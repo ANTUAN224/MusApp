@@ -59,6 +59,7 @@ dependencies {
     testImplementation (libs.kotlinx.coroutines.test) //Dependencia para ejecutar las corrutinas en los tests unitarios sin bloquear el hilo principal
     testImplementation (libs.androidx.core.testing) //Dependencia para realizar pruebas unitarias con ViewModel y LiveData
     implementation(libs.androidx.datastore.preferences) //Dependencia para poder utilizar la librería DataStore Preferences de Jetpack
+    implementation(libs.firebase.auth) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios.
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
