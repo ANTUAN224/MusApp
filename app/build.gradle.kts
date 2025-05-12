@@ -5,14 +5,15 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrainsKotlinSerialization) //Plugin del compilador de Kotlin para la librería de Kotlinx Serialization
+    id("com.google.gms.google-services") //Complemento de Google Services necesario para que Firebase tenga una configuración automática
 }
 
 android {
-    namespace = "com.example.musapp"
+    namespace = "com.project.musapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.musapp"
+        applicationId = "com.project.musapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
