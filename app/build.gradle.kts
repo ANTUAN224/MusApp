@@ -5,7 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrainsKotlinSerialization) //Plugin del compilador de Kotlin para la librería de Kotlinx Serialization
-    id("com.google.gms.google-services") //Complemento de Google Services necesario para que Firebase tenga una configuración automática
+    id("com.google.gms.google-services") //Plugin de Google a nivel de módulo Services necesario para que Firebase tenga una configuración automática
+    id("com.google.devtools.ksp") //Plugin de KSP (Kotlin Symbol Processing) a nivel de módulo necesario para utilizar las anotaciones de Room
 }
 
 android {
@@ -62,7 +63,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences) //Dependencia para poder utilizar la librería DataStore Preferences de Jetpack.
     implementation(libs.firebase.auth) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios.
     implementation(libs.androidx.room.runtime) //Dependencia para poder utilizar la librería Room para facilitar las operaciones CRUD en una BD SQLite.
-    ksp("androidx.room:room-compiler:2.7.1")
+    ksp(libs.androidx.room.compiler) //Dependencia para poder utilizar la herramienta KSP (Kotlin Symbol Processing) para las anotaciones de Room.
+    implementation(libs.androidx.room.ktx) //Dependencia opcional que incluye funciones de extensión y soporte para corrutinas en DAO, simplificando el uso de Room.
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
