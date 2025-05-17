@@ -1,4 +1,4 @@
-package com.example.musapp.ui.theme
+package com.project.musapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
