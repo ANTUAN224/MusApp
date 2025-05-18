@@ -73,7 +73,6 @@ dependencies {
     implementation(libs.androidx.room.ktx) //Dependencia opcional que incluye funciones de extensión y soporte para corrutinas en DAO, simplificando el uso de Room.
     testImplementation(libs.mockk) //Dependencia para poder utilizar la librería de testing MockK
     testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests.
-    testRuntimeOnly(libs.junit.platform.launcher) //Dependencia necesaria para que JUnit 5 se ejecute correctamente en Gradle.
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
