@@ -1,3 +1,4 @@
+
 import org.gradle.kotlin.dsl.testImplementation
 
 plugins {
@@ -23,6 +24,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -33,15 +35,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform() //Permite ejecutar tests con JUnit 5
 }
 
 dependencies {
@@ -67,6 +73,7 @@ dependencies {
     implementation(libs.androidx.room.ktx) //Dependencia opcional que incluye funciones de extensión y soporte para corrutinas en DAO, simplificando el uso de Room.
     testImplementation(libs.mockk) //Dependencia para poder utilizar la librería de testing MockK
     testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests.
+    testRuntimeOnly(libs.junit.platform.launcher) //Dependencia necesaria para que JUnit 5 se ejecute correctamente en Gradle.
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
