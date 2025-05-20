@@ -64,15 +64,15 @@ dependencies {
     implementation(libs.androidx.material.icons.extended) //Dependencia para poder utilizar todos los iconos de M3
     implementation(libs.kotlinx.coroutines.core) //Dependencia que proporciona las funciones principales para trabajar con corrutinas
     implementation(libs.kotlinx.coroutines.android) //Dependencia para optimizar las corrutinas con el Main Dispatcher en Android
-    testImplementation (libs.kotlinx.coroutines.test) //Dependencia para ejecutar las corrutinas en los tests unitarios sin bloquear el hilo principal
+    testImplementation (libs.kotlinx.coroutines.test) //Dependencia para ejecutar las corrutinas en los tests unitarios sin bloquear el hilo principal.
     testImplementation (libs.androidx.core.testing) //Dependencia para realizar pruebas unitarias con ViewModel y LiveData
-    implementation(libs.androidx.datastore.preferences) //Dependencia para poder utilizar la librería DataStore Preferences de Jetpack.
-    implementation(libs.firebase.auth) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios.
-    implementation(libs.androidx.room.runtime) //Dependencia para poder utilizar la librería Room para facilitar las operaciones CRUD en una BD SQLite.
-    ksp(libs.androidx.room.compiler) //Dependencia para poder utilizar la herramienta KSP (Kotlin Symbol Processing) para las anotaciones de Room.
+    implementation(libs.androidx.datastore.preferences) //Dependencia para poder utilizar la librería DataStore Preferences de Jetpack
+    implementation(libs.firebase.auth) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios
+    implementation(libs.androidx.room.runtime) //Dependencia para poder utilizar la librería Room para facilitar las operaciones CRUD en una BD SQLite
+    ksp(libs.androidx.room.compiler) //Dependencia para poder utilizar la herramienta KSP (Kotlin Symbol Processing) para las anotaciones de Room
     implementation(libs.androidx.room.ktx) //Dependencia opcional que incluye funciones de extensión y soporte para corrutinas en DAO, simplificando el uso de Room.
     testImplementation(libs.mockk) //Dependencia para poder utilizar la librería de testing MockK
-    testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests.
+    testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
