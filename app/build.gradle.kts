@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx) //Dependencia para que la clase que se comporte como ViewModel pueda extender la clase ViewModel (imprescindible en MVVM)
     implementation(libs.androidx.lifecycle.livedata) //Dependencia para poder utilizar livedata (imprescindible en MVVM)
+    implementation(libs.androidx.runtime.livedata) //Dependencia para poder utilizar la función 'observeAsState()' de LiveData
     implementation(libs.retrofit) //Dependencia para poder utilizar Retrofit
     implementation(libs.converter.gson) //Dependencia de Retrofit para utilizar la librería Gson para la serialización a JSON y deserialización a objetos
     implementation(libs.androidx.material.icons.extended) //Dependencia para poder utilizar todos los iconos de M3
