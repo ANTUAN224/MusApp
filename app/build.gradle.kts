@@ -25,7 +25,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -52,6 +51,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
+    implementation (libs.androidx.constraintlayout.compose)//Dependencia para poder utilizar ConstraintLayout en Jetpack Compose
     implementation(libs.coil.compose) //Dependencia para utilizar la librería Coil para imágenes locales
     implementation(libs.coil.network.okhttp) //Dependencia de Coil para poder cargar imágenes alojadas en Internet
     implementation (libs.android.lottie) //Dependencia para utilizar la librería Lottie para implementar animaciones profesionales en la app
@@ -69,13 +69,15 @@ dependencies {
     testImplementation (libs.kotlinx.coroutines.test) //Dependencia para ejecutar las corrutinas en los tests unitarios sin bloquear el hilo principal
     testImplementation (libs.androidx.core.testing) //Dependencia para realizar pruebas unitarias con ViewModel y LiveData
     implementation(libs.androidx.datastore.preferences) //Dependencia para poder utilizar la librería DataStore Preferences de Jetpack
-    implementation(libs.firebase.auth) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios
+    implementation(libs.firebase.auth.ktx) //Dependencia para utilizar la librería de Firebase Authentication para la generación de tokens de usuarios
+    implementation(libs.firebase.storage.ktx) //Dependencia para poder utilizar la librería de Firebase Storage
     implementation(libs.androidx.room.runtime) //Dependencia para poder utilizar la librería Room para facilitar las operaciones CRUD en una BD SQLite
     ksp(libs.androidx.room.compiler) //Dependencia para poder utilizar la herramienta KSP (Kotlin Symbol Processing) para las anotaciones de Room
     implementation(libs.androidx.room.ktx) //Dependencia opcional que incluye funciones de extensión y soporte para corrutinas en DAO, simplificando el uso de Room
     testImplementation(libs.mockk) //Dependencia para poder utilizar la librería de testing MockK
     testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests
     implementation (libs.hilt.android) //Dependencia para poder utilizar la librería Dagger Hilt para DI
+    implementation(libs.androidx.hilt.navigation.compose) //Dependencia para poder utilizar Dagger Hilt en la navegación de Compose
     ksp (libs.hilt.compiler) //Dependencia para poder utilizar la herramient KSP (Kotlin Symbol Processing) para DI con Dagger Hilt
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
