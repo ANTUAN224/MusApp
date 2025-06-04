@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/> <!--Para poder realizar llamadas a la API-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!--Para poder acceder al estado de red del dispositivo-->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".core.di.application.MusApp"
+        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusApp"
@@ -15,8 +18,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MusApp">
+            android:theme="@style/Theme.MusApp"
+            android:screenOrientation="portrait"> <!--Para bloquear la orientación de la app a sólo vertical-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

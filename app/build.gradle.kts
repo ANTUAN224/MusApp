@@ -25,7 +25,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -52,6 +51,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
+    implementation (libs.androidx.constraintlayout.compose)//Dependencia para poder utilizar ConstraintLayout en Jetpack Compose
     implementation(libs.coil.compose) //Dependencia para utilizar la librería Coil para imágenes locales
     implementation(libs.coil.network.okhttp) //Dependencia de Coil para poder cargar imágenes alojadas en Internet
     implementation (libs.android.lottie) //Dependencia para utilizar la librería Lottie para implementar animaciones profesionales en la app
@@ -76,6 +76,7 @@ dependencies {
     testImplementation(libs.mockk) //Dependencia para poder utilizar la librería de testing MockK
     testImplementation(libs.junit.jupiter) //Dependencia para poder utilizar la librería JUnit 5 para los unit tests
     implementation (libs.hilt.android) //Dependencia para poder utilizar la librería Dagger Hilt para DI
+    implementation(libs.androidx.hilt.navigation.compose) //Dependencia para poder utilizar Dagger Hilt en la navegación de Compose
     ksp (libs.hilt.compiler) //Dependencia para poder utilizar la herramient KSP (Kotlin Symbol Processing) para DI con Dagger Hilt
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
