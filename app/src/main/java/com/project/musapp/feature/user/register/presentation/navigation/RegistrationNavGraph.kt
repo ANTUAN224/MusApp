@@ -29,26 +29,15 @@ fun NavGraphBuilder.registrationNavGraph(navController: NavController, context: 
             val userRegisterViewModel: UserRegisterViewModel =
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Obtengo una instancia de ViewModel cuyo scope es el del nav graph actual
 
-            val navigateToHome =
-                userRegisterViewModel.navigateToHome.observeAsState(initial = null).value
-
             LastRegisterScreen(
                 viewModel = userRegisterViewModel,
                 context = context,
                 onReturnButtonPress = { navController.popBackStack() }) {
                 userRegisterViewModel.onLastRegisterScreenButtonPress()
 
-                if (navigateToHome == true) Toast.makeText(
-                    context, "Te has registrado correctamente en la base de datos.",
-                    Toast.LENGTH_SHORT
-                ).show()
-//                    navController.navigate(route = RouteHub.Home) {
-//                    popUpTo<RouteHub.InitialMenu> { inclusive = true }
-//                }
-                else if (navigateToHome == false) Toast.makeText(
-                    context, "Se ha producido un error durante el proceso de registro",
-                    Toast.LENGTH_SHORT
-                ).show()
+                navController.navigate(route = RouteHub.Home) {
+                    popUpTo<RouteHub.InitialMenu> { inclusive = true }
+                }
             }
         }
     }
