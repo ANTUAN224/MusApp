@@ -17,7 +17,7 @@ import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.Na
 
 @Composable
 fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, navItemIndex: Int) {
-    val navItemList = listOf<NavItem>(
+    val navItemList = listOf(
         NavItem(label = "Home", icon = Icons.Outlined.Home),
         NavItem(label = "Colecciones", icon = Icons.Outlined.Folder),
         NavItem(label = "Cultura artística", icon = Icons.Outlined.School)
