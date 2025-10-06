@@ -2,7 +2,7 @@ package com.project.musapp.feature.home.user.register.domain.useCase
 
 import com.project.musapp.feature.user.register.domain.model.UserRegisterModel
 import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository
-import com.project.musapp.feature.user.register.domain.useCase.RegisterUserUseCase
+import com.project.musapp.feature.user.register.domain.usecase.RegisterUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK

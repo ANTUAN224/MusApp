@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface UserRegisterApiClient {
+interface RegisterUserApiClient {
     @POST("user/register")
     suspend fun insertUser(@Header("Authorization") headerCompanionValue : String, @Body registerUserRemoteDTO: RegisterUserRemoteDTO) : Response<Void>
 }

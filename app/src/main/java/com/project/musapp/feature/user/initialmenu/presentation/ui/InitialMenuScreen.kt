@@ -1,4 +1,4 @@
-package com.project.musapp.feature.user.initialMenu.presentation.ui
+package com.project.musapp.feature.user.initialmenu.presentation.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box

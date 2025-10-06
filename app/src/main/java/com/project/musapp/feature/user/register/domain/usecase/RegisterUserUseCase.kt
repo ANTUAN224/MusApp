@@ -1,4 +1,4 @@
-package com.project.musapp.feature.user.register.domain.useCase
+package com.project.musapp.feature.user.register.domain.usecase
 
 import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
 import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository

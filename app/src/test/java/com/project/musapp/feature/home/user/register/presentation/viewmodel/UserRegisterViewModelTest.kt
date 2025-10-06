@@ -1,8 +1,8 @@
 package com.project.musapp.feature.home.user.register.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.project.musapp.feature.user.register.domain.useCase.CreateFirebaseUserUseCase
-import com.project.musapp.feature.user.register.domain.useCase.RegisterUserUseCase
+import com.project.musapp.feature.user.register.domain.usecase.CreateFirebaseUserUseCase
+import com.project.musapp.feature.user.register.domain.usecase.RegisterUserUseCase
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.Dispatchers

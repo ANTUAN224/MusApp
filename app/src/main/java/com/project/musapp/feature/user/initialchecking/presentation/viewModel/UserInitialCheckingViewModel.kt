@@ -1,18 +1,17 @@
-package com.project.musapp.feature.user.initialChecking.presentation.viewModel
+package com.project.musapp.feature.user.initialchecking.presentation.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.musapp.feature.user.initialChecking.domain.usecase.UserConnectionVerificationUseCase
-import com.project.musapp.feature.user.initialChecking.domain.usecase.UserSessionVerificationUseCase
+import com.project.musapp.feature.user.initialchecking.domain.usecase.UserConnectionVerificationUseCase
+import com.project.musapp.feature.user.initialchecking.domain.usecase.UserSessionVerificationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.time.measureTime
 
 @HiltViewModel
 class UserInitialCheckingViewModel

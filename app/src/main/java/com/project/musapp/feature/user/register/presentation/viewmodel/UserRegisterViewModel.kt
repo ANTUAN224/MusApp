@@ -10,8 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.project.musapp.R
 import com.project.musapp.feature.user.helper.RegisterOrLoginRegexHelper
 import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
-import com.project.musapp.feature.user.register.domain.useCase.CreateFirebaseUserUseCase
-import com.project.musapp.feature.user.register.domain.useCase.RegisterUserUseCase
+import com.project.musapp.feature.user.register.domain.usecase.CreateFirebaseUserUseCase
+import com.project.musapp.feature.user.register.domain.usecase.RegisterUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

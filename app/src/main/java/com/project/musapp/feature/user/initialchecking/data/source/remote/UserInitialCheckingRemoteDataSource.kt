@@ -1,4 +1,4 @@
-package com.project.musapp.feature.user.initialChecking.data.source.remote
+package com.project.musapp.feature.user.initialchecking.data.source.remote
 
 import android.content.Context
 import android.net.ConnectivityManager

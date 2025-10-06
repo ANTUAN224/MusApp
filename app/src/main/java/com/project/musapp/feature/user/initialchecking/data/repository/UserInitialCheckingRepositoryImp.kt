@@ -1,7 +1,7 @@
-package com.project.musapp.feature.user.initialChecking.data.repository
+package com.project.musapp.feature.user.initialchecking.data.repository
 
-import com.project.musapp.feature.user.initialChecking.data.source.remote.UserInitialCheckingRemoteDataSource
-import com.project.musapp.feature.user.initialChecking.domain.repository.UserInitialCheckingRepository
+import com.project.musapp.feature.user.initialchecking.data.source.remote.UserInitialCheckingRemoteDataSource
+import com.project.musapp.feature.user.initialchecking.domain.repository.UserInitialCheckingRepository
 import javax.inject.Inject
 
 class UserInitialCheckingRepositoryImp @Inject constructor(

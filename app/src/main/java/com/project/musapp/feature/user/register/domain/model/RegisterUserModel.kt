@@ -10,4 +10,4 @@ class RegisterUserModel(
     val email: String,
     val password: String,
     val imagePath: Uri
-) {}
+)

@@ -1,4 +1,4 @@
-package com.project.musapp.feature.user.initialChecking.presentation.ui
+package com.project.musapp.feature.user.initialchecking.presentation.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
