@@ -175,7 +175,7 @@ fun PasswordTextField(viewModel: UserRegisterViewModel) {
         onValueChange = { viewModel.onPasswordChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        isError = passwordError.isNotBlank() == true,
+        isError = passwordError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
