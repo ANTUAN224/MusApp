@@ -1,6 +1,6 @@
 package com.project.musapp.feature.home.user.register.domain.useCase
 
-import com.project.musapp.feature.user.register.domain.model.UserRegisterModel
+import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
 import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository
 import com.project.musapp.feature.user.register.domain.usecase.RegisterUserUseCase
 import io.mockk.coEvery
@@ -34,7 +34,7 @@ class UserRegisterUseCaseTest {
         coEvery { userRegisterRepository.insertUser(any()) } returns true
 
         //When
-        val response = registerUserUseCase(mockk<UserRegisterModel>())
+        val response = registerUserUseCase(mockk< RegisterUserModel>())
 
         //Then
         coVerify(exactly = 1) { userRegisterRepository.insertUser(any()) }
