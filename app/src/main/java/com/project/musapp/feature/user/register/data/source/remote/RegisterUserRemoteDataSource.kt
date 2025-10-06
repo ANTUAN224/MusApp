@@ -7,7 +7,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.project.musapp.core.helper.ImageConversionHelper
-import com.project.musapp.feature.user.register.data.model.remote.dto.toRemoteDTO
 import com.project.musapp.feature.user.register.data.source.remote.client.RegisterUserApiClient
 import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -49,19 +48,19 @@ class RegisterUserRemoteDataSource @Inject constructor(
         return userProfileImageUrl.toString()
     }
 
-    suspend fun insertUser(registerUserModel: RegisterUserModel): Boolean {
-        return registerUserApiClient
-            .insertUser(
-                headerCompanionValue = "Bearer ${getFirebaseUserToken()}",
-                registerUserRemoteDTO = registerUserModel.toRemoteDTO(
-                    userProfileImageUrl =
-                        uploadUserProfileImageToFirebaseStorage(
-                            imageData = ImageConversionHelper.toByteArray(
-                                context = context,
-                                imagePath = registerUserModel.imagePath
-                            )
-                        )
-                )
-            ).isSuccessful
-    }
+//    suspend fun insertUser(registerUserModel: RegisterUserModel): Boolean {
+//        return registerUserApiClient
+//            .insertUser(
+//                headerCompanionValue = "Bearer ${getFirebaseUserToken()}",
+//                registerUserRemoteDTO = registerUserModel.toRemoteDTO(
+//                    userProfileImageUrl =
+//                        uploadUserProfileImageToFirebaseStorage(
+//                            imageData = ImageConversionHelper.toByteArray(
+//                                context = context,
+//                                imagePath = registerUserModel.imagePath
+//                            )
+//                        )
+//                )
+//            ).isSuccessful
+//    }
 }
