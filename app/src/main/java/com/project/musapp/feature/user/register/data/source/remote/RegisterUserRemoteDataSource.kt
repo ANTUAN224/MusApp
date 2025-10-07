@@ -6,15 +6,13 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.project.musapp.core.helper.ImageConversionHelper
-import com.project.musapp.feature.user.register.data.source.remote.client.RegisterUserApiClient
-import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
+import com.project.musapp.feature.user.register.data.source.remote.client.UserRegisterApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RegisterUserRemoteDataSource @Inject constructor(
-    private val registerUserApiClient: RegisterUserApiClient,
+    private val userRegisterApiClient: UserRegisterApiClient,
     @ApplicationContext private val context: Context
 ) {
     suspend fun createUserInFirebase(email: String, password: String): Boolean {
