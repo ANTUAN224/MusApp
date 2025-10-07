@@ -6,9 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrainsKotlinSerialization) //Plugin del compilador de Kotlin para la librería de Kotlinx Serialization
-    id("com.google.gms.google-services") //Plugin de Google a nivel de módulo Services necesario para que Firebase tenga una configuración automática
-    id("com.google.devtools.ksp") //Plugin de KSP (Kotlin Symbol Processing) a nivel de módulo necesario para utilizar las anotaciones de Room
-    id ("com.google.dagger.hilt.android") //Plugin de Google para utilizar la librería Dagger Hilt
+    alias(libs.plugins.google.services) //Plugin de Google a nivel de módulo Services necesario para que Firebase tenga una configuración automática
+    alias(libs.plugins.ksp) //Plugin de KSP (Kotlin Symbol Processing) a nivel de módulo necesario para generar código a partir de diversas librerías
+    alias(libs.plugins.hilt.android) //Plugin de Google para utilizar la librería Dagger Hilt
 }
 
 android {
