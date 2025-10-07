@@ -46,7 +46,8 @@ class MainActivity : ComponentActivity() {
                 val currentNavItemIndex =
                     navigationViewModel.navItemIndex.observeAsState(initial = 0).value
 
-                val showNavBar = navigationViewModel.showNavBar.observeAsState(initial = false).value
+                val showNavBar =
+                    navigationViewModel.showNavBar.observeAsState(initial = false).value
 
                 val navController = rememberNavController()
 
@@ -62,8 +63,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = if (hasInternetConnection == true && hasActiveSession == false) {
                             RouteHub.InitialMenu
-                        }
-                        else if (hasActiveSession == true) {
+                        } else if (hasActiveSession == true) {
                             navigationViewModel.onHomeScreenNavigation()
                             RouteHub.Home
                         } else {
