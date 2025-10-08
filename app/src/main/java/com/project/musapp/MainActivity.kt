@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,18 +40,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             MusAppTheme(darkTheme = false) {
                 val hasInternetConnection by
-                    userInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
+                userInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
 
                 val hasActiveSession by
-                    userInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
+                userInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
 
                 val currentNavItemIndex by
-                    navigationViewModel.navItemIndex.observeAsState(initial = 0)
+                navigationViewModel.navItemIndex.observeAsState(initial = 0)
 
                 val showNavBar by
-                    navigationViewModel.showNavBar.observeAsState(initial = false)
+                navigationViewModel.showNavBar.observeAsState(initial = false)
 
                 val navController = rememberNavController()
+
+                LaunchedEffect(Unit) {
+                    userInitialCheckingViewModel.onUserInitialChecking()
+                }
 
                 Scaffold(bottomBar = {
                     if (showNavBar) MusAppNavigationBar(
@@ -59,11 +64,29 @@ class MainActivity : ComponentActivity() {
                     )
                 }) { innerPadding ->
 
+                    LaunchedEffect(hasInternetConnection, hasActiveSession) {
+                        if (hasInternetConnection == null || hasActiveSession == null)
+                            return@LaunchedEffect
+
+                        if (hasInternetConnection == true) {
+                            if (hasActiveSession == true) {
+                                navigationViewModel.onHomeScreenNavigation()
+
+                                navController.navigate(route = RouteHub.Home) {
+                                    popUpTo<RouteHub.UserInitialChecking> { inclusive = true }
+                                }
+                            } else {
+                                navController.navigate(route = RouteHub.InitialMenu) {
+                                    popUpTo<RouteHub.UserInitialChecking> { inclusive = true }
+                                }
+                            }
+                        }
+                    }
+
                     NavHost(
                         navController = navController,
                         startDestination = RouteHub.UserInitialChecking
                     ) {
-
                         composable<RouteHub.UserInitialChecking> {
                             UserInitialCheckingScreen(
                                 hasInternetConnection = hasInternetConnection
@@ -75,7 +98,7 @@ class MainActivity : ComponentActivity() {
                                 hiltViewModel(viewModelStoreOwner = navBackStackEntry)
 
                             val showLoginModal by
-                                userLoginViewModel.showLoginModal.observeAsState(initial = false)
+                            userLoginViewModel.showLoginModal.observeAsState(initial = false)
 
                             InitialMenuScreen(onGoToRegisterButtonPress = {
                                 navController.navigate(
@@ -99,7 +122,11 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        registrationNavGraph(navController, context = applicationContext, navigationViewModel = navigationViewModel)
+                        registrationNavGraph(
+                            navController,
+                            context = applicationContext,
+                            navigationViewModel = navigationViewModel
+                        )
                     }
                 }
             }
