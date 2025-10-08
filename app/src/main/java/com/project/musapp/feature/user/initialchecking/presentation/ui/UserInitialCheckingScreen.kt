@@ -30,12 +30,12 @@ fun UserInitialCheckingScreen(
 }
 
 @Composable
-fun ConnectionVerificationModal() {
+private fun ConnectionVerificationModal() {
     val activity = LocalActivity.current!!
     AlertDialog(
         onDismissRequest = { activity.finish() },
         confirmButton = { TextButton(onClick = { activity.finish() }) { Text(text = "Cerrar") } },
-        title = { Text(text = "Sin conexión a Internet.") },
+        title = { Text(text = "Sin conexión a Internet") },
         text = { Text(text = "Actualmente, no tienes acceso a Internet, por lo que no podrás acceder a la app. Verifica tu conexión y vuelva a intentarlo en otra ocasión.") }
     )
 }
