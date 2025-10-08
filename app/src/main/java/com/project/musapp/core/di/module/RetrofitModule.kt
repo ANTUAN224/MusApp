@@ -1,7 +1,7 @@
 package com.project.musapp.core.di.module
 
 import com.project.musapp.feature.user.login.data.source.remote.client.UserLoginApiClient
-import com.project.musapp.feature.user.register.data.source.remote.client.UserRegisterApiClient
+import com.project.musapp.feature.user.register.data.source.remote.client.UserRegistrationApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +23,8 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideUserRegisterApiClient(retrofit: Retrofit): UserRegisterApiClient =
-        retrofit.create(UserRegisterApiClient::class.java)
+    fun provideUserRegisterApiClient(retrofit: Retrofit): UserRegistrationApiClient =
+        retrofit.create(UserRegistrationApiClient::class.java)
 
     @Provides
     @Singleton
