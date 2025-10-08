@@ -25,7 +25,7 @@ class UserInitialCheckingViewModel
     private val _hasActiveSession = MutableLiveData<Boolean?>()
     val hasActiveSession: LiveData<Boolean?> = _hasActiveSession
 
-    fun executeUserInitialChecking() {
+    fun onUserInitialChecking() {
         viewModelScope.launch(context = Dispatchers.IO) {
             delay(2000) //Simula el tiempo de carga inicial
             withContext(context = Dispatchers.Main) {
