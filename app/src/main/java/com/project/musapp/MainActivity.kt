@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -100,7 +99,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        registrationNavGraph(navController, context = applicationContext)
+                        registrationNavGraph(navController, context = applicationContext, navigationViewModel = navigationViewModel)
                     }
                 }
             }
