@@ -22,7 +22,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         _showNavBar.value = false
     }
 
-    fun onNavItemClick(currentItemIndex : Int) {
-        _navItemIndex.value = currentItemIndex
+    fun onNavItemClick(currentNavItemIndex : Int) {
+        _navItemIndex.value = currentNavItemIndex
     }
 }
