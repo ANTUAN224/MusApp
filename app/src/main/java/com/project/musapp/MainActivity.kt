@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -37,21 +39,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MusAppTheme(darkTheme = false) {
-                val hasInternetConnection =
-                    userInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null).value
+                val hasInternetConnection by
+                    userInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
 
-                val hasActiveSession =
-                    userInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null).value
+                val hasActiveSession by
+                    userInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
 
-                val currentNavItemIndex =
-                    navigationViewModel.navItemIndex.observeAsState(initial = 0).value
+                val currentNavItemIndex by
+                    navigationViewModel.navItemIndex.observeAsState(initial = 0)
 
-                val showNavBar =
-                    navigationViewModel.showNavBar.observeAsState(initial = false).value
+                val showNavBar by
+                    navigationViewModel.showNavBar.observeAsState(initial = false)
 
                 val navController = rememberNavController()
-
-                userInitialCheckingViewModel.executeUserInitialChecking()
 
                 Scaffold(bottomBar = {
                     if (showNavBar) MusAppNavigationBar(
@@ -59,17 +59,12 @@ class MainActivity : ComponentActivity() {
                         navItemIndex = currentNavItemIndex
                     )
                 }) { innerPadding ->
+
                     NavHost(
                         navController = navController,
-                        startDestination = if (hasInternetConnection == true && hasActiveSession == false) {
-                            RouteHub.InitialMenu
-                        } else if (hasActiveSession == true) {
-                            navigationViewModel.onHomeScreenNavigation()
-                            RouteHub.Home
-                        } else {
-                            RouteHub.UserInitialChecking
-                        }
+                        startDestination = RouteHub.UserInitialChecking
                     ) {
+
                         composable<RouteHub.UserInitialChecking> {
                             UserInitialCheckingScreen(
                                 hasInternetConnection = hasInternetConnection
@@ -80,8 +75,8 @@ class MainActivity : ComponentActivity() {
                             val userLoginViewModel: UserLoginViewModel =
                                 hiltViewModel(viewModelStoreOwner = navBackStackEntry)
 
-                            val showLoginModal =
-                                userLoginViewModel.showLoginModal.observeAsState(initial = false).value
+                            val showLoginModal by
+                                userLoginViewModel.showLoginModal.observeAsState(initial = false)
 
                             InitialMenuScreen(onGoToRegisterButtonPress = {
                                 navController.navigate(
@@ -96,6 +91,8 @@ class MainActivity : ComponentActivity() {
                                     viewModel = userLoginViewModel,
                                     context = applicationContext
                                 ) {
+                                    navigationViewModel.onHomeScreenNavigation()
+
                                     navController.navigate(route = RouteHub.Home) {
                                         popUpTo<RouteHub.InitialMenu> { inclusive = true }
                                     }
