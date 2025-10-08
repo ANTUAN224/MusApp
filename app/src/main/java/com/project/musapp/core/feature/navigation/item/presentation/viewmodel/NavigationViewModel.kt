@@ -18,7 +18,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         _showNavBar.value = true
     }
 
-    fun onInitialMenuNavigation() {
+    fun onInitialMenuScreenNavigation() {
         _showNavBar.value = false
     }
 
