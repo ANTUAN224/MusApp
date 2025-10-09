@@ -70,10 +70,12 @@ class UserRegisterViewModel @Inject constructor(
     val isImageSelected: LiveData<Boolean> = _isImageSelected
 
     private val _isUserRegistrationFirstScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isUserRegistrationFirstScreenButtonEnabled: LiveData<Boolean> = _isUserRegistrationFirstScreenButtonEnabled
+    val isUserRegistrationFirstScreenButtonEnabled: LiveData<Boolean> =
+        _isUserRegistrationFirstScreenButtonEnabled
 
     private val _isUserRegistrationLastScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isUserRegistrationLastScreenButtonEnabled: LiveData<Boolean> = _isUserRegistrationLastScreenButtonEnabled
+    val isUserRegistrationLastScreenButtonEnabled: LiveData<Boolean> =
+        _isUserRegistrationLastScreenButtonEnabled
 
     private val _isImageSelectionButtonPressed = MutableLiveData<Boolean>()
     val isImageSelectionButtonPressed: LiveData<Boolean> = _isImageSelectionButtonPressed
@@ -84,19 +86,19 @@ class UserRegisterViewModel @Inject constructor(
     fun onNameChange(name: String) {
         _name.value = name
         setNameErrorMessage(name)
-        checkFirstRegisterScreenErrors()
+        checkUserRegistrationFirstScreenErrors()
     }
 
     fun onSurnamesChange(surnames: String) {
         _surnames.value = surnames
         setSurnameErrorMessage(surnames)
-        checkFirstRegisterScreenErrors()
+        checkUserRegistrationFirstScreenErrors()
     }
 
     fun onBirthdateTextChange(birthdateText: String) {
         _birthdateText.value = birthdateText
         setBirthDateErrorMessage(birthdateText)
-        checkFirstRegisterScreenErrors()
+        checkUserRegistrationFirstScreenErrors()
     }
 
     private fun setNameErrorMessage(name: String) {
@@ -130,9 +132,9 @@ class UserRegisterViewModel @Inject constructor(
         }
     }
 
-    private fun checkFirstRegisterScreenErrors() {
+    private fun checkUserRegistrationFirstScreenErrors() {
         _isUserRegistrationFirstScreenButtonEnabled.value =
-            nameError.value?.isBlank() == true && birthdateError.value?.isBlank() == true && surnamesError.value?.isBlank() == true
+            nameError.value?.isBlank() ?: false && birthdateError.value?.isBlank() ?: false && surnamesError.value?.isBlank() ?: false
     }
 
     fun onEmailChange(email: String) {
@@ -200,18 +202,19 @@ class UserRegisterViewModel @Inject constructor(
 
     fun onLastRegisterScreenButtonPress() {
         viewModelScope.launch(context = Dispatchers.IO) {
-            val isSuccessful =
-                createFirebaseUserUseCase(email = email.value!!, password = password.value!!) &&
-                        registerUserUseCase(
-                            registerUserModel = RegisterUserModel(
-                                name = name.value!!,
-                                surnames = surnames.value!!,
-                                birthdate = LocalDate.parse(birthdateText.value!!),
-                                email = email.value!!,
-                                password = password.value!!,
-                                imagePath = imagePath.value!!
-                            )
-                        )
+            val isSuccessful = createFirebaseUserUseCase(
+                email = email.value!!,
+                password = password.value!!
+            ) && registerUserUseCase(
+                registerUserModel = RegisterUserModel(
+                    name = name.value!!,
+                    surnames = surnames.value!!,
+                    birthdate = LocalDate.parse(birthdateText.value!!),
+                    email = email.value!!,
+                    password = password.value!!,
+                    imagePath = imagePath.value!!
+                )
+            )
             withContext(context = Dispatchers.Main) {
                 _navigateToHome.value = isSuccessful
             }
