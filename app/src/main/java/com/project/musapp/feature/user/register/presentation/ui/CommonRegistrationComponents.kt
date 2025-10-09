@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -48,11 +49,11 @@ fun UserRegistrationScreenBodyTitle(title: String) {
 fun UserRegistrationScreenBodyButton(
     content: String, viewModel: UserRegisterViewModel, onButtonClick: () -> Unit
 ) {
-    val isFirstScreenButtonEnabled =
-        viewModel.isUserRegistrationFirstScreenButtonEnabled.observeAsState(initial = false).value
+    val isFirstScreenButtonEnabled by
+        viewModel.isUserRegistrationFirstScreenButtonEnabled.observeAsState(initial = false)
 
-    val isLastScreenButtonEnabled =
-        viewModel.isUserRegistrationLastScreenButtonEnabled.observeAsState(initial = false).value
+    val isLastScreenButtonEnabled by
+        viewModel.isUserRegistrationLastScreenButtonEnabled.observeAsState(initial = false)
 
     Button(
         modifier = Modifier

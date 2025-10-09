@@ -19,6 +19,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -122,8 +123,8 @@ fun FirstRegisterBody(
 
 @Composable
 fun NameTextField(viewModel: UserRegisterViewModel) {
-    val name = viewModel.name.observeAsState(initial = "").value
-    val nameError = viewModel.nameError.observeAsState(initial = "").value
+    val name by viewModel.name.observeAsState(initial = "")
+    val nameError by viewModel.nameError.observeAsState(initial = "")
 
     TextField(
         label = { Text(text = "Nombre*") },
@@ -141,8 +142,8 @@ fun NameTextField(viewModel: UserRegisterViewModel) {
 
 @Composable
 fun SurnameTextField(viewModel: UserRegisterViewModel) {
-    val surnames = viewModel.surnames.observeAsState(initial = "").value
-    val surnamesError = viewModel.surnamesError.observeAsState(initial = "").value
+    val surnames by viewModel.surnames.observeAsState(initial = "")
+    val surnamesError by viewModel.surnamesError.observeAsState(initial = "")
 
     TextField(
         label = { Text(text = "Apellidos*") },
