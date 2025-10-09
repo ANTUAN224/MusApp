@@ -48,7 +48,7 @@ fun LastRegisterScreen(
             onReturnButtonPress = onReturnButtonPress
         )
     }, bottomBar = {}) { innerPadding ->
-        LastRegisterBody(
+        UserRegistrationLastScreenBody(
             viewModel = viewModel,
             title = title,
             context = context
@@ -59,7 +59,7 @@ fun LastRegisterScreen(
 }
 
 @Composable
-fun LastRegisterBody(
+fun UserRegistrationLastScreenBody(
     viewModel: UserRegisterViewModel,
     title : String,
     context: Context,
