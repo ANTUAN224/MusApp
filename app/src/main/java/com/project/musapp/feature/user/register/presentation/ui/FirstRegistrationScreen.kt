@@ -247,7 +247,7 @@ fun BirthdateTextField(viewModel: UserRegisterViewModel) {
                 dateFormatter = remember {
                     DatePickerDefaults.dateFormatter(
                         selectedDateSkeleton = "dd-MM-yyyy",
-                        selectedDateDescriptionSkeleton = "EEEE, dd 'de' MMM 'de' yyyy"
+                        selectedDateDescriptionSkeleton = "EEEE, dd 'de' MMMM 'de' yyyy"
                     )
                 }
             )
