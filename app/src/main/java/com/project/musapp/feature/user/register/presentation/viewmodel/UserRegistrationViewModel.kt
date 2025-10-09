@@ -140,7 +140,7 @@ class UserRegisterViewModel @Inject constructor(
     fun onEmailChange(email: String) {
         _email.value = email
         setEmailErrorMessage(email)
-        checkLastRegisterScreenErrors()
+        checkUserRegistrationLastScreenErrors()
     }
 
     private fun setEmailErrorMessage(email: String) {
@@ -155,7 +155,7 @@ class UserRegisterViewModel @Inject constructor(
     fun onPasswordChange(password: String) {
         _password.value = password
         setPasswordErrorMessage(password)
-        checkLastRegisterScreenErrors()
+        checkUserRegistrationLastScreenErrors()
     }
 
     private fun setPasswordErrorMessage(password: String) {
@@ -167,7 +167,7 @@ class UserRegisterViewModel @Inject constructor(
         }
     }
 
-    private fun checkLastRegisterScreenErrors() {
+    private fun checkUserRegistrationLastScreenErrors() {
         _isUserRegistrationLastScreenButtonEnabled.value =
             emailError.value?.isBlank() == true && passwordError.value?.isBlank() == true
     }
