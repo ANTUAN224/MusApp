@@ -69,11 +69,11 @@ class UserRegisterViewModel @Inject constructor(
     private val _isImageSelected = MutableLiveData<Boolean>()
     val isImageSelected: LiveData<Boolean> = _isImageSelected
 
-    private val _isFirstRegisterScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isFirstRegisterScreenButtonEnabled: LiveData<Boolean> = _isFirstRegisterScreenButtonEnabled
+    private val _isUserRegistrationFirstScreenButtonEnabled = MutableLiveData<Boolean>()
+    val isUserRegistrationFirstScreenButtonEnabled: LiveData<Boolean> = _isUserRegistrationFirstScreenButtonEnabled
 
-    private val _isLastRegisterScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isLastRegisterScreenButtonEnabled: LiveData<Boolean> = _isLastRegisterScreenButtonEnabled
+    private val _isUserRegistrationLastScreenButtonEnabled = MutableLiveData<Boolean>()
+    val isUserRegistrationLastScreenButtonEnabled: LiveData<Boolean> = _isUserRegistrationLastScreenButtonEnabled
 
     private val _isImageSelectionButtonPressed = MutableLiveData<Boolean>()
     val isImageSelectionButtonPressed: LiveData<Boolean> = _isImageSelectionButtonPressed
@@ -129,7 +129,7 @@ class UserRegisterViewModel @Inject constructor(
     }
 
     private fun checkFirstRegisterScreenErrors() {
-        _isFirstRegisterScreenButtonEnabled.value =
+        _isUserRegistrationFirstScreenButtonEnabled.value =
             nameError.value?.isBlank() == true && birthdateError.value?.isBlank() == true && surnamesError.value?.isBlank() == true
     }
 
@@ -163,7 +163,7 @@ class UserRegisterViewModel @Inject constructor(
     }
 
     private fun checkLastRegisterScreenErrors() {
-        _isLastRegisterScreenButtonEnabled.value =
+        _isUserRegistrationLastScreenButtonEnabled.value =
             emailError.value?.isBlank() == true && passwordError.value?.isBlank() == true
     }
 

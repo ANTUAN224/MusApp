@@ -49,10 +49,10 @@ fun UserRegistrationScreenBodyButton(
     content: String, viewModel: UserRegisterViewModel, onButtonClick: () -> Unit
 ) {
     val isFirstScreenButtonEnabled =
-        viewModel.isFirstRegisterScreenButtonEnabled.observeAsState(initial = false).value
+        viewModel.isUserRegistrationFirstScreenButtonEnabled.observeAsState(initial = false).value
 
     val isLastScreenButtonEnabled =
-        viewModel.isLastRegisterScreenButtonEnabled.observeAsState(initial = false).value
+        viewModel.isUserRegistrationLastScreenButtonEnabled.observeAsState(initial = false).value
 
     Button(
         modifier = Modifier
