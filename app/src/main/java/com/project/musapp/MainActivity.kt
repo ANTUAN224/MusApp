@@ -19,7 +19,7 @@ import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.Na
 import com.project.musapp.core.feature.navigation.routing.RouteHub
 import com.project.musapp.feature.user.register.presentation.navigation.registrationNavGraph
 import com.project.musapp.feature.user.initialchecking.presentation.ui.UserInitialCheckingScreen
-import com.project.musapp.feature.user.initialchecking.presentation.viewModel.UserInitialCheckingViewModel
+import com.project.musapp.feature.user.initialchecking.presentation.viewModel.UserStateInitialCheckingViewModel
 import com.project.musapp.feature.user.initialmenu.presentation.ui.InitialMenuScreen
 import com.project.musapp.feature.user.login.presentation.ui.UserLoginModal
 import com.project.musapp.feature.user.login.presentation.viewmodel.UserLoginViewModel
@@ -31,7 +31,7 @@ import kotlin.getValue
 class MainActivity : ComponentActivity() {
     private val navigationViewModel: NavigationViewModel by viewModels() //Simplifica la obtención de una instancia de un ViewModel con lazy initialization.
 
-    private val userInitialCheckingViewModel: UserInitialCheckingViewModel by viewModels()
+    private val userStateInitialCheckingViewModel: UserStateInitialCheckingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +40,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MusAppTheme(darkTheme = false) {
                 val hasInternetConnection by
-                userInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
+                userStateInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
 
                 val hasActiveSession by
-                userInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
+                userStateInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
 
                 val currentNavItemIndex by
                 navigationViewModel.navItemIndex.observeAsState(initial = 0)
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 LaunchedEffect(Unit) {
-                    userInitialCheckingViewModel.onUserInitialChecking()
+                    userStateInitialCheckingViewModel.onUserInitialChecking()
                 }
 
                 Scaffold(bottomBar = {

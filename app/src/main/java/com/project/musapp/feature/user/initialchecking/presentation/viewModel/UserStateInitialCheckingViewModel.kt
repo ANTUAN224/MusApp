@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class UserInitialCheckingViewModel
+class UserStateInitialCheckingViewModel
 @Inject constructor(
     private val userConnectionVerificationUseCase: UserConnectionVerificationUseCase,
     private val userSessionVerificationUseCase: UserSessionVerificationUseCase

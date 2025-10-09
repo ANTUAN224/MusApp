@@ -1,6 +1,6 @@
 package com.project.musapp.feature.user.initialchecking.domain.repository
 
-interface UserInitialCheckingRepository {
+interface UserStateInitialCheckingRepository {
     fun verifyUserConnection() : Boolean
     fun verifyUserSession() : Boolean
 }

@@ -1,7 +1,7 @@
 package com.project.musapp.feature.user.initialchecking.di.module
 
-import com.project.musapp.feature.user.initialchecking.data.repository.UserInitialCheckingRepositoryImp
-import com.project.musapp.feature.user.initialchecking.domain.repository.UserInitialCheckingRepository
+import com.project.musapp.feature.user.initialchecking.data.repository.UserStateStateInitialCheckingRepositoryImp
+import com.project.musapp.feature.user.initialchecking.domain.repository.UserStateInitialCheckingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class UserConnectionVerificationRepositoryModule {
     @Binds //Alternativa a @Provides si la interfaz o clase abstracta sólo tiene una implementación o clase hija respectivamente.
     @Singleton
-    abstract fun bind(userRegisterRepositoryImp: UserInitialCheckingRepositoryImp): UserInitialCheckingRepository
+    abstract fun bind(userRegisterRepositoryImp: UserStateStateInitialCheckingRepositoryImp): UserStateInitialCheckingRepository
 }

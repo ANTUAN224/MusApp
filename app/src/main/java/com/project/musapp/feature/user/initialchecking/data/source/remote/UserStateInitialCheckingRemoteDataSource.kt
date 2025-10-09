@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class UserInitialCheckingRemoteDataSource @Inject constructor(@ApplicationContext private val context: Context) {
+class UserStateInitialCheckingRemoteDataSource @Inject constructor(@ApplicationContext private val context: Context) {
     fun verifyInternetConnection(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
