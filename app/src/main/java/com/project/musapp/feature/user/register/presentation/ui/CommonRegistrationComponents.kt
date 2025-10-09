@@ -23,7 +23,7 @@ import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegis
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterTopBar(onReturnButtonPress: () -> Unit) {
+fun UserRegistrationTopBar(onReturnButtonPress: () -> Unit) {
     TopAppBar(
         navigationIcon = {
             IconButton(onClick = { onReturnButtonPress() }) {
@@ -40,12 +40,12 @@ fun RegisterTopBar(onReturnButtonPress: () -> Unit) {
 }
 
 @Composable
-fun RegisterScreenTitle(title: String) {
+fun UserRegistrationScreenBodyTitle(title: String) {
     Text(text = title, color = Color.Black, fontSize = 40.sp, fontWeight = FontWeight.Bold)
 }
 
 @Composable
-fun RegisterScreenButton(
+fun UserRegistrationScreenBodyButton(
     content: String, viewModel: UserRegisterViewModel, onButtonClick: () -> Unit
 ) {
     val isFirstScreenButtonEnabled =

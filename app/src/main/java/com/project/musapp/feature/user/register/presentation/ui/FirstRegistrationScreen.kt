@@ -36,7 +36,7 @@ fun FirstRegisterScreen(
     onFirstRegisterButtonPress: () -> Unit
 ) {
     Scaffold(topBar = {
-        RegisterTopBar(
+        UserRegistrationTopBar(
             onReturnButtonPress = onReturnButtonPress
         )
     }, bottomBar = {}) { innerPadding ->
@@ -66,7 +66,7 @@ fun FirstRegisterBody(
                 verticalBias = 0.2f
             }
         ) {
-            RegisterScreenTitle(title = "Primera parte")
+            UserRegistrationScreenBodyTitle(title = "Primera parte")
         }
 
         Box(
@@ -111,7 +111,7 @@ fun FirstRegisterBody(
             bottom.linkTo(parent.bottom)
             verticalBias = 0.2f
         }) {
-            RegisterScreenButton(
+            UserRegistrationScreenBodyButton(
                 content = "Siguiente", viewModel = viewModel
             ) {
                 onFirstRegisterButtonPress()
