@@ -13,18 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.project.musapp.core.feature.navigation.item.presentation.ui.GlobalCircularProgressIndicator
 
 @Composable
 fun UserInitialCheckingScreen(
     hasInternetConnection: Boolean?
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(60.dp),
-            color = Color(color = 0xFF12AA7A),
-            trackColor = Color.LightGray,
-            strokeWidth = 5.dp
-        )
+        GlobalCircularProgressIndicator()
         if (hasInternetConnection == false) ConnectionVerificationModal()
     }
 }
