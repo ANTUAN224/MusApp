@@ -22,6 +22,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,7 @@ import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegis
 fun LastRegisterScreen(
     viewModel: UserRegisterViewModel,
     context: Context,
-    title : String,
+    title: String,
     onReturnButtonPress: () -> Unit,
     onLastRegisterButtonPress: () -> Unit
 ) {
@@ -49,9 +50,7 @@ fun LastRegisterScreen(
         )
     }, bottomBar = {}) { innerPadding ->
         UserRegistrationLastScreenBody(
-            viewModel = viewModel,
-            title = title,
-            context = context
+            viewModel = viewModel, title = title, context = context
         ) {
             onLastRegisterButtonPress()
         }
@@ -61,7 +60,7 @@ fun LastRegisterScreen(
 @Composable
 fun UserRegistrationLastScreenBody(
     viewModel: UserRegisterViewModel,
-    title : String,
+    title: String,
     context: Context,
     onLastRegisterButtonPress: () -> Unit
 ) {
@@ -77,8 +76,7 @@ fun UserRegistrationLastScreenBody(
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
                 verticalBias = 0.2f
-            }
-        ) {
+            }) {
             UserRegistrationScreenBodyTitle(title = title)
         }
 
@@ -89,8 +87,7 @@ fun UserRegistrationLastScreenBody(
                 top.linkTo(lastScreenTitleBox.bottom)
                 bottom.linkTo(parent.bottom)
                 verticalBias = 0.1f
-            }
-        ) {
+            }) {
             EmailTextField(viewModel = viewModel)
         }
 
@@ -102,8 +99,7 @@ fun UserRegistrationLastScreenBody(
                 top.linkTo(emailBox.bottom)
                 bottom.linkTo(parent.bottom)
                 verticalBias = 0.1f
-            }
-        ) {
+            }) {
             PasswordTextField(viewModel = viewModel)
         }
 
@@ -147,8 +143,8 @@ fun UserRegistrationLastScreenBody(
 
 @Composable
 fun EmailTextField(viewModel: UserRegisterViewModel) {
-    val email = viewModel.email.observeAsState(initial = "").value
-    val emailError = viewModel.emailError.observeAsState(initial = "").value
+    val email by viewModel.email.observeAsState(initial = "")
+    val emailError by viewModel.emailError.observeAsState(initial = "")
 
     TextField(
         label = { Text(text = "Correo electrónico*") },
@@ -167,9 +163,9 @@ fun EmailTextField(viewModel: UserRegisterViewModel) {
 
 @Composable
 fun PasswordTextField(viewModel: UserRegisterViewModel) {
-    val password = viewModel.password.observeAsState(initial = "").value
-    val passwordError = viewModel.passwordError.observeAsState(initial = "").value
-    val showPassword = viewModel.showPassword.observeAsState(initial = false).value
+    val password by viewModel.password.observeAsState(initial = "")
+    val passwordError by viewModel.passwordError.observeAsState(initial = "")
+    val showPassword by viewModel.showPassword.observeAsState(initial = false)
 
     TextField(
         label = { Text(text = "Contraseña*") },
@@ -177,7 +173,10 @@ fun PasswordTextField(viewModel: UserRegisterViewModel) {
         value = password,
         onValueChange = { viewModel.onPasswordChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation =
+            if (showPassword) VisualTransformation.None
+            else
+                PasswordVisualTransformation(),
         isError = passwordError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
@@ -204,8 +203,9 @@ fun PasswordTextField(viewModel: UserRegisterViewModel) {
 
 @Composable
 fun ProfileImage(viewModel: UserRegisterViewModel, context: Context) {
-    val profileImagePath =
-        viewModel.imagePath.observeAsState(initial = "android.resource://${context.packageName}/${R.drawable.default_image}".toUri()).value
+    val profileImagePath by viewModel.imagePath.observeAsState(
+        initial = ("android.resource://${context.packageName}/" + "${R.drawable.default_image}").toUri()
+    )
 
     AsyncImage(
         model = profileImagePath,
@@ -218,9 +218,10 @@ fun ProfileImage(viewModel: UserRegisterViewModel, context: Context) {
 
 @Composable
 fun ImageSelectionButton(viewModel: UserRegisterViewModel, context: Context) {
-    val isProfileImageSelected = viewModel.isImageSelected.observeAsState(initial = false).value
-    val isImageSelectionButtonPressed =
-        viewModel.isImageSelectionButtonPressed.observeAsState(initial = false).value
+    val isProfileImageSelected by viewModel.isImageSelected.observeAsState(initial = false)
+    val isImageSelectionButtonPressed by viewModel.isImageSelectionButtonPressed.observeAsState(
+        initial = false
+    )
 
     val imageSelectionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -230,16 +231,12 @@ fun ImageSelectionButton(viewModel: UserRegisterViewModel, context: Context) {
 
     if (!isProfileImageSelected) {
         Button(
-            modifier = Modifier.height(70.dp),
-            onClick = {
+            modifier = Modifier.height(70.dp), onClick = {
                 imageSelectionLauncher.launch(input = "image/*")
                 viewModel.onImageSelectionButtonPress()
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFC0CB),
-                contentColor = Color.DarkGray
-            ),
-            enabled = !isImageSelectionButtonPressed
+            }, colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFC0CB), contentColor = Color.DarkGray
+            ), enabled = !isImageSelectionButtonPressed
         ) {
             Text(text = "Añadir imagen")
         }
@@ -248,8 +245,7 @@ fun ImageSelectionButton(viewModel: UserRegisterViewModel, context: Context) {
             modifier = Modifier.height(70.dp),
             onClick = { viewModel.onImageDeletion(context = context) },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFC0CB),
-                contentColor = Color.DarkGray
+                containerColor = Color(0xFFFFC0CB), contentColor = Color.DarkGray
             )
         ) {
             Text(text = "Eliminar imagen")
