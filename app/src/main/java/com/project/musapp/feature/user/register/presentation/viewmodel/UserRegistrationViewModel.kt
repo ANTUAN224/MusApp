@@ -208,7 +208,7 @@ class UserRegisterViewModel @Inject constructor(
                 email = email.value!!,
                 password = password.value!!
             ) && registerUserUseCase(
-                registerUserModel = UserRegistrationModel(
+                userRegistrationModel = UserRegistrationModel(
                     name = name.value!!,
                     surnames = surnames.value!!,
                     birthdate = LocalDate.parse(birthdateText.value!!),
