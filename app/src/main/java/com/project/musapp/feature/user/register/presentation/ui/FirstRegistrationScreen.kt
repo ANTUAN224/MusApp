@@ -165,9 +165,9 @@ fun SurnameTextField(viewModel: UserRegisterViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BirthdateTextField(viewModel: UserRegisterViewModel) {
-    val birthdateText = viewModel.birthdateText.observeAsState(initial = "").value
-    val birthdateTextError = viewModel.birthdateError.observeAsState(initial = "").value
-    val showDatePickerDialog = viewModel.showDatePickerDialog.observeAsState(initial = false).value
+    val birthdateText by viewModel.birthdateText.observeAsState(initial = "")
+    val birthdateTextError by viewModel.birthdateError.observeAsState(initial = "")
+    val showDatePickerDialog by viewModel.showDatePickerDialog.observeAsState(initial = false)
 
     val datePickerState = rememberDatePickerState()
 
