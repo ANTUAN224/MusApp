@@ -150,7 +150,7 @@ fun SurnameTextField(viewModel: UserRegisterViewModel) {
         singleLine = true,
         value = surnames,
         onValueChange = { viewModel.onSurnamesChange(it) },
-        isError = surnamesError.isNotBlank() == true,
+        isError = surnamesError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
@@ -175,7 +175,7 @@ fun BirthdateTextField(viewModel: UserRegisterViewModel) {
         ) else "",
         onValueChange = {},
         readOnly = true,
-        isError = birthdateTextError.isNotBlank() == true,
+        isError = birthdateTextError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(

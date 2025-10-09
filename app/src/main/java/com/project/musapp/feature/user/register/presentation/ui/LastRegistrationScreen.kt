@@ -153,7 +153,7 @@ fun EmailTextField(viewModel: UserRegisterViewModel) {
         value = email,
         onValueChange = { viewModel.onEmailChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        isError = emailError.isNotBlank() == true,
+        isError = emailError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
