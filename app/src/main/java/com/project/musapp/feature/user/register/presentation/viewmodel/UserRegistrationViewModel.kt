@@ -147,6 +147,7 @@ class UserRegisterViewModel @Inject constructor(
         _emailError.value = when {
             email.isBlank() -> "El email no puede estar en blanco."
             !RegisterOrLoginRegexHelper.emailRegex.matches(email) -> "El email no tiene un formato correcto."
+            email.length > 30 -> "El email no puede tener más de 30 caracteres."
             else -> ""
         }
     }
