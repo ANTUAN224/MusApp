@@ -31,7 +31,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun FirstRegisterScreen(
+fun UserRegistrationFirstScreen(
     viewModel: UserRegisterViewModel,
     title : String,
     onReturnButtonPress: () -> Unit,
@@ -42,7 +42,7 @@ fun FirstRegisterScreen(
             onReturnButtonPress = onReturnButtonPress
         )
     }, bottomBar = {}) { innerPadding ->
-        FirstRegisterBody(
+        UserRegistrationFirstScreenBody(
             viewModel = viewModel,
             title = title,
             onFirstRegisterButtonPress = onFirstRegisterButtonPress
@@ -51,7 +51,7 @@ fun FirstRegisterScreen(
 }
 
 @Composable
-fun FirstRegisterBody(
+fun UserRegistrationFirstScreenBody(
     viewModel: UserRegisterViewModel,
     title : String,
     onFirstRegisterButtonPress: () -> Unit

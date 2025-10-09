@@ -11,7 +11,7 @@ import androidx.navigation.navigation
 import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.core.feature.navigation.routing.RouteHub
 import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegisterViewModel
-import com.project.musapp.feature.user.register.presentation.ui.FirstRegisterScreen
+import com.project.musapp.feature.user.register.presentation.ui.UserRegistrationFirstScreen
 import com.project.musapp.feature.user.register.presentation.ui.LastRegisterScreen
 
 fun NavGraphBuilder.registrationNavGraph(
@@ -24,7 +24,7 @@ fun NavGraphBuilder.registrationNavGraph(
         composable<RouteHub.Registration.StepOne> { navBackStackEntry ->
             val userRegisterViewModel: UserRegisterViewModel =
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Creo una instancia de ViewModel cuyo scope es el del nav graph actual
-            FirstRegisterScreen(
+            UserRegistrationFirstScreen(
                 viewModel = userRegisterViewModel,
                 title = title,
                 onReturnButtonPress = { navController.popBackStack() }) {
