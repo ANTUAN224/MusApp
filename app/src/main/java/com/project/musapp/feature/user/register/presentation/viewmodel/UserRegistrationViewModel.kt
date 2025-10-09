@@ -163,6 +163,7 @@ class UserRegisterViewModel @Inject constructor(
             password.isBlank() -> "La contraseña no pueden estar en blanco."
             password.length < 8 -> "La contraseña debe tener al menos 8 caracteres."
             !RegisterOrLoginRegexHelper.passwordRegex.matches(password) -> "La contraseña no tiene un formato correcto."
+            password.length > 30 -> "La contraseña no puede tener más de 30 caracteres."
             else -> ""
         }
     }
