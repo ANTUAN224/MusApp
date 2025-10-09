@@ -103,6 +103,7 @@ class UserRegisterViewModel @Inject constructor(
         _nameError.value = when {
             name.isBlank() -> "El nombre no puede estar en blanco."
             !RegisterOrLoginRegexHelper.nameOrSurnameRegex.matches(name) -> "El nombre no tiene un formato correcto."
+            name.length > 40 -> "El nombre no puede tener más de 40 caracteres."
             else -> ""
         }
     }
@@ -111,6 +112,7 @@ class UserRegisterViewModel @Inject constructor(
         _surnamesError.value = when {
             surnames.isBlank() -> "Los apellidos no pueden estar en blanco."
             !RegisterOrLoginRegexHelper.nameOrSurnameRegex.matches(surnames) -> "Los apellidos no tienen un formato correcto."
+            surnames.length > 70 -> "Los apellidos no pueden tener más de 70 caracteres."
             else -> ""
         }
     }
