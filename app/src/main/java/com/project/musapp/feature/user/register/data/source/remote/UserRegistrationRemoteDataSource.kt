@@ -6,7 +6,9 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.project.musapp.core.helper.ImageConversionHelper
 import com.project.musapp.feature.user.register.data.source.remote.client.UserRegistrationApiClient
+import com.project.musapp.feature.user.register.domain.model.UserRegistrationModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -46,19 +48,19 @@ class UserRegistrationRemoteDataSource @Inject constructor(
         return userProfileImageUrl.toString()
     }
 
-//    suspend fun insertUser(registerUserModel: RegisterUserModel): Boolean {
-//        return registerUserApiClient
-//            .insertUser(
-//                headerCompanionValue = "Bearer ${getFirebaseUserToken()}",
-//                registerUserRemoteDTO = registerUserModel.toRemoteDTO(
-//                    userProfileImageUrl =
-//                        uploadUserProfileImageToFirebaseStorage(
-//                            imageData = ImageConversionHelper.toByteArray(
-//                                context = context,
-//                                imagePath = registerUserModel.imagePath
-//                            )
-//                        )
-//                )
-//            ).isSuccessful
-//    }
+    suspend fun insertUser(userRegistrationModel: UserRegistrationModel): Boolean {
+        return registerUserApiClient
+            .insertUser(
+                headerCompanionValue = "Bearer ${getFirebaseUserToken()}",
+                registerUserRemoteDTO = userRegistrationModel.toRemoteDTO(
+                    userProfileImageUrl =
+                        uploadUserProfileImageToFirebaseStorage(
+                            imageData = ImageConversionHelper.toByteArray(
+                                context = context,
+                                imagePath = userRegistrationModel.imagePath
+                            )
+                        )
+                )
+            ).isSuccessful
+    }
 }

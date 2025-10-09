@@ -1,7 +1,7 @@
 package com.project.musapp.feature.user.register.data.repository
 
 import com.project.musapp.feature.user.register.data.source.remote.UserRegistrationRemoteDataSource
-import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
+import com.project.musapp.feature.user.register.domain.model.UserRegistrationModel
 import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository
 import javax.inject.Inject
 
@@ -16,13 +16,8 @@ class RegisterUserRepositoryImp @Inject constructor(
         )
 
     override suspend fun insertUser(
-        userRegisterModel: RegisterUserModel
+        userRegisterModel: UserRegistrationModel
     ): Boolean {
-//        return remoteDataSource.insertUser(registerUserModel = userRegisterModel)
-////                &&
-////                localDataSource.insertUser(
-////                    userRegisterModel = userRegisterModel
-////                )
-        return true
+        return remoteDataSource.insertUser(userRegistrationModel = userRegisterModel)
     }
 }

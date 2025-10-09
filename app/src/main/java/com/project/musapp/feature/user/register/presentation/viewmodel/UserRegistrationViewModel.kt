@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.R
 import com.project.musapp.feature.user.helper.RegisterOrLoginRegexHelper
-import com.project.musapp.feature.user.register.domain.model.RegisterUserModel
+import com.project.musapp.feature.user.register.domain.model.UserRegistrationModel
 import com.project.musapp.feature.user.register.domain.usecase.CreateFirebaseUserUseCase
 import com.project.musapp.feature.user.register.domain.usecase.RegisterUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -208,7 +208,7 @@ class UserRegisterViewModel @Inject constructor(
                 email = email.value!!,
                 password = password.value!!
             ) && registerUserUseCase(
-                registerUserModel = RegisterUserModel(
+                registerUserModel = UserRegistrationModel(
                     name = name.value!!,
                     surnames = surnames.value!!,
                     birthdate = LocalDate.parse(birthdateText.value!!),
