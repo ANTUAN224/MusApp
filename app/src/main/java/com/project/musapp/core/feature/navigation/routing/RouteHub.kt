@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class RouteHub {
     @Serializable
-    object UserInitialChecking : RouteHub()
+    object UserStateInitialChecking : RouteHub()
 
     @Serializable
     object InitialMenu : RouteHub()
@@ -22,13 +22,10 @@ sealed class RouteHub {
     @Serializable
     object Home : RouteHub() {
         @Serializable
-        object RecentVisitedArtworkShowing : RouteHub() {
+        object FavoriteArtworkShowing : RouteHub() {
             @Serializable
             object Information : RouteHub()
         }
-
-        @Serializable
-        object AnyArtworkSearched : RouteHub()
 
         @Serializable
         object ArtworkInformation : RouteHub()

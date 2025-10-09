@@ -73,11 +73,11 @@ class MainActivity : ComponentActivity() {
                                 navigationViewModel.onHomeScreenNavigation()
 
                                 navController.navigate(route = RouteHub.Home) {
-                                    popUpTo<RouteHub.UserInitialChecking> { inclusive = true }
+                                    popUpTo<RouteHub.UserStateInitialChecking> { inclusive = true }
                                 }
                             } else {
                                 navController.navigate(route = RouteHub.InitialMenu) {
-                                    popUpTo<RouteHub.UserInitialChecking> { inclusive = true }
+                                    popUpTo<RouteHub.UserStateInitialChecking> { inclusive = true }
                                 }
                             }
                         }
@@ -85,9 +85,9 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = RouteHub.UserInitialChecking
+                        startDestination = RouteHub.UserStateInitialChecking
                     ) {
-                        composable<RouteHub.UserInitialChecking> {
+                        composable<RouteHub.UserStateInitialChecking> {
                             UserInitialCheckingScreen(
                                 hasInternetConnection = hasInternetConnection
                             )
