@@ -125,7 +125,8 @@ class MainActivity : ComponentActivity() {
                         registrationNavGraph(
                             navController,
                             context = applicationContext,
-                            navigationViewModel = navigationViewModel
+                            navigationViewModel = navigationViewModel,
+                            title = "Registro de usuario"
                         )
                     }
                 }

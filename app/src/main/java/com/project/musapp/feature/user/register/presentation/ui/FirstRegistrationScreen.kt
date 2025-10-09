@@ -33,6 +33,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FirstRegisterScreen(
     viewModel: UserRegisterViewModel,
+    title : String,
     onReturnButtonPress: () -> Unit,
     onFirstRegisterButtonPress: () -> Unit
 ) {
@@ -43,6 +44,7 @@ fun FirstRegisterScreen(
     }, bottomBar = {}) { innerPadding ->
         FirstRegisterBody(
             viewModel = viewModel,
+            title = title,
             onFirstRegisterButtonPress = onFirstRegisterButtonPress
         )
     }
@@ -51,6 +53,7 @@ fun FirstRegisterScreen(
 @Composable
 fun FirstRegisterBody(
     viewModel: UserRegisterViewModel,
+    title : String,
     onFirstRegisterButtonPress: () -> Unit
 ) {
     ConstraintLayout(
@@ -67,7 +70,7 @@ fun FirstRegisterBody(
                 verticalBias = 0.2f
             }
         ) {
-            UserRegistrationScreenBodyTitle(title = "Primera parte")
+            UserRegistrationScreenBodyTitle(title = title)
         }
 
         Box(

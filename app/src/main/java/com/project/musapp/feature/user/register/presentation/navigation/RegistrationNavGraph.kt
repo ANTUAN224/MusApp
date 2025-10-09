@@ -17,6 +17,7 @@ import com.project.musapp.feature.user.register.presentation.ui.LastRegisterScre
 fun NavGraphBuilder.registrationNavGraph(
     navController: NavController,
     context: Context,
+    title : String,
     navigationViewModel: NavigationViewModel
 ) {
     navigation<RouteHub.Registration>(startDestination = RouteHub.Registration.StepOne) {
@@ -25,6 +26,7 @@ fun NavGraphBuilder.registrationNavGraph(
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Creo una instancia de ViewModel cuyo scope es el del nav graph actual
             FirstRegisterScreen(
                 viewModel = userRegisterViewModel,
+                title = title,
                 onReturnButtonPress = { navController.popBackStack() }) {
                 navController.navigate(route = RouteHub.Registration.StepTwo)
             }
@@ -39,6 +41,7 @@ fun NavGraphBuilder.registrationNavGraph(
             LastRegisterScreen(
                 viewModel = userRegisterViewModel,
                 context = context,
+                title = title,
                 onReturnButtonPress = { navController.popBackStack() }) {
                 userRegisterViewModel.onLastRegisterScreenButtonPress()
 

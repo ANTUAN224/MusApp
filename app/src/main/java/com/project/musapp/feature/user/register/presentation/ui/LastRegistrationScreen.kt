@@ -39,6 +39,7 @@ import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegis
 fun LastRegisterScreen(
     viewModel: UserRegisterViewModel,
     context: Context,
+    title : String,
     onReturnButtonPress: () -> Unit,
     onLastRegisterButtonPress: () -> Unit
 ) {
@@ -49,6 +50,7 @@ fun LastRegisterScreen(
     }, bottomBar = {}) { innerPadding ->
         LastRegisterBody(
             viewModel = viewModel,
+            title = title,
             context = context
         ) {
             onLastRegisterButtonPress()
@@ -59,6 +61,7 @@ fun LastRegisterScreen(
 @Composable
 fun LastRegisterBody(
     viewModel: UserRegisterViewModel,
+    title : String,
     context: Context,
     onLastRegisterButtonPress: () -> Unit
 ) {
@@ -76,7 +79,7 @@ fun LastRegisterBody(
                 verticalBias = 0.2f
             }
         ) {
-            UserRegistrationScreenBodyTitle(title = "Segunda parte")
+            UserRegistrationScreenBodyTitle(title = title)
         }
 
         Box(
