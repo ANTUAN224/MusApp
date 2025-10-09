@@ -35,7 +35,7 @@ fun UserRegistrationTopBar(onReturnButtonPress: () -> Unit) {
                 )
             }
         },
-        title = { Text(text = "            Registro de cuenta", color = Color.White) },
+        title = { Text(text = "            Registro de usuario", color = Color.White) },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
     )
 }
