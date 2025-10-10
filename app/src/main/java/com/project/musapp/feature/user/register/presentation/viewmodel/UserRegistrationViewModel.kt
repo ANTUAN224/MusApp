@@ -211,10 +211,8 @@ class UserRegistrationViewModel @Inject constructor(
                 userRegistrationModel = UserRegistrationModel(
                     name = name.value!!,
                     surnames = surnames.value!!,
-                    birthdate = LocalDate.parse(birthdateText.value!!),
-                    email = email.value!!,
-                    password = password.value!!,
-                    imagePath = imagePath.value!!
+                    birthdateText = birthdateText.value!!,
+                    email = email.value!!
                 )
             )
             withContext(context = Dispatchers.Main) {
