@@ -1,7 +1,7 @@
 package com.project.musapp.feature.home.user.register.domain.useCase
 
-import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository
-import com.project.musapp.feature.user.register.domain.usecase.CreateFirebaseUserUseCase
+import com.project.musapp.feature.user.registration.domain.repository.UserRegisterRepository
+import com.project.musapp.feature.user.registration.domain.usecase.CreateFirebaseUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK

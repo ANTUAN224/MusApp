@@ -17,7 +17,7 @@ import com.google.firebase.FirebaseApp
 import com.project.musapp.core.feature.navigation.item.presentation.ui.MusAppNavigationBar
 import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.core.feature.navigation.routing.RouteHub
-import com.project.musapp.feature.user.register.presentation.navigation.registrationNavGraph
+import com.project.musapp.feature.user.registration.presentation.navigation.registrationNavGraph
 import com.project.musapp.feature.user.initialchecking.presentation.ui.UserInitialCheckingScreen
 import com.project.musapp.feature.user.initialchecking.presentation.viewModel.UserStateInitialCheckingViewModel
 import com.project.musapp.feature.user.initialmenu.presentation.ui.InitialMenuScreen

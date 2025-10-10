@@ -1,7 +1,7 @@
 package com.project.musapp.core.di.module
 
 import com.project.musapp.feature.user.login.data.source.remote.client.UserLoginApiClient
-import com.project.musapp.feature.user.register.data.source.remote.client.UserRegistrationApiClient
+import com.project.musapp.feature.user.registration.data.source.remote.client.UserRegistrationApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
