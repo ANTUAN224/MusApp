@@ -1,13 +1,19 @@
 package com.project.musapp.feature.user.register.domain.model
 
-import android.net.Uri
+import com.project.musapp.feature.user.register.data.model.dto.UserRegistrationDTO
 import java.time.LocalDate
 
 class UserRegistrationModel(
     val name: String,
     val surnames: String,
-    val birthdate: LocalDate,
-    val email: String,
-    val password: String,
-    val imagePath: Uri
+    val birthdateText: String,
+    val email: String
 )
+
+fun UserRegistrationModel.toDTO(): UserRegistrationDTO =
+    UserRegistrationDTO(
+        name = name,
+        surnames = surnames,
+        birthdate = birthdateText,
+        email = email
+    )
