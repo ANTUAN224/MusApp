@@ -5,7 +5,7 @@ import com.project.musapp.feature.user.register.domain.model.UserRegistrationMod
 import com.project.musapp.feature.user.register.domain.repository.UserRegisterRepository
 import javax.inject.Inject
 
-class RegisterUserRepositoryImp @Inject constructor(
+class UserRegistrationRepositoryImp @Inject constructor(
     private val remoteDataSource: UserRegistrationRemoteDataSource
 ) :
     UserRegisterRepository {
