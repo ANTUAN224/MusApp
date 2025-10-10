@@ -170,7 +170,7 @@ class UserRegisterViewModel @Inject constructor(
 
     private fun checkUserRegistrationLastScreenErrors() {
         _isUserRegistrationLastScreenButtonEnabled.value =
-            emailError.value?.isBlank() == true && passwordError.value?.isBlank() == true
+            emailError.value?.isBlank() ?: false && passwordError.value?.isBlank() ?: false
     }
 
     fun setSelectedImage(imagePathSelected: Uri?) {
