@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UserRegisterRepositoryModule {
+abstract class UserRegistrationRepositoryModule {
     @Binds //Se utiliza cuando la interfaz o clase abstracta sólo tiene una implementación o clase hija respectivamente.
     @Singleton
     abstract fun bind(userRegistrationRepositoryImp: UserRegistrationRepositoryImp): UserRegisterRepository
