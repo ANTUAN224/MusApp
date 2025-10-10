@@ -24,7 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegisterViewModel
+import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegistrationViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun UserRegistrationFirstScreen(
-    viewModel: UserRegisterViewModel,
+    viewModel: UserRegistrationViewModel,
     title : String,
     onReturnButtonPress: () -> Unit,
     onFirstRegisterButtonPress: () -> Unit
@@ -52,7 +52,7 @@ fun UserRegistrationFirstScreen(
 
 @Composable
 fun UserRegistrationFirstScreenBody(
-    viewModel: UserRegisterViewModel,
+    viewModel: UserRegistrationViewModel,
     title : String,
     onFirstRegisterButtonPress: () -> Unit
 ) {
@@ -125,7 +125,7 @@ fun UserRegistrationFirstScreenBody(
 }
 
 @Composable
-fun NameTextField(viewModel: UserRegisterViewModel) {
+fun NameTextField(viewModel: UserRegistrationViewModel) {
     val name by viewModel.name.observeAsState(initial = "")
     val nameError by viewModel.nameError.observeAsState(initial = "")
 
@@ -144,7 +144,7 @@ fun NameTextField(viewModel: UserRegisterViewModel) {
 }
 
 @Composable
-fun SurnameTextField(viewModel: UserRegisterViewModel) {
+fun SurnameTextField(viewModel: UserRegistrationViewModel) {
     val surnames by viewModel.surnames.observeAsState(initial = "")
     val surnamesError by viewModel.surnamesError.observeAsState(initial = "")
 
@@ -164,7 +164,7 @@ fun SurnameTextField(viewModel: UserRegisterViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BirthdateTextField(viewModel: UserRegisterViewModel) {
+fun BirthdateTextField(viewModel: UserRegistrationViewModel) {
     val birthdateText by viewModel.birthdateText.observeAsState(initial = "")
     val birthdateTextError by viewModel.birthdateError.observeAsState(initial = "")
     val showDatePickerDialog by viewModel.showDatePickerDialog.observeAsState(initial = false)

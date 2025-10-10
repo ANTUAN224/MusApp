@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegisterViewModel
+import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegistrationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +47,7 @@ fun UserRegistrationScreenBodyTitle(title: String) {
 
 @Composable
 fun UserRegistrationScreenBodyButton(
-    content: String, viewModel: UserRegisterViewModel, onButtonClick: () -> Unit
+    content: String, viewModel: UserRegistrationViewModel, onButtonClick: () -> Unit
 ) {
     val isFirstScreenButtonEnabled by
         viewModel.isUserRegistrationFirstScreenButtonEnabled.observeAsState(initial = false)

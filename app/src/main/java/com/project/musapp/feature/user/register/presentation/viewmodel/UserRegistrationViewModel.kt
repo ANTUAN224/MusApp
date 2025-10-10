@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class UserRegisterViewModel @Inject constructor(
+class UserRegistrationViewModel @Inject constructor(
     private val createFirebaseUserUseCase: CreateFirebaseUserUseCase,
     private val registerUserUseCase: RegisterUserUseCase,
     @ApplicationContext private val context: Context

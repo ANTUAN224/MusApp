@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.core.feature.navigation.routing.RouteHub
-import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegisterViewModel
+import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegistrationViewModel
 import com.project.musapp.feature.user.register.presentation.ui.UserRegistrationFirstScreen
 import com.project.musapp.feature.user.register.presentation.ui.LastRegisterScreen
 
@@ -22,10 +22,10 @@ fun NavGraphBuilder.registrationNavGraph(
 ) {
     navigation<RouteHub.Registration>(startDestination = RouteHub.Registration.StepOne) {
         composable<RouteHub.Registration.StepOne> { navBackStackEntry ->
-            val userRegisterViewModel: UserRegisterViewModel =
+            val userRegistrationViewModel: UserRegistrationViewModel =
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Creo una instancia de ViewModel cuyo scope es el del nav graph actual
             UserRegistrationFirstScreen(
-                viewModel = userRegisterViewModel,
+                viewModel = userRegistrationViewModel,
                 title = title,
                 onReturnButtonPress = { navController.popBackStack() }) {
                 navController.navigate(route = RouteHub.Registration.StepTwo)
@@ -33,17 +33,17 @@ fun NavGraphBuilder.registrationNavGraph(
         }
 
         composable<RouteHub.Registration.StepTwo> { navBackStackEntry ->
-            val userRegisterViewModel: UserRegisterViewModel =
+            val userRegistrationViewModel: UserRegistrationViewModel =
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Obtengo una instancia de ViewModel cuyo scope es el del nav graph actual
 
-            val navigateToHome by userRegisterViewModel.navigateToHome.observeAsState(initial = false)
+            val navigateToHome by userRegistrationViewModel.navigateToHome.observeAsState(initial = false)
 
             LastRegisterScreen(
-                viewModel = userRegisterViewModel,
+                viewModel = userRegistrationViewModel,
                 context = context,
                 title = title,
                 onReturnButtonPress = { navController.popBackStack() }) {
-                userRegisterViewModel.onLastRegisterScreenButtonPress()
+                userRegistrationViewModel.onLastRegisterScreenButtonPress()
 
                 if (navigateToHome) {
                     navigationViewModel.onHomeScreenNavigation()

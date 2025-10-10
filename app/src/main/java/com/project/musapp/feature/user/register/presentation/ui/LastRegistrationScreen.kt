@@ -34,11 +34,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.project.musapp.R
-import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegisterViewModel
+import com.project.musapp.feature.user.register.presentation.viewmodel.UserRegistrationViewModel
 
 @Composable
 fun LastRegisterScreen(
-    viewModel: UserRegisterViewModel,
+    viewModel: UserRegistrationViewModel,
     context: Context,
     title: String,
     onReturnButtonPress: () -> Unit,
@@ -59,7 +59,7 @@ fun LastRegisterScreen(
 
 @Composable
 fun UserRegistrationLastScreenBody(
-    viewModel: UserRegisterViewModel,
+    viewModel: UserRegistrationViewModel,
     title: String,
     context: Context,
     onLastRegisterButtonPress: () -> Unit
@@ -142,7 +142,7 @@ fun UserRegistrationLastScreenBody(
 }
 
 @Composable
-fun EmailTextField(viewModel: UserRegisterViewModel) {
+fun EmailTextField(viewModel: UserRegistrationViewModel) {
     val email by viewModel.email.observeAsState(initial = "")
     val emailError by viewModel.emailError.observeAsState(initial = "")
 
@@ -162,7 +162,7 @@ fun EmailTextField(viewModel: UserRegisterViewModel) {
 }
 
 @Composable
-fun PasswordTextField(viewModel: UserRegisterViewModel) {
+fun PasswordTextField(viewModel: UserRegistrationViewModel) {
     val password by viewModel.password.observeAsState(initial = "")
     val passwordError by viewModel.passwordError.observeAsState(initial = "")
     val showPassword by viewModel.showPassword.observeAsState(initial = false)
@@ -202,7 +202,7 @@ fun PasswordTextField(viewModel: UserRegisterViewModel) {
 }
 
 @Composable
-fun ProfileImage(viewModel: UserRegisterViewModel, context: Context) {
+fun ProfileImage(viewModel: UserRegistrationViewModel, context: Context) {
     val profileImagePath by viewModel.imagePath.observeAsState(
         initial = ("android.resource://${context.packageName}/" + "${R.drawable.default_image}").toUri()
     )
@@ -217,7 +217,7 @@ fun ProfileImage(viewModel: UserRegisterViewModel, context: Context) {
 }
 
 @Composable
-fun ImageSelectionButton(viewModel: UserRegisterViewModel, context: Context) {
+fun ImageSelectionButton(viewModel: UserRegistrationViewModel, context: Context) {
     val isProfileImageSelected by viewModel.isImageSelected.observeAsState(initial = false)
     val isImageSelectionButtonPressed by viewModel.isImageSelectionButtonPressed.observeAsState(
         initial = false
