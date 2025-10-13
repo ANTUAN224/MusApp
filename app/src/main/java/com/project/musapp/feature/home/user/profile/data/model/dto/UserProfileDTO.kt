@@ -4,5 +4,6 @@ data class UserProfileDTO(
     val name: String,
     val surnames: String,
     val birthdate : String,
-    val email : String
+    val email : String,
+    val firebaseStorageProfileImageUrl : String
 )
