@@ -34,7 +34,7 @@ class UserRegistrationRemoteDataSource @Inject constructor(
         val firebaseUserTokenResult =
             Firebase.auth.currentUser!!.getIdToken(true).await()
 
-        return firebaseUserTokenResult.token.toString()
+        return firebaseUserTokenResult.token!!
     }
 
     private suspend fun uploadUserProfileImageToFirebaseStorage(imageData: ByteArray): String {
