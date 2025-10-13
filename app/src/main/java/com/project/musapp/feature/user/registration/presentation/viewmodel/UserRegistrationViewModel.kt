@@ -212,7 +212,8 @@ class UserRegistrationViewModel @Inject constructor(
                     name = name.value!!,
                     surnames = surnames.value!!,
                     birthdateText = birthdateText.value!!,
-                    email = email.value!!
+                    email = email.value!!,
+                    profileImageLocalPath = imagePath.value!!
                 )
             )
             withContext(context = Dispatchers.Main) {
