@@ -8,7 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserRegistrationApiClient {
-    @POST("user/register")
+    @POST("user/registration")
     suspend fun insertUser(
         @Header("Authorization") headerCompanionValue: String,
         @Body userRegistrationDTO: UserRegistrationDTO
