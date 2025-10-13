@@ -175,8 +175,7 @@ fun PasswordTextField(viewModel: UserRegistrationViewModel) {
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation =
             if (showPassword) VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
+            else PasswordVisualTransformation(),
         isError = passwordError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
