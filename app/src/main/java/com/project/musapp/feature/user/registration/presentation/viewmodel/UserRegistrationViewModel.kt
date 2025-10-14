@@ -216,9 +216,8 @@ class UserRegistrationViewModel @Inject constructor(
                     profileImageLocalPath = imagePath.value!!
                 )
             )
-            withContext(context = Dispatchers.Main) {
-                _navigateToHome.value = isSuccessful
-            }
+
+            _navigateToHome.postValue(isSuccessful)
         }
     }
 }
