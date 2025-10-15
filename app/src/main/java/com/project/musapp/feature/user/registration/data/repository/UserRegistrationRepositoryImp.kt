@@ -17,7 +17,6 @@ class UserRegistrationRepositoryImp @Inject constructor(
 
     override suspend fun insertUser(
         userRegisterModel: UserRegistrationModel
-    ): Boolean {
-        return remoteDataSource.insertUser(userRegistrationModel = userRegisterModel)
-    }
+    ): Boolean =
+        remoteDataSource.insertUser(userRegistrationModel = userRegisterModel)
 }
