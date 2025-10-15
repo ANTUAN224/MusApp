@@ -31,20 +31,12 @@ import kotlin.getValue
 class MainActivity : ComponentActivity() {
     private val navigationViewModel: NavigationViewModel by viewModels() //Simplifica la obtención de una instancia de un ViewModel con lazy initialization.
 
-    private val userStateInitialCheckingViewModel: UserStateInitialCheckingViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this) // Inicialización de Firebase al ejecutar la app
         enableEdgeToEdge()
         setContent {
             MusAppTheme(darkTheme = false) {
-                val hasInternetConnection by
-                userStateInitialCheckingViewModel.hasInternetConnection.observeAsState(initial = null)
-
-                val hasActiveSession by
-                userStateInitialCheckingViewModel.hasActiveSession.observeAsState(initial = null)
-
                 val currentNavItemIndex by
                 navigationViewModel.navItemIndex.observeAsState(initial = 0)
 
@@ -53,10 +45,6 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                LaunchedEffect(Unit) {
-                    userStateInitialCheckingViewModel.onUserInitialChecking()
-                }
-
                 Scaffold(bottomBar = {
                     if (showNavBar) MusAppNavigationBar(
                         navigationViewModel = navigationViewModel,
@@ -64,30 +52,51 @@ class MainActivity : ComponentActivity() {
                     )
                 }) { innerPadding ->
 
-                    LaunchedEffect(hasInternetConnection, hasActiveSession) {
-                        if (hasInternetConnection == null || hasActiveSession == null)
-                            return@LaunchedEffect
-
-                        if (hasInternetConnection == true) {
-                            if (hasActiveSession == true) {
-                                navigationViewModel.onHomeScreenNavigation()
-
-                                navController.navigate(route = RouteHub.Home) {
-                                    popUpTo<RouteHub.UserStateInitialChecking> { inclusive = true }
-                                }
-                            } else {
-                                navController.navigate(route = RouteHub.InitialMenu) {
-                                    popUpTo<RouteHub.UserStateInitialChecking> { inclusive = true }
-                                }
-                            }
-                        }
-                    }
-
                     NavHost(
                         navController = navController,
                         startDestination = RouteHub.UserStateInitialChecking
                     ) {
-                        composable<RouteHub.UserStateInitialChecking> {
+                        composable<RouteHub.UserStateInitialChecking> { navBackStackEntry ->
+                            val userStateInitialCheckingViewModel: UserStateInitialCheckingViewModel =
+                                hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                            LaunchedEffect(Unit) {
+                                userStateInitialCheckingViewModel.onUserInitialChecking()
+                            }
+
+                            val hasInternetConnection by
+                            userStateInitialCheckingViewModel.hasInternetConnection.observeAsState(
+                                initial = null
+                            )
+
+                            val hasActiveSession by
+                            userStateInitialCheckingViewModel.hasActiveSession.observeAsState(
+                                initial = null
+                            )
+
+                            LaunchedEffect(hasInternetConnection, hasActiveSession) {
+                                if (hasInternetConnection == null || hasActiveSession == null)
+                                    return@LaunchedEffect
+
+                                if (hasInternetConnection == true) {
+                                    if (hasActiveSession == true) {
+                                        navigationViewModel.onHomeScreenNavigation()
+
+                                        navController.navigate(route = RouteHub.Home) {
+                                            popUpTo<RouteHub.UserStateInitialChecking> {
+                                                inclusive = true
+                                            }
+                                        }
+                                    } else {
+                                        navController.navigate(route = RouteHub.InitialMenu) {
+                                            popUpTo<RouteHub.UserStateInitialChecking> {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             UserInitialCheckingScreen(
                                 hasInternetConnection = hasInternetConnection
                             )
