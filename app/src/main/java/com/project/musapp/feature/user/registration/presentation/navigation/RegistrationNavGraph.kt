@@ -17,7 +17,7 @@ import com.project.musapp.feature.user.registration.presentation.ui.LastRegister
 fun NavGraphBuilder.registrationNavGraph(
     navController: NavController,
     context: Context,
-    title : String,
+    title: String,
     navigationViewModel: NavigationViewModel
 ) {
     navigation<RouteHub.Registration>(startDestination = RouteHub.Registration.StepOne) {
@@ -36,23 +36,33 @@ fun NavGraphBuilder.registrationNavGraph(
             val userRegistrationViewModel: UserRegistrationViewModel =
                 hiltViewModel(viewModelStoreOwner = navBackStackEntry) //Obtengo una instancia de ViewModel cuyo scope es el del nav graph actual
 
-            val navigateToHome by userRegistrationViewModel.navigateToHome.observeAsState(initial = false)
+            val isLoading by userRegistrationViewModel.isLoading.observeAsState(initial = false)
+
+            val navigateToHome by userRegistrationViewModel.navigateToHome.observeAsState(initial = null)
 
             LastRegisterScreen(
                 viewModel = userRegistrationViewModel,
                 context = context,
                 title = title,
-                onReturnButtonPress = { navController.popBackStack() }) {
-                userRegistrationViewModel.onLastRegisterScreenButtonPress()
+                isLoading = isLoading,
+                navigateToHome = navigateToHome,
+                onReturnButtonPress = { navController.popBackStack() },
+                onLastRegisterButtonPress = {
+                    userRegistrationViewModel.onLastRegisterScreenButtonPress()
 
-                if (navigateToHome) {
-                    navigationViewModel.onHomeScreenNavigation()
-                }
-
-                navController.navigate(route = RouteHub.Home) {
-                    popUpTo<RouteHub.InitialMenu> { inclusive = true }
+                    if (navigateToHome == true) {
+                        navigationViewModel.onHomeScreenNavigation()
+                    }
+                }) {
+                navController.navigate(route = RouteHub.UserStateInitialChecking) {
+                    popUpTo<RouteHub.Registration> { inclusive = true }
                 }
             }
+
+        }
+
+        navController.navigate(route = RouteHub.Home) {
+            popUpTo<RouteHub.InitialMenu> { inclusive = true }
         }
     }
 }
