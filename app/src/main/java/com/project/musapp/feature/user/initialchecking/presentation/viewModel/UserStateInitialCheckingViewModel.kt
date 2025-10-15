@@ -28,10 +28,9 @@ class UserStateInitialCheckingViewModel
     fun onUserInitialChecking() {
         viewModelScope.launch(context = Dispatchers.IO) {
             delay(2000) //Simula el tiempo de carga inicial
-            withContext(context = Dispatchers.Main) {
-                _hasInternetConnection.value = userConnectionVerificationUseCase()
-                _hasActiveSession.value = userSessionVerificationUseCase()
-            }
+
+            _hasInternetConnection.postValue(userConnectionVerificationUseCase())
+            _hasActiveSession.postValue(userSessionVerificationUseCase())
         }
     }
 }
