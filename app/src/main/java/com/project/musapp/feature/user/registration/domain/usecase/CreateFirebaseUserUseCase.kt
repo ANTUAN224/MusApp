@@ -1,9 +1,9 @@
 package com.project.musapp.feature.user.registration.domain.usecase
 
-import com.project.musapp.feature.user.registration.domain.repository.UserRegisterRepository
+import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
 import javax.inject.Inject
 
-class CreateFirebaseUserUseCase @Inject constructor(private val userRegisterRepository: UserRegisterRepository) {
+class CreateFirebaseUserUseCase @Inject constructor(private val userRegistrationRepository: UserRegistrationRepository) {
     suspend operator fun invoke(email: String, password: String) =
-        userRegisterRepository.createFirebaseUser(email, password)
+        userRegistrationRepository.createFirebaseUser(email, password)
 }

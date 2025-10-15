@@ -1,6 +1,6 @@
 package com.project.musapp.feature.home.user.register.domain.useCase
 
-import com.project.musapp.feature.user.registration.domain.repository.UserRegisterRepository
+import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
 import com.project.musapp.feature.user.registration.domain.usecase.CreateFirebaseUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,25 +17,25 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class CreateTokenUseCaseTest {
     @MockK
-    private lateinit var userRegisterRepository: UserRegisterRepository
+    private lateinit var userRegistrationRepository: UserRegistrationRepository
 
     private lateinit var createFirebaseUserUseCase: CreateFirebaseUserUseCase
 
     @BeforeAll
     fun setUp() {
-        createFirebaseUserUseCase = CreateFirebaseUserUseCase(userRegisterRepository)
+        createFirebaseUserUseCase = CreateFirebaseUserUseCase(userRegistrationRepository)
     }
 
     @Test
     fun `when the repository call 'createToken' fun, then returns true`() = runTest {
         //Given
-        coEvery { userRegisterRepository.createFirebaseUser(any<String>(), any<String>()) } returns true
+        coEvery { userRegistrationRepository.createFirebaseUser(any<String>(), any<String>()) } returns true
 
         //When
         val response = createFirebaseUserUseCase("antoniomateos1234@gmail.com", "9087PO")
 
         //Then
-        coVerify(exactly = 1) { userRegisterRepository.createFirebaseUser(any<String>(), any<String>()) }
+        coVerify(exactly = 1) { userRegistrationRepository.createFirebaseUser(any<String>(), any<String>()) }
         assertTrue(response)
     }
 }

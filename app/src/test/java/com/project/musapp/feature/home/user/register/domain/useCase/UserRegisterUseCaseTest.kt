@@ -1,7 +1,7 @@
 package com.project.musapp.feature.home.user.register.domain.useCase
 
 import com.project.musapp.feature.user.registration.domain.model.UserRegistrationModel
-import com.project.musapp.feature.user.registration.domain.repository.UserRegisterRepository
+import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
 import com.project.musapp.feature.user.registration.domain.usecase.RegisterUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,25 +19,25 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class) //Me ahorro el inicializar los objetos anotados con @MockK o @RelaxedMockK con 'MockKAnnotations.init(this)'.
 class UserRegisterUseCaseTest {
     @MockK
-    private lateinit var userRegisterRepository: UserRegisterRepository
+    private lateinit var userRegistrationRepository: UserRegistrationRepository
 
     private lateinit var registerUserUseCase: RegisterUserUseCase
 
     @BeforeAll
     fun setUp() {
-        registerUserUseCase = RegisterUserUseCase(userRegisterRepository)
+        registerUserUseCase = RegisterUserUseCase(userRegistrationRepository)
     }
 
     @Test
     fun `when the repository invokes 'insertUser' function, then returns true`() = runTest {
         //Given
-        coEvery { userRegisterRepository.insertUser(any()) } returns true
+        coEvery { userRegistrationRepository.insertUser(any()) } returns true
 
         //When
         val response = registerUserUseCase(mockk< UserRegistrationModel>())
 
         //Then
-        coVerify(exactly = 1) { userRegisterRepository.insertUser(any()) }
+        coVerify(exactly = 1) { userRegistrationRepository.insertUser(any()) }
         assertTrue(response)
     }
 }

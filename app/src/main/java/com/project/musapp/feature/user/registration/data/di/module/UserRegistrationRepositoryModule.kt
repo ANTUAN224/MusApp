@@ -1,7 +1,7 @@
 package com.project.musapp.feature.user.registration.data.di.module
 
 import com.project.musapp.feature.user.registration.data.repository.UserRegistrationRepositoryImp
-import com.project.musapp.feature.user.registration.domain.repository.UserRegisterRepository
+import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class UserRegistrationRepositoryModule {
     @Binds //Se utiliza cuando la interfaz o clase abstracta sólo tiene una implementación o clase hija respectivamente.
     @Singleton
-    abstract fun bind(userRegistrationRepositoryImp: UserRegistrationRepositoryImp): UserRegisterRepository
+    abstract fun bind(userRegistrationRepositoryImp: UserRegistrationRepositoryImp): UserRegistrationRepository
 }
