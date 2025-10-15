@@ -9,6 +9,7 @@ import com.google.firebase.storage.ktx.storage
 import com.project.musapp.core.helper.ImageConversionHelper
 import com.project.musapp.feature.user.registration.data.source.remote.client.UserRegistrationApiClient
 import com.project.musapp.feature.user.registration.domain.model.UserRegistrationModel
+import com.project.musapp.feature.user.registration.domain.model.toDTO
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -52,14 +53,13 @@ class UserRegistrationRemoteDataSource @Inject constructor(
         return userRegistrationApiClient
             .insertUser(
                 headerCompanionValue = "Bearer ${getFirebaseUserToken()}",
-                registerUserRemoteDTO = userRegistrationModel.toRemoteDTO(
-                    userProfileImageUrl =
-                        uploadUserProfileImageToFirebaseStorage(
-                            imageData = ImageConversionHelper.toByteArray(
-                                context = context,
-                                imagePath = userRegistrationModel.imagePath
-                            )
+                userRegistrationDTO = userRegistrationModel.toDTO(
+                    firebaseStorageProfileImageUrl = uploadUserProfileImageToFirebaseStorage(
+                        ImageConversionHelper.toByteArray(
+                            context = context,
+                            imagePath = userRegistrationModel.profileImageLocalPath
                         )
+                    )
                 )
             ).isSuccessful
     }
