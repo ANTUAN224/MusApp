@@ -2,7 +2,7 @@ package com.project.musapp.feature.home.user.register.domain.useCase
 
 import com.project.musapp.feature.user.registration.domain.model.UserRegistrationModel
 import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
-import com.project.musapp.feature.user.registration.domain.usecase.RegisterUserUseCase
+import com.project.musapp.feature.user.registration.domain.usecase.InsertUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -21,11 +21,11 @@ class UserRegisterUseCaseTest {
     @MockK
     private lateinit var userRegistrationRepository: UserRegistrationRepository
 
-    private lateinit var registerUserUseCase: RegisterUserUseCase
+    private lateinit var insertUserUseCase: InsertUserUseCase
 
     @BeforeAll
     fun setUp() {
-        registerUserUseCase = RegisterUserUseCase(userRegistrationRepository)
+        insertUserUseCase = InsertUserUseCase(userRegistrationRepository)
     }
 
     @Test
@@ -34,7 +34,7 @@ class UserRegisterUseCaseTest {
         coEvery { userRegistrationRepository.insertUser(any()) } returns true
 
         //When
-        val response = registerUserUseCase(mockk< UserRegistrationModel>())
+        val response = insertUserUseCase(mockk< UserRegistrationModel>())
 
         //Then
         coVerify(exactly = 1) { userRegistrationRepository.insertUser(any()) }

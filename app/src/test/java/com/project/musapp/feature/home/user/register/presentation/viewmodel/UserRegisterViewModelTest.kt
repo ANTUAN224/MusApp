@@ -2,7 +2,7 @@ package com.project.musapp.feature.home.user.register.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.project.musapp.feature.user.registration.domain.usecase.CreateFirebaseUserUseCase
-import com.project.musapp.feature.user.registration.domain.usecase.RegisterUserUseCase
+import com.project.musapp.feature.user.registration.domain.usecase.InsertUserUseCase
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class UserRegisterViewModelTest {
     @MockK
-    private lateinit var registerUserUseCase: RegisterUserUseCase
+    private lateinit var insertUserUseCase: InsertUserUseCase
 
     @MockK
     private lateinit var createFirebaseUserUseCase: CreateFirebaseUserUseCase

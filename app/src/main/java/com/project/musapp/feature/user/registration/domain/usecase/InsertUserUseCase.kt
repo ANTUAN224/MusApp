@@ -4,7 +4,7 @@ import com.project.musapp.feature.user.registration.domain.model.UserRegistratio
 import com.project.musapp.feature.user.registration.domain.repository.UserRegistrationRepository
 import javax.inject.Inject
 
-class RegisterUserUseCase @Inject constructor(private val userRepository: UserRegistrationRepository) {
+class InsertUserUseCase @Inject constructor(private val userRepository: UserRegistrationRepository) {
     suspend operator fun invoke(userRegistrationModel: UserRegistrationModel) =
         userRepository.insertUser(userRegistrationModel)
 }

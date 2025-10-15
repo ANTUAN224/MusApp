@@ -11,12 +11,11 @@ import com.project.musapp.R
 import com.project.musapp.feature.user.helper.RegisterOrLoginRegexHelper
 import com.project.musapp.feature.user.registration.domain.model.UserRegistrationModel
 import com.project.musapp.feature.user.registration.domain.usecase.CreateFirebaseUserUseCase
-import com.project.musapp.feature.user.registration.domain.usecase.RegisterUserUseCase
+import com.project.musapp.feature.user.registration.domain.usecase.InsertUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
@@ -24,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserRegistrationViewModel @Inject constructor(
     private val createFirebaseUserUseCase: CreateFirebaseUserUseCase,
-    private val registerUserUseCase: RegisterUserUseCase,
+    private val insertUserUseCase: InsertUserUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _name = MutableLiveData<String>()
@@ -212,7 +211,7 @@ class UserRegistrationViewModel @Inject constructor(
             val isSuccessful = createFirebaseUserUseCase(
                 email = email.value!!,
                 password = password.value!!
-            ) && registerUserUseCase(
+            ) && insertUserUseCase(
                 userRegistrationModel = UserRegistrationModel(
                     name = name.value!!,
                     surnames = surnames.value!!,
