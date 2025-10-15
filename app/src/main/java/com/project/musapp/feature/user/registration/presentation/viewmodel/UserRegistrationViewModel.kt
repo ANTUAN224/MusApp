@@ -80,8 +80,11 @@ class UserRegistrationViewModel @Inject constructor(
     private val _isImageSelectionButtonPressed = MutableLiveData<Boolean>()
     val isImageSelectionButtonPressed: LiveData<Boolean> = _isImageSelectionButtonPressed
 
-    private val _navigateToHome = MutableLiveData<Boolean>()
-    val navigateToHome: LiveData<Boolean> = _navigateToHome
+    private val _navigateToHome = MutableLiveData<Boolean?>()
+    val navigateToHome: LiveData<Boolean?> = _navigateToHome
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
     fun onNameChange(name: String) {
         _name.value = name
@@ -204,6 +207,8 @@ class UserRegistrationViewModel @Inject constructor(
 
     fun onLastRegisterScreenButtonPress() {
         viewModelScope.launch(context = Dispatchers.IO) {
+            _isLoading.postValue(true)
+
             val isSuccessful = createFirebaseUserUseCase(
                 email = email.value!!,
                 password = password.value!!
@@ -216,6 +221,7 @@ class UserRegistrationViewModel @Inject constructor(
                     profileImageLocalPath = imagePath.value!!
                 )
             )
+            _isLoading.postValue(false)
 
             _navigateToHome.postValue(isSuccessful)
         }
