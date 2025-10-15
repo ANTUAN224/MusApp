@@ -5,13 +5,13 @@ import com.project.musapp.feature.user.registration.domain.repository.UserRegist
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class) //Indica que la dependencia generada será en el scope del ViewModel.
 abstract class UserRegistrationRepositoryModule {
     @Binds //Se utiliza cuando la interfaz o clase abstracta sólo tiene una implementación o clase hija respectivamente.
-    @Singleton
+    @ViewModelScoped //Se crea una instancia singleton para el scope del ViewModel del registro del usuario.
     abstract fun bind(userRegistrationRepositoryImp: UserRegistrationRepositoryImp): UserRegistrationRepository
 }
