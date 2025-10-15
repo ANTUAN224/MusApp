@@ -12,17 +12,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,6 +37,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.project.musapp.R
+import com.project.musapp.core.feature.navigation.item.presentation.ui.GlobalCircularProgressIndicator
 import com.project.musapp.feature.user.registration.presentation.viewmodel.UserRegistrationViewModel
 
 @Composable
@@ -41,20 +45,40 @@ fun LastRegisterScreen(
     viewModel: UserRegistrationViewModel,
     context: Context,
     title: String,
+    isLoading: Boolean,
+    navigateToHome: Boolean?,
     onReturnButtonPress: () -> Unit,
-    onLastRegisterButtonPress: () -> Unit
+    onLastRegisterButtonPress: () -> Unit,
+    onReturnToInitialMenu: () -> Unit
 ) {
-    Scaffold(topBar = {
-        UserRegistrationTopBar(
-            onReturnButtonPress = onReturnButtonPress
-        )
-    }, bottomBar = {}) { innerPadding ->
-        UserRegistrationLastScreenBody(
-            viewModel = viewModel, title = title, context = context
-        ) {
-            onLastRegisterButtonPress()
+    if (!isLoading && navigateToHome == null) {
+        Scaffold(topBar = {
+            UserRegistrationTopBar(
+                onReturnButtonPress = onReturnButtonPress
+            )
+        }, bottomBar = {}) { innerPadding ->
+            UserRegistrationLastScreenBody(
+                viewModel = viewModel, title = title, context = context
+            ) {
+                onLastRegisterButtonPress()
+            }
+        }
+    } else {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            GlobalCircularProgressIndicator()
+            if (navigateToHome == false) RegistrationErrorModal { onReturnToInitialMenu }
         }
     }
+}
+
+@Composable
+fun RegistrationErrorModal(onReturnToInitialMenu: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onReturnToInitialMenu() },
+        confirmButton = { TextButton(onClick = { onReturnToInitialMenu() }) { Text(text = "Volver al menú inicial") } },
+        title = { Text(text = "Error en el registro de usuario") },
+        text = { Text(text = "Se ha producido un error durante el registro de usuario. Por favor, inténtalo de nuevo más tarde.") }
+    )
 }
 
 @Composable
