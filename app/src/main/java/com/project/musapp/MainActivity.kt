@@ -1,6 +1,7 @@
 package com.project.musapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -128,6 +129,12 @@ class MainActivity : ComponentActivity() {
                                         popUpTo<RouteHub.InitialMenu> { inclusive = true }
                                     }
                                 }
+                            }
+                        }
+
+                        composable<RouteHub.Home> {
+                            LaunchedEffect(Unit) {
+                                Toast.makeText(applicationContext, "Bienvenido a casita", Toast.LENGTH_SHORT).show()
                             }
                         }
 
