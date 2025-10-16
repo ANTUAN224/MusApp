@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.R
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class UserRegistrationViewModel @Inject constructor(
     private val createFirebaseUserUseCase: CreateFirebaseUserUseCase,
     private val insertUserUseCase: InsertUserUseCase,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
@@ -68,13 +70,9 @@ class UserRegistrationViewModel @Inject constructor(
     private val _isImageSelected = MutableLiveData<Boolean>()
     val isImageSelected: LiveData<Boolean> = _isImageSelected
 
-    private val _isUserRegistrationFirstScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isUserRegistrationFirstScreenButtonEnabled: LiveData<Boolean> =
-        _isUserRegistrationFirstScreenButtonEnabled
-
-    private val _isUserRegistrationLastScreenButtonEnabled = MutableLiveData<Boolean>()
-    val isUserRegistrationLastScreenButtonEnabled: LiveData<Boolean> =
-        _isUserRegistrationLastScreenButtonEnabled
+    private val _isUserRegistrationScreenButtonEnabled = MutableLiveData<Boolean>()
+    val isUserRegistrationScreenButtonEnabled: LiveData<Boolean> =
+        _isUserRegistrationScreenButtonEnabled
 
     private val _isImageSelectionButtonPressed = MutableLiveData<Boolean>()
     val isImageSelectionButtonPressed: LiveData<Boolean> = _isImageSelectionButtonPressed
@@ -88,19 +86,19 @@ class UserRegistrationViewModel @Inject constructor(
     fun onNameChange(name: String) {
         _name.value = name
         setNameErrorMessage(name)
-        checkUserRegistrationFirstScreenErrors()
+        checkUserRegistrationScreenErrors()
     }
 
     fun onSurnamesChange(surnames: String) {
         _surnames.value = surnames
         setSurnameErrorMessage(surnames)
-        checkUserRegistrationFirstScreenErrors()
+        checkUserRegistrationScreenErrors()
     }
 
     fun onBirthdateTextChange(birthdateText: String) {
         _birthdateText.value = birthdateText
         setBirthDateErrorMessage(birthdateText)
-        checkUserRegistrationFirstScreenErrors()
+        checkUserRegistrationScreenErrors()
     }
 
     private fun setNameErrorMessage(name: String) {
@@ -134,15 +132,10 @@ class UserRegistrationViewModel @Inject constructor(
         }
     }
 
-    private fun checkUserRegistrationFirstScreenErrors() {
-        _isUserRegistrationFirstScreenButtonEnabled.value =
-            nameError.value?.isBlank() ?: false && birthdateError.value?.isBlank() ?: false && surnamesError.value?.isBlank() ?: false
-    }
-
     fun onEmailChange(email: String) {
         _email.value = email
         setEmailErrorMessage(email)
-        checkUserRegistrationLastScreenErrors()
+        checkUserRegistrationScreenErrors()
     }
 
     private fun setEmailErrorMessage(email: String) {
@@ -157,7 +150,7 @@ class UserRegistrationViewModel @Inject constructor(
     fun onPasswordChange(password: String) {
         _password.value = password
         setPasswordErrorMessage(password)
-        checkUserRegistrationLastScreenErrors()
+        checkUserRegistrationScreenErrors()
     }
 
     private fun setPasswordErrorMessage(password: String) {
@@ -168,11 +161,6 @@ class UserRegistrationViewModel @Inject constructor(
             password.length > 30 -> "La contraseña no puede tener más de 30 caracteres."
             else -> ""
         }
-    }
-
-    private fun checkUserRegistrationLastScreenErrors() {
-        _isUserRegistrationLastScreenButtonEnabled.value =
-            emailError.value?.isBlank() ?: false && passwordError.value?.isBlank() ?: false
     }
 
     fun setSelectedImage(imagePathSelected: Uri?) {
@@ -204,7 +192,14 @@ class UserRegistrationViewModel @Inject constructor(
         _isImageSelectionButtonPressed.value = true
     }
 
-    fun onLastRegisterScreenButtonPress() {
+    private fun checkUserRegistrationScreenErrors() {
+        _isUserRegistrationScreenButtonEnabled.value =
+            nameError.value?.isBlank() ?: false && surnamesError.value?.isBlank() ?: false &&
+                    birthdateError.value?.isBlank() ?: false && emailError.value?.isBlank() ?: false &&
+                    passwordError.value?.isBlank() ?: false
+    }
+
+    fun onUserRegistrationScreenButtonPress() {
         viewModelScope.launch(context = Dispatchers.IO) {
             _isLoading.postValue(true)
 

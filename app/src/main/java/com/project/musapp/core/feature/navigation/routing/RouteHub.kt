@@ -11,13 +11,7 @@ sealed class RouteHub {
     object InitialMenu : RouteHub()
 
     @Serializable
-    object Registration : RouteHub() {
-        @Serializable
-        object StepOne : RouteHub()
-
-        @Serializable
-        object StepTwo : RouteHub()
-    }
+    object Registration : RouteHub()
 
     @Serializable
     object Home : RouteHub() {

@@ -18,12 +18,13 @@ import com.google.firebase.FirebaseApp
 import com.project.musapp.core.feature.navigation.item.presentation.ui.MusAppNavigationBar
 import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.core.feature.navigation.routing.RouteHub
-import com.project.musapp.feature.user.registration.presentation.navigation.registrationNavGraph
 import com.project.musapp.feature.user.initialchecking.presentation.ui.UserInitialCheckingScreen
 import com.project.musapp.feature.user.initialchecking.presentation.viewModel.UserStateInitialCheckingViewModel
 import com.project.musapp.feature.user.initialmenu.presentation.ui.InitialMenuScreen
 import com.project.musapp.feature.user.login.presentation.ui.UserLoginModal
 import com.project.musapp.feature.user.login.presentation.viewmodel.UserLoginViewModel
+import com.project.musapp.feature.user.registration.presentation.ui.UserRegistrationScreen
+import com.project.musapp.feature.user.registration.presentation.viewmodel.UserRegistrationViewModel
 import com.project.musapp.ui.theme.MusAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -132,18 +133,46 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
+                        composable<RouteHub.Registration> { navBackStackEntry ->
+                            val userRegistrationViewModel: UserRegistrationViewModel =
+                                hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                            val isLoading by userRegistrationViewModel.isLoading.observeAsState(initial = false)
+
+                            val navigateToHome by userRegistrationViewModel.navigateToHome.observeAsState(initial = null)
+
+                            UserRegistrationScreen(
+                                viewModel = userRegistrationViewModel,
+                                context = applicationContext,
+                                topBarTitle = "Registro de usuario",
+                                bodyTitle = "Introduce tus datos",
+                                isLoading = isLoading,
+                                navigateToHome = navigateToHome,
+                                onReturnButtonPress = { navController.popBackStack() },
+                                onRegisterButtonPress = {
+                                    userRegistrationViewModel.onUserRegistrationScreenButtonPress()
+                                }) {
+                                navController.navigate(route = RouteHub.UserStateInitialChecking) {
+                                    popUpTo<RouteHub.Registration> { inclusive = true }
+                                }
+                            }
+
+                            LaunchedEffect(navigateToHome) {
+                                if (navigateToHome == true) {
+                                    navigationViewModel.onHomeScreenNavigation()
+
+                                    navController.navigate(route = RouteHub.Home) {
+                                        popUpTo<RouteHub.Registration> { inclusive = true }
+                                    }
+                                }
+                            }
+                        }
+
                         composable<RouteHub.Home> {
                             LaunchedEffect(Unit) {
                                 Toast.makeText(applicationContext, "Bienvenido a casita", Toast.LENGTH_SHORT).show()
                             }
                         }
-
-                        registrationNavGraph(
-                            navController,
-                            context = applicationContext,
-                            navigationViewModel = navigationViewModel,
-                            title = "Registro de usuario"
-                        )
                     }
                 }
             }
