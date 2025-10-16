@@ -41,7 +41,7 @@ import com.project.musapp.core.feature.navigation.item.presentation.ui.GlobalCir
 import com.project.musapp.feature.user.registration.presentation.viewmodel.UserRegistrationViewModel
 
 @Composable
-fun LastRegisterScreen(
+fun LastRegistrationScreen(
     viewModel: UserRegistrationViewModel,
     context: Context,
     title: String,
@@ -66,7 +66,7 @@ fun LastRegisterScreen(
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             GlobalCircularProgressIndicator()
-            if (navigateToHome == false) RegistrationErrorModal { onReturnToInitialMenu }
+            if (navigateToHome == false) RegistrationErrorModal { onReturnToInitialMenu() }
         }
     }
 }
@@ -76,8 +76,8 @@ fun RegistrationErrorModal(onReturnToInitialMenu: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onReturnToInitialMenu() },
         confirmButton = { TextButton(onClick = { onReturnToInitialMenu() }) { Text(text = "Volver al menú inicial") } },
-        title = { Text(text = "Error en el registro de usuario") },
-        text = { Text(text = "Se ha producido un error durante el registro de usuario. Por favor, inténtalo de nuevo más tarde.") }
+        title = { Text(text = "Error en el registro") },
+        text = { Text(text = "Se ha producido un error durante el registro de usuario. Vuelve al menú inicial e inténtalo de nuevo.") }
     )
 }
 

@@ -13,7 +13,7 @@ import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.Na
 import com.project.musapp.core.feature.navigation.routing.RouteHub
 import com.project.musapp.feature.user.registration.presentation.viewmodel.UserRegistrationViewModel
 import com.project.musapp.feature.user.registration.presentation.ui.UserRegistrationFirstScreen
-import com.project.musapp.feature.user.registration.presentation.ui.LastRegisterScreen
+import com.project.musapp.feature.user.registration.presentation.ui.LastRegistrationScreen
 
 fun NavGraphBuilder.registrationNavGraph(
     navController: NavController,
@@ -41,7 +41,7 @@ fun NavGraphBuilder.registrationNavGraph(
 
             val navigateToHome by userRegistrationViewModel.navigateToHome.observeAsState(initial = null)
 
-            LastRegisterScreen(
+            LastRegistrationScreen(
                 viewModel = userRegistrationViewModel,
                 context = context,
                 title = title,
