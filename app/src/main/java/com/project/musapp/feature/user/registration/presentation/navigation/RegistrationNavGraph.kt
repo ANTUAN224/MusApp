@@ -1,6 +1,7 @@
 package com.project.musapp.feature.user.registration.presentation.navigation
 
 import android.content.Context
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,20 +50,21 @@ fun NavGraphBuilder.registrationNavGraph(
                 onReturnButtonPress = { navController.popBackStack() },
                 onLastRegisterButtonPress = {
                     userRegistrationViewModel.onLastRegisterScreenButtonPress()
-
-                    if (navigateToHome == true) {
-                        navigationViewModel.onHomeScreenNavigation()
-                    }
                 }) {
                 navController.navigate(route = RouteHub.UserStateInitialChecking) {
                     popUpTo<RouteHub.Registration> { inclusive = true }
                 }
             }
 
-        }
+            LaunchedEffect(navigateToHome) {
+                if (navigateToHome == true) {
+                    navigationViewModel.onHomeScreenNavigation()
 
-        navController.navigate(route = RouteHub.Home) {
-            popUpTo<RouteHub.InitialMenu> { inclusive = true }
+                    navController.navigate(route = RouteHub.Home) {
+                        popUpTo<RouteHub.Registration> { inclusive = true }
+                    }
+                }
+            }
         }
     }
 }
