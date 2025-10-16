@@ -41,7 +41,7 @@ import com.project.musapp.core.feature.navigation.item.presentation.ui.GlobalCir
 import com.project.musapp.feature.user.registration.presentation.viewmodel.UserRegistrationViewModel
 
 @Composable
-fun LastRegistrationScreen(
+fun UserRegistrationLastScreen(
     viewModel: UserRegistrationViewModel,
     context: Context,
     title: String,
