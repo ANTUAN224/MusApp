@@ -3,6 +3,7 @@ package com.project.musapp.feature.user.registration.presentation.ui
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -100,18 +101,18 @@ fun UserRegistrationScreen(
 fun UserRegistrationTopBar(title: String, onReturnButtonPress: () -> Unit) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = { onReturnButtonPress() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Botón para volver a la pantalla anterior",
-                    tint = Color.White
-                )
-            }
-        }, title = {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Text(text = title, color = Color.White)
-            }
-        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
+        IconButton(onClick = { onReturnButtonPress() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = "Botón para volver a la pantalla anterior",
+                tint = Color.White
+            )
+        }
+    }, title = {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Text(text = title, color = Color.White)
+        }
+    }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
     )
 }
 
@@ -134,14 +135,18 @@ fun UserRegistrationScreenBody(
     onLastRegisterButtonPress: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), contentAlignment = Alignment.Center
+        ) {
             UserRegistrationScreenBodyTitle(title = title)
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().weight(1.5f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.5f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val fieldNames = getFieldNames()
@@ -165,9 +170,11 @@ fun UserRegistrationScreenBody(
             }
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), contentAlignment = Alignment.Center
+        ) {
             UserRegistrationScreenButton(
                 content = "Completar el registro", viewModel = viewModel
             ) {
@@ -265,44 +272,44 @@ fun BirthdateTextField(viewModel: UserRegistrationViewModel) {
     if (showDatePickerDialog) {
         DatePickerDialog(
             onDismissRequest = {
-                viewModel.onDatePickerDialogClosing()
-            }, dismissButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.onDatePickerDialogClosing()
-                    }, colors = ButtonDefaults.buttonColors(
-                        contentColor = Color.White, containerColor = Color.Black
+            viewModel.onDatePickerDialogClosing()
+        }, dismissButton = {
+            TextButton(
+                onClick = {
+                    viewModel.onDatePickerDialogClosing()
+                }, colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White, containerColor = Color.Black
+                )
+            ) {
+                Text(text = "Cancelar")
+            }
+        }, confirmButton = {
+            TextButton(
+                onClick = {
+                    viewModel.onDatePickerDialogClosing()
+                    viewModel.onBirthdateTextChange(
+                        birthdateText = Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
+                            .atOffset(
+                                ZoneOffset.UTC
+                            ).toLocalDate().toString()
                     )
-                ) {
-                    Text(text = "Cancelar")
-                }
-            }, confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.onDatePickerDialogClosing()
-                        viewModel.onBirthdateTextChange(
-                            birthdateText = Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
-                                .atOffset(
-                                    ZoneOffset.UTC
-                                ).toLocalDate().toString()
-                        )
-                    },
-                    enabled = datePickerState.selectedDateMillis != null,
-                    colors = ButtonDefaults.buttonColors(
-                        disabledContentColor = Color.Black,
-                        disabledContainerColor = Color.LightGray,
-                        contentColor = Color.White,
-                        containerColor = Color.Black
-                    )
-                ) {
-                    Text(text = "Aceptar")
-                }
-            }, colors = DatePickerDefaults.colors(
-                selectedDayContentColor = Color.White,
-                selectedDayContainerColor = Color.Black,
-                selectedYearContentColor = Color.White,
-                selectedYearContainerColor = Color.Black
-            )
+                },
+                enabled = datePickerState.selectedDateMillis != null,
+                colors = ButtonDefaults.buttonColors(
+                    disabledContentColor = Color.Black,
+                    disabledContainerColor = Color.LightGray,
+                    contentColor = Color.White,
+                    containerColor = Color.Black
+                )
+            ) {
+                Text(text = "Aceptar")
+            }
+        }, colors = DatePickerDefaults.colors(
+            selectedDayContentColor = Color.White,
+            selectedDayContainerColor = Color.Black,
+            selectedYearContentColor = Color.White,
+            selectedYearContainerColor = Color.Black
+        )
         ) {
             DatePicker(
                 state = datePickerState,
@@ -437,9 +444,8 @@ fun UserRegistrationScreenButton(
 
     Button(
         modifier = Modifier
-            .width(220.dp)
-            .height(150.dp)
-            .padding(bottom = 80.dp),
+            .padding(bottom = 50.dp)
+            .size(width = 220.dp, height = 70.dp),
         onClick = { onButtonClick() },
         enabled = isUserRegistrationScreenButtonEnabled,
         colors = ButtonDefaults.buttonColors(
