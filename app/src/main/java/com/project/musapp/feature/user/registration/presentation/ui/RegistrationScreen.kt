@@ -369,13 +369,13 @@ fun PasswordTextField(viewModel: UserRegistrationViewModel) {
             IconButton(onClick = { viewModel.onPasswordShowingStateChange(showPassword) }) {
                 if (showPassword) {
                     Icon(
-                        imageVector = Icons.Filled.VisibilityOff,
-                        contentDescription = "Icono para ocultar la contraseña"
+                        imageVector = Icons.Filled.Visibility,
+                        contentDescription = "Icono que indica que la contraseña es visible"
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Filled.Visibility,
-                        contentDescription = "Icono para mostrar la contraseña"
+                        imageVector = Icons.Filled.VisibilityOff,
+                        contentDescription = "Icono que indica que la contraseña está oculta"
                     )
                 }
             }
