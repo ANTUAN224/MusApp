@@ -17,7 +17,7 @@ object RetrofitModule {
     @Singleton //Indica que esta función me devuelve la misma instancia siempre (patrón de diseño Singleton).
     fun provideRetrofit(): Retrofit = Retrofit
             .Builder()
-            .baseUrl("http://localhost:6000/api/")
+            .baseUrl("http://192.168.1.128:6000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
