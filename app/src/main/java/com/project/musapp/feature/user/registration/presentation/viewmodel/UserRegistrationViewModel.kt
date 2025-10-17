@@ -64,7 +64,8 @@ class UserRegistrationViewModel @Inject constructor(
     private val _passwordError = MutableLiveData<String>()
     val passwordError: LiveData<String> = _passwordError
 
-    private val _imagePath = MutableLiveData<Uri>()
+    private val _imagePath = MutableLiveData<Uri>(("android.resource://${context.packageName}/" +
+            "${R.drawable.default_image}").toUri())
     val imagePath: LiveData<Uri> = _imagePath
 
     private val _isImageSelected = MutableLiveData<Boolean>()
@@ -204,14 +205,14 @@ class UserRegistrationViewModel @Inject constructor(
             _isLoading.postValue(true)
 
             val isSuccessful = createFirebaseUserUseCase(
-                email = email.value!!,
-                password = password.value!!
+                email = email.value!!.trim(),
+                password = password.value!!.trim()
             ) && insertUserUseCase(
                 userRegistrationModel = UserRegistrationModel(
-                    name = name.value!!,
-                    surnames = surnames.value!!,
-                    birthdateText = birthdateText.value!!,
-                    email = email.value!!,
+                    name = name.value!!.trim(),
+                    surnames = surnames.value!!.trim(),
+                    birthdateText = birthdateText.value!!.trim(),
+                    email = email.value!!.trim(),
                     profileImageLocalPath = imagePath.value!!
                 )
             )
