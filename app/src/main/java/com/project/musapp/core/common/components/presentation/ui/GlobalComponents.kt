@@ -1,4 +1,4 @@
-package com.project.musapp.core.feature.navigation.item.presentation.ui
+package com.project.musapp.core.common.components.presentation.ui
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
