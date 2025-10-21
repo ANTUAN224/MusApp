@@ -1,4 +1,4 @@
-package com.project.musapp.core.common.components.presentation.ui
+package com.project.musapp.core.component.presentation.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.size
