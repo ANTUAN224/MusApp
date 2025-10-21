@@ -1,4 +1,4 @@
-package com.project.musapp.core.helper
+package com.project.musapp.feature.user.auth.registration.data.helper
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,7 +9,7 @@ import java.io.File
 object ImageConversionHelper {
     fun toByteArray(context: Context, imagePath: Uri): ByteArray {
     return when (imagePath.scheme) {
-                "content" -> { //Imagen seleccionada desde un content provider.
+                "content", "android.resource" -> { //Imagen seleccionada desde un content provider o la de por defecto de la app (android resource).
                     context.contentResolver.openInputStream(imagePath)!!.use { inputStream ->
                         inputStream.readBytes()
                     }
