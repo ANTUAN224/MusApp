@@ -1,4 +1,4 @@
-package com.project.musapp.core.feature.navigation.item.presentation.viewmodel
+package com.project.musapp.core.navigation.item.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

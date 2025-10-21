@@ -1,4 +1,4 @@
-package com.project.musapp.core.feature.navigation.item.domain.model
+package com.project.musapp.core.navigation.item.domain.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

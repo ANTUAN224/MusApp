@@ -1,4 +1,4 @@
-package com.project.musapp.core.feature.navigation.routing
+package com.project.musapp.core.navigation.routing
 
 import kotlinx.serialization.Serializable
 

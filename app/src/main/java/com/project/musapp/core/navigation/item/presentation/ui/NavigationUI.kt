@@ -1,4 +1,4 @@
-package com.project.musapp.core.feature.navigation.item.presentation.ui
+package com.project.musapp.core.navigation.item.presentation.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
@@ -12,8 +12,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.project.musapp.core.feature.navigation.item.domain.model.NavItem
-import com.project.musapp.core.feature.navigation.item.presentation.viewmodel.NavigationViewModel
+import com.project.musapp.core.navigation.item.domain.model.NavItem
+import com.project.musapp.core.navigation.item.presentation.viewmodel.NavigationViewModel
 
 @Composable
 fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, navItemIndex: Int) {
@@ -25,7 +25,8 @@ fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, navItemIndex: 
     NavigationBar(containerColor = Color(color = 0xFF12AA7A)) {
         navItemList.forEachIndexed { index, item ->
             MusAppNavigationItem(
-                navItem = item, isSelected = index == navItemIndex
+                navItem = item,
+                isSelected = index == navItemIndex
             ) {
                 navigationViewModel.onNavItemClick(index)
             }
