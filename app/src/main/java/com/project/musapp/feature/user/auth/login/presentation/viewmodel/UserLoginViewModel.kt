@@ -44,6 +44,8 @@ class UserLoginViewModel @Inject constructor(
     }
 
     fun onLoginModalClosing() {
+        _email.value = ""
+        _password.value = ""
         _showLoginModal.value = false
     }
 
