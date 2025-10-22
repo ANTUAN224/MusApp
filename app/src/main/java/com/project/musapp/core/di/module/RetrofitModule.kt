@@ -1,7 +1,8 @@
 package com.project.musapp.core.di.module
 
-import com.project.musapp.feature.user.login.data.source.remote.client.UserLoginApiClient
-import com.project.musapp.feature.user.registration.data.source.remote.service.UserRegistrationApiService
+import com.project.musapp.BuildConfig
+import com.project.musapp.feature.user.auth.login.data.source.remote.client.UserLoginApiClient
+import com.project.musapp.feature.user.auth.registration.data.source.remote.service.UserRegistrationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,7 @@ object RetrofitModule {
     @Singleton //Indica que esta función me devuelve la misma instancia siempre (patrón de diseño Singleton).
     fun provideRetrofit(): Retrofit = Retrofit
             .Builder()
-            .baseUrl("http://192.168.0.201:6000/api/")
+            .baseUrl(BuildConfig.API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

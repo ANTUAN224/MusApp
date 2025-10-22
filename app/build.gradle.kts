@@ -1,5 +1,6 @@
 
 import org.gradle.kotlin.dsl.testImplementation
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,6 +10,14 @@ plugins {
     alias(libs.plugins.google.services) //Plugin de Google a nivel de módulo Services necesario para que Firebase tenga una configuración automática
     alias(libs.plugins.ksp) //Plugin de KSP (Kotlin Symbol Processing) a nivel de módulo necesario para generar código a partir de diversas librerías
     alias(libs.plugins.hilt.android) //Plugin de Google para utilizar la librería Dagger Hilt
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { inputStream ->
+        localProperties.load(inputStream)
+    }
 }
 
 android {
@@ -26,8 +35,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(type = "String", name = "API_BASE_URL", value = localProperties.getProperty("api.baseUrl", "\"\""))
+        }
+
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
