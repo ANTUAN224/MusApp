@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.feature.user.auth.helper.RegisterOrLoginRegexHelper
 import com.project.musapp.feature.user.auth.login.domain.useCase.VerifyUserLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserLoginViewModel @Inject constructor(
+    private val verifyUserInternetConnectionUseCase: VerifyUserInternetConnectionUseCase,
     private val verifyUserLoginUseCase: VerifyUserLoginUseCase
 ) :
     ViewModel() {
