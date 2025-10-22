@@ -1,13 +1,14 @@
-package com.project.musapp.feature.user.initialchecking.data.source.remote
+package com.project.musapp.core.internetconnectionverification.data.source.local
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class UserStateInitialCheckingRemoteDataSource @Inject constructor(@ApplicationContext private val context: Context) {
+class UserInternetConnectionVerificationAndroid @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     fun verifyInternetConnection(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -16,7 +17,4 @@ class UserStateInitialCheckingRemoteDataSource @Inject constructor(@ApplicationC
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                 capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
-
-    fun verifyUserSession(): Boolean =
-        FirebaseAuth.getInstance().currentUser != null
 }
