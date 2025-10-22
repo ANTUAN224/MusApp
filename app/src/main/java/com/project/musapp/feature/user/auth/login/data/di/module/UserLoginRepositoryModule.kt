@@ -5,13 +5,15 @@ import com.project.musapp.feature.user.auth.login.domain.repository.UserLoginRep
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 abstract class UserLoginRepositoryModule {
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bind(userLoginRepositoryImp: UserLoginRepositoryImp) : UserLoginRepository
 }
