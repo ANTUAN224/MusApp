@@ -1,8 +1,8 @@
 package com.project.musapp.feature.home.user.register.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.project.musapp.feature.user.registration.domain.usecase.CreateFirebaseUserUseCase
-import com.project.musapp.feature.user.registration.domain.usecase.InsertUserUseCase
+import com.project.musapp.feature.user.auth.registration.domain.usecase.CreateUserUseCase
+import com.project.musapp.feature.user.auth.registration.domain.usecase.InsertUserUseCase
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ class UserRegisterViewModelTest {
     private lateinit var insertUserUseCase: InsertUserUseCase
 
     @MockK
-    private lateinit var createFirebaseUserUseCase: CreateFirebaseUserUseCase
+    private lateinit var createUserUseCase: CreateUserUseCase
 
     @get:Rule
     val instantTaskExecutorRule : InstantTaskExecutorRule = InstantTaskExecutorRule()
