@@ -248,8 +248,6 @@ class UserRegistrationViewModel @Inject constructor(
                 }
 
                 _navigateToHome.value = true
-
-                _isLoading.value = false
             } catch (e: Exception) {
                 if (verifyUserSessionStateUseCase()) {
                     logoutUserUseCase()
@@ -263,6 +261,8 @@ class UserRegistrationViewModel @Inject constructor(
                     is EmailAlreadyInUseException ->
                         _showNoInternetConnectionModal.value = false
                 }
+            } finally {
+                _isLoading.value = false
             }
         }
     }
