@@ -36,8 +36,14 @@ class UserLoginViewModel @Inject constructor(
     private val _isLoginAcceptButtonEnabled = MutableLiveData<Boolean>()
     val isLoginAcceptButtonEnabled: LiveData<Boolean> = _isLoginAcceptButtonEnabled
 
-    private val _navigateToHome = MutableLiveData<Boolean>()
-    val navigateToHome: LiveData<Boolean> = _navigateToHome
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _navigateToHome = MutableLiveData<Boolean?>()
+    val navigateToHome: LiveData<Boolean?> = _navigateToHome
+
+    private val _showNoInternetConnectionModal = MutableLiveData<Boolean>()
+    val showNoInternetConnectionModal: LiveData<Boolean> = _showNoInternetConnectionModal
 
     fun onLoginModalOpening() {
         _showLoginModal.value = true
