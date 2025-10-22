@@ -7,13 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.project.musapp.feature.user.auth.helper.RegisterOrLoginRegexHelper
 import com.project.musapp.feature.user.auth.login.domain.useCase.VerifyUserLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class UserLoginViewModel @Inject constructor(private val useCase: VerifyUserLoginUseCase) :
+class UserLoginViewModel @Inject constructor(
+    private val verifyUserLoginUseCase: VerifyUserLoginUseCase
+) :
     ViewModel() {
     private val _showLoginModal = MutableLiveData<Boolean>()
     val showLoginModal: LiveData<Boolean> = _showLoginModal
@@ -36,9 +36,6 @@ class UserLoginViewModel @Inject constructor(private val useCase: VerifyUserLogi
     private val _isLoginAcceptButtonEnabled = MutableLiveData<Boolean>()
     val isLoginAcceptButtonEnabled: LiveData<Boolean> = _isLoginAcceptButtonEnabled
 
-    private val _userNotFoundInDatabaseMessage = MutableLiveData<String>()
-    val userNotFoundInDatabaseMessage: LiveData<String> = _userNotFoundInDatabaseMessage
-
     private val _navigateToHome = MutableLiveData<Boolean>()
     val navigateToHome: LiveData<Boolean> = _navigateToHome
 
@@ -56,10 +53,12 @@ class UserLoginViewModel @Inject constructor(private val useCase: VerifyUserLogi
         checkLoginFields()
     }
 
+
     private fun setEmailErrorMessage(email: String) {
         _emailError.value = when {
             email.isBlank() -> "El email no puede estar en blanco."
             !RegisterOrLoginRegexHelper.emailRegex.matches(email) -> "El email no tiene un formato correcto."
+            email.length > 30 -> "El email no puede tener más de 30 caracteres."
             else -> ""
         }
     }
@@ -75,13 +74,14 @@ class UserLoginViewModel @Inject constructor(private val useCase: VerifyUserLogi
             password.isBlank() -> "La contraseña no pueden estar en blanco."
             password.length < 8 -> "La contraseña debe tener al menos 8 caracteres."
             !RegisterOrLoginRegexHelper.passwordRegex.matches(password) -> "La contraseña no tiene un formato correcto."
+            password.length > 30 -> "La contraseña no puede tener más de 30 caracteres."
             else -> ""
         }
     }
 
     private fun checkLoginFields() {
         _isLoginAcceptButtonEnabled.value =
-            emailError.value?.isBlank() == true && passwordError.value?.isBlank() == true
+            emailError.value?.isBlank() ?: false && passwordError.value?.isBlank() ?: false
     }
 
     fun onPasswordShowingStateChange(currentShowingPasswordState: Boolean) {
@@ -89,18 +89,8 @@ class UserLoginViewModel @Inject constructor(private val useCase: VerifyUserLogi
     }
 
     fun checkUserLogin() {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            val userExistsInDatabase = useCase(email = email.value!!, password = password.value!!)
-            withContext(context = Dispatchers.Main) {
-                if (!userExistsInDatabase) {
-                    _userNotFoundInDatabaseMessage.value =
-                        "El usuario con esas credenciales no existe en la base de datos."
-                    _navigateToHome.value = true
-                } else {
-                    _userNotFoundInDatabaseMessage.value = ""
-                    _navigateToHome.value = false
-                }
-            }
+        viewModelScope.launch {
+
         }
     }
 }
