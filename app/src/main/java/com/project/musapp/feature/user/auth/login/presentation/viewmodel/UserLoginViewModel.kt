@@ -4,11 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
 import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.feature.user.auth.helper.RegisterOrLoginRegexHelper
+import com.project.musapp.feature.user.auth.login.domain.exception.UserNotFoundException
 import com.project.musapp.feature.user.auth.login.domain.useCase.VerifyUserLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -100,7 +105,31 @@ class UserLoginViewModel @Inject constructor(
 
     fun checkUserLogin() {
         viewModelScope.launch {
+            _isLoading.value = true
 
+            delay(2000)
+
+            try {
+                verifyUserInternetConnectionUseCase()
+
+                withContext(context = Dispatchers.IO) {
+                    verifyUserLoginUseCase(email = email.value!!, password.value!!)
+                }
+
+                _navigateToHome.value = true
+            } catch (e: Exception) {
+                _navigateToHome.value = false
+
+                when (e) {
+                    is NoInternetConnectionException ->
+                        _showNoInternetConnectionModal.value = true
+
+                    is UserNotFoundException ->
+                        _showNoInternetConnectionModal.value = false
+                }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }
