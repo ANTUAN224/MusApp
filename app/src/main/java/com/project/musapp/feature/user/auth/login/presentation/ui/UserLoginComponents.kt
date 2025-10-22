@@ -16,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,8 +26,8 @@ import com.project.musapp.feature.user.auth.login.presentation.viewmodel.UserLog
 
 @Composable
 fun UserLoginModal(viewModel: UserLoginViewModel, context: Context, onSuccessLogin: () -> Unit) {
-    val isLoginAcceptButtonEnabled =
-        viewModel.isLoginAcceptButtonEnabled.observeAsState(initial = false).value
+    val isLoginAcceptButtonEnabled by
+        viewModel.isLoginAcceptButtonEnabled.observeAsState(initial = false)
 
     AlertDialog(
         onDismissRequest = { viewModel.onLoginModalClosing() },
@@ -92,9 +93,9 @@ fun LoginEmailTextField(viewModel: UserLoginViewModel) {
 
 @Composable
 fun LoginPasswordTextField(viewModel: UserLoginViewModel) {
-    val password = viewModel.password.observeAsState(initial = "").value
-    val passwordError = viewModel.passwordError.observeAsState(initial = "").value
-    val showPassword = viewModel.showPassword.observeAsState(initial = false).value
+    val password by viewModel.password.observeAsState(initial = "")
+    val passwordError by viewModel.passwordError.observeAsState(initial = "")
+    val showPassword by viewModel.showPassword.observeAsState(initial = false)
 
     TextField(
         label = { Text(text = "Contraseña*") },
@@ -114,12 +115,12 @@ fun LoginPasswordTextField(viewModel: UserLoginViewModel) {
             IconButton(onClick = { viewModel.onPasswordShowingStateChange(showPassword) }) {
                 if (showPassword) {
                     Icon(
-                        imageVector = Icons.Filled.VisibilityOff,
+                        imageVector = Icons.Filled.Visibility,
                         contentDescription = "Icono para mostrar la contraseña"
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Filled.Visibility,
+                        imageVector = Icons.Filled.VisibilityOff,
                         contentDescription = "Icono para ocultar la contraseña"
                     )
                 }
