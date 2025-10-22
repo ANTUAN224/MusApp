@@ -81,7 +81,7 @@ fun LoginEmailTextField(viewModel: UserLoginViewModel) {
         value = email,
         onValueChange = { viewModel.onEmailChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        isError = emailError.isNotBlank() == true,
+        isError = emailError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
@@ -103,7 +103,7 @@ fun LoginPasswordTextField(viewModel: UserLoginViewModel) {
         onValueChange = { viewModel.onPasswordChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        isError = passwordError.isNotBlank() == true,
+        isError = passwordError.isNotBlank(),
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
