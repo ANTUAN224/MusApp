@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class VerifyUserLoginUseCase @Inject constructor(private val repository: UserLoginRepository) {
     suspend operator fun invoke(email: String, password: String) =
-        repository.verifyUserLogin(email = email, password = password)
+        repository.logInUser(email = email, password = password)
 }

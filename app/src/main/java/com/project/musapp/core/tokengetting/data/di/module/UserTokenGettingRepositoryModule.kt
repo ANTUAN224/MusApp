@@ -1,4 +1,4 @@
-package com.project.musapp.core.tokengetting.data.di
+package com.project.musapp.core.tokengetting.data.di.module
 
 import com.project.musapp.core.tokengetting.data.repository.UserTokenGettingRepositoryImp
 import com.project.musapp.core.tokengetting.domain.repository.UserTokenGettingRepository

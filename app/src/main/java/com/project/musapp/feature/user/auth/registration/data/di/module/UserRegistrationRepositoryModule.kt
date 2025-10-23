@@ -1,4 +1,4 @@
-package com.project.musapp.feature.user.auth.registration.data.di
+package com.project.musapp.feature.user.auth.registration.data.di.module
 
 import com.project.musapp.feature.user.auth.registration.data.repository.UserRegistrationRepositoryImp
 import com.project.musapp.feature.user.auth.registration.domain.repository.UserRegistrationRepository

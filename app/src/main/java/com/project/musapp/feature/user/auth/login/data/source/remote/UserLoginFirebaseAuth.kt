@@ -13,7 +13,7 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 class UserLoginFirebaseAuth @Inject constructor() {
-    suspend fun verifyUserLogin(email: String, password: String) {
+    suspend fun logInUser(email: String, password: String) {
         val timeout = 5.seconds
 
         try {

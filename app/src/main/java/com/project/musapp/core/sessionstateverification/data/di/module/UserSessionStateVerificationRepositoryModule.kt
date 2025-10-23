@@ -1,4 +1,4 @@
-package com.project.musapp.core.sessionstateverification.data.di
+package com.project.musapp.core.sessionstateverification.data.di.module
 
 import com.project.musapp.core.sessionstateverification.data.repository.UserSessionStateVerificationRepositoryImp
 import com.project.musapp.core.sessionstateverification.domain.repository.UserSessionStateVerificationRepository

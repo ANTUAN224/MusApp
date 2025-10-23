@@ -1,4 +1,4 @@
-package com.project.musapp.core.internetconnectionverification.data.di
+package com.project.musapp.core.internetconnectionverification.data.di.module
 
 import com.project.musapp.core.internetconnectionverification.data.repository.UserInternetConnectionVerificationRepositoryImp
 import com.project.musapp.core.internetconnectionverification.domain.repository.UserInternetConnectionVerificationRepository

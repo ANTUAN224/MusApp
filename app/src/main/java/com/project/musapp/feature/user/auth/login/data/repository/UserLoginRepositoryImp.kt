@@ -4,8 +4,8 @@ import com.project.musapp.feature.user.auth.login.data.source.remote.UserLoginFi
 import com.project.musapp.feature.user.auth.login.domain.repository.UserLoginRepository
 import javax.inject.Inject
 
-class UserLoginRepositoryImp @Inject constructor(private val remoteDataSource: UserLoginFirebaseAuth) :
+class UserLoginRepositoryImp @Inject constructor(private val userLoginFirebaseAuth: UserLoginFirebaseAuth) :
     UserLoginRepository {
-    override suspend fun verifyUserLogin(email: String, password: String) =
-        remoteDataSource.verifyUserLogin(email = email, password = password)
+    override suspend fun logInUser(email: String, password: String) =
+        userLoginFirebaseAuth.logInUser(email = email, password = password)
 }
