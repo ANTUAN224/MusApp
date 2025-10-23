@@ -1,5 +1,6 @@
 package com.project.musapp.feature.user.auth.login.presentation.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +35,8 @@ fun LoginPart(
     isLoading: Boolean,
     navigateToHome: Boolean?,
     showNoInternetConnectionModal: Boolean,
-    onReturnToInitialMenu: () -> Unit
+    showUserNotFoundModal: Boolean,
+    onUserNotFoundModalClosing: () -> Unit
 ) {
     if (!isLoading && navigateToHome == null) {
         val isLoginAcceptButtonEnabled by viewModel.isLoginAcceptButtonEnabled.observeAsState(
@@ -70,13 +72,18 @@ fun LoginPart(
             }
         })
     } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
             CommonCircularProgressIndicator()
             if (navigateToHome == false) {
                 if (showNoInternetConnectionModal) {
                     CommonNoInternetConnectionModal()
-                } else {
-                    UserNotFoundModal { onReturnToInitialMenu() }
+                } else if (showUserNotFoundModal) {
+                    UserNotFoundModal { onUserNotFoundModalClosing() }
                 }
             }
         }
