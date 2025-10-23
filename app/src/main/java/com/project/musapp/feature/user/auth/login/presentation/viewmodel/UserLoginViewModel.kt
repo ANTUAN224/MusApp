@@ -1,5 +1,6 @@
 package com.project.musapp.feature.user.auth.login.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,9 @@ class UserLoginViewModel @Inject constructor(
 
     private val _showNoInternetConnectionModal = MutableLiveData<Boolean>()
     val showNoInternetConnectionModal: LiveData<Boolean> = _showNoInternetConnectionModal
+
+    private val _showUserNotFoundModal = MutableLiveData<Boolean>()
+    val showUserNotFoundModal: LiveData<Boolean> = _showUserNotFoundModal
 
     fun onLoginModalOpening() {
         _showLoginModal.value = true
@@ -106,6 +110,11 @@ class UserLoginViewModel @Inject constructor(
         _showPassword.value = !currentShowingPasswordState
     }
 
+    fun onUserNotFoundModalClosing() {
+        _navigateToHome.value = null
+        _showUserNotFoundModal.value = false
+    }
+
     fun onLoginAcceptButtonClick() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -113,8 +122,6 @@ class UserLoginViewModel @Inject constructor(
             delay(2000)
 
             try {
-                verifyUserInternetConnectionUseCase()
-
                 withContext(context = Dispatchers.IO) {
                     verifyUserLoginUseCase(email = email.value!!, password.value!!)
                 }
@@ -128,7 +135,7 @@ class UserLoginViewModel @Inject constructor(
                         _showNoInternetConnectionModal.value = true
 
                     is UserNotFoundException ->
-                        _showNoInternetConnectionModal.value = false
+                        _showUserNotFoundModal.value = true
                 }
             } finally {
                 _isLoading.value = false
