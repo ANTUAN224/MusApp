@@ -18,7 +18,7 @@ import com.google.firebase.FirebaseApp
 import com.project.musapp.core.navigation.item.presentation.ui.MusAppNavigationBar
 import com.project.musapp.core.navigation.item.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.core.navigation.routing.RouteHub
-import com.project.musapp.feature.user.auth.login.presentation.ui.UserLoginModal
+import com.project.musapp.feature.user.auth.login.presentation.ui.LoginPart
 import com.project.musapp.feature.user.auth.login.presentation.viewmodel.UserLoginViewModel
 import com.project.musapp.feature.user.auth.registration.presentation.ui.UserRegistrationScreen
 import com.project.musapp.feature.user.auth.registration.presentation.viewmodel.UserRegistrationViewModel
@@ -111,6 +111,15 @@ class MainActivity : ComponentActivity() {
                             val showLoginModal by
                             userLoginViewModel.showLoginModal.observeAsState(initial = false)
 
+                            val isLoading by
+                            userLoginViewModel.isLoading.observeAsState(initial = false)
+
+                            val navigateToHome by
+                            userLoginViewModel.navigateToHome.observeAsState(initial = null)
+
+                            val showNoInternetConnectionModal by
+                            userLoginViewModel.showNoInternetConnectionModal.observeAsState(initial = false)
+
                             InitialMenuScreen(onGoToRegisterButtonPress = {
                                 navController.navigate(
                                     route = RouteHub.Registration
@@ -120,15 +129,26 @@ class MainActivity : ComponentActivity() {
                             }
 
                             if (showLoginModal) {
-                                UserLoginModal(
+                                LoginPart(
                                     viewModel = userLoginViewModel,
-                                    context = applicationContext
+                                    isLoading = isLoading,
+                                    navigateToHome = navigateToHome,
+                                    showNoInternetConnectionModal = showNoInternetConnectionModal
                                 ) {
-                                    navigationViewModel.onHomeScreenNavigation()
+                                    navigationViewModel.onInitialMenuScreenNavigation()
 
-                                    navController.navigate(route = RouteHub.Home) {
+                                    navController.navigate(route = RouteHub.InitialMenu) {
                                         popUpTo<RouteHub.InitialMenu> { inclusive = true }
                                     }
+                                }
+
+                            }
+
+                            if (navigateToHome == true) {
+                                navigationViewModel.onHomeScreenNavigation()
+
+                                navController.navigate(route = RouteHub.Home) {
+                                    popUpTo<RouteHub.InitialMenu> { inclusive = true }
                                 }
                             }
                         }
