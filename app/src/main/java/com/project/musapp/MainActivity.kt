@@ -120,6 +120,9 @@ class MainActivity : ComponentActivity() {
                             val showNoInternetConnectionModal by
                             userLoginViewModel.showNoInternetConnectionModal.observeAsState(initial = false)
 
+                            val showUserNotFountModal by
+                            userLoginViewModel.showUserNotFoundModal.observeAsState(initial = false)
+
                             InitialMenuScreen(onGoToRegisterButtonPress = {
                                 navController.navigate(
                                     route = RouteHub.Registration
@@ -133,22 +136,21 @@ class MainActivity : ComponentActivity() {
                                     viewModel = userLoginViewModel,
                                     isLoading = isLoading,
                                     navigateToHome = navigateToHome,
-                                    showNoInternetConnectionModal = showNoInternetConnectionModal
+                                    showNoInternetConnectionModal = showNoInternetConnectionModal,
+                                    showUserNotFoundModal = showUserNotFountModal
                                 ) {
-                                    navigationViewModel.onInitialMenuScreenNavigation()
-
-                                    navController.navigate(route = RouteHub.InitialMenu) {
-                                        popUpTo<RouteHub.InitialMenu> { inclusive = true }
-                                    }
+                                    userLoginViewModel.onUserNotFoundModalClosing()
+                                    userLoginViewModel.onLoginModalClosing()
                                 }
-
                             }
 
-                            if (navigateToHome == true) {
-                                navigationViewModel.onHomeScreenNavigation()
+                            LaunchedEffect(navigateToHome) {
+                                if (navigateToHome == true) {
+                                    navigationViewModel.onHomeScreenNavigation()
 
-                                navController.navigate(route = RouteHub.Home) {
-                                    popUpTo<RouteHub.InitialMenu> { inclusive = true }
+                                    navController.navigate(route = RouteHub.Home) {
+                                        popUpTo<RouteHub.InitialMenu> { inclusive = true }
+                                    }
                                 }
                             }
                         }
