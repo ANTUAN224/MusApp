@@ -106,7 +106,7 @@ class UserLoginViewModel @Inject constructor(
         _showPassword.value = !currentShowingPasswordState
     }
 
-    fun checkUserLogin() {
+    fun onLoginAcceptButtonClick() {
         viewModelScope.launch {
             _isLoading.value = true
 

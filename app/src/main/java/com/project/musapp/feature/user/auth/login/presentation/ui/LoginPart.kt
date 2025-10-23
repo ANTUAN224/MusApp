@@ -52,12 +52,14 @@ fun LoginPart(
             }
         }, confirmButton = {
             TextButton(
-                onClick = {}, colors = ButtonDefaults.buttonColors(
+                onClick = { viewModel.onLoginAcceptButtonClick() },
+                colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = Color.LightGray,
                     disabledContentColor = Color.Black,
                     containerColor = Color.Black,
                     contentColor = Color.White
-                ), enabled = isLoginAcceptButtonEnabled
+                ),
+                enabled = isLoginAcceptButtonEnabled
             ) {
                 Text(text = "Aceptar")
             }
