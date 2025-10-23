@@ -1,8 +1,8 @@
 package com.project.musapp.feature.user.auth.login.presentation.ui
 
-import android.content.Context
-import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -18,57 +18,67 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.project.musapp.core.component.presentation.ui.CommonCircularProgressIndicator
+import com.project.musapp.core.component.presentation.ui.CommonNoInternetConnectionModal
 import com.project.musapp.feature.user.auth.login.presentation.viewmodel.UserLoginViewModel
 
 @Composable
-fun UserLoginModal(viewModel: UserLoginViewModel, context: Context, onSuccessLogin: () -> Unit) {
-    val isLoginAcceptButtonEnabled by
-        viewModel.isLoginAcceptButtonEnabled.observeAsState(initial = false)
+fun LoginPart(
+    viewModel: UserLoginViewModel,
+    isLoading: Boolean,
+    navigateToHome: Boolean?,
+    showNoInternetConnectionModal: Boolean,
+    onReturnToInitialMenu: () -> Unit
+) {
+    if (!isLoading && navigateToHome == null) {
+        val isLoginAcceptButtonEnabled by viewModel.isLoginAcceptButtonEnabled.observeAsState(
+            initial = false
+        )
 
-    AlertDialog(
-        onDismissRequest = { viewModel.onLoginModalClosing() },
-        dismissButton = {
+        AlertDialog(onDismissRequest = { viewModel.onLoginModalClosing() }, dismissButton = {
             TextButton(
-                onClick = { viewModel.onLoginModalClosing() }, colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
+                onClick = { viewModel.onLoginModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black, contentColor = Color.White
                 )
             ) {
                 Text(text = "Cancelar")
             }
-        },
-        confirmButton = {
+        }, confirmButton = {
             TextButton(
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        "Has iniciado sesión con éxito",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
-                colors = ButtonDefaults.buttonColors(
+                onClick = {}, colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = Color.LightGray,
                     disabledContentColor = Color.Black,
                     containerColor = Color.Black,
                     contentColor = Color.White
-                ),
-                enabled = isLoginAcceptButtonEnabled
+                ), enabled = isLoginAcceptButtonEnabled
             ) {
                 Text(text = "Aceptar")
             }
-        },
-        title = { Text(text = "Inicio de sesión") },
-        text = {
+        }, title = { Text(text = "Inicio de sesión") }, text = {
             Column {
                 LoginEmailTextField(viewModel = viewModel)
                 LoginPasswordTextField(viewModel = viewModel)
             }
+        })
+    } else {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CommonCircularProgressIndicator()
+            if (navigateToHome == false) {
+                if (showNoInternetConnectionModal) {
+                    CommonNoInternetConnectionModal()
+                } else {
+                    UserNotFoundModal { onReturnToInitialMenu() }
+                }
+            }
         }
-    )
+    }
 }
 
 @Composable
@@ -125,5 +135,24 @@ fun LoginPasswordTextField(viewModel: UserLoginViewModel) {
                     )
                 }
             }
+        }
+    )
+}
+
+@Composable
+fun UserNotFoundModal(onReturnToInitialMenu: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onReturnToInitialMenu() },
+        confirmButton = {
+            TextButton(onClick = { onReturnToInitialMenu() }) {
+                Text(text = "Volver al menú inicial")
+            }
+        },
+        title = { Text(text = "Usuario no encontrado") },
+        text = {
+            Text(
+                text = "El usuario cuyo correo electrónico y/o contraseña ingresados no se encuentra " +
+                        "registrado en nuestro sistema. Vuelve al menú inicial e inténtalo de nuevo."
+            )
         })
 }
