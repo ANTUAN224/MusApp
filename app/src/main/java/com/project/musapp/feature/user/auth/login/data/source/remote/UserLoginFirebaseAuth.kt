@@ -1,6 +1,5 @@
 package com.project.musapp.feature.user.auth.login.data.source.remote
 
-import android.util.Log
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
@@ -19,9 +18,7 @@ class UserLoginFirebaseAuth @Inject constructor() {
 
         try {
             withTimeout(timeout = timeout) {
-                Log.d("NETWORK_EXCEPTION", "Verificando credenciales del usuario...")
                 Firebase.auth.signInWithEmailAndPassword(email, password).await()
-                Log.d("NETWORK_EXCEPTION", "Credenciales del usuario verificadas.")
             }
         } catch (e: Exception) {
             when (e) {
