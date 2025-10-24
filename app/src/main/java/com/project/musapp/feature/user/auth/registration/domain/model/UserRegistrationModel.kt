@@ -10,7 +10,7 @@ class UserRegistrationModel(
     val profileImageUrl: String
 )
 
-fun UserRegistrationModel.toDTO(): UserRegistrationDTO =
+fun UserRegistrationModel.toDTO() =
     UserRegistrationDTO(
         name = this.name,
         surnames = this.surnames,
