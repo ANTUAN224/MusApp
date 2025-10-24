@@ -4,9 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storage
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
 import com.project.musapp.feature.user.auth.registration.data.helper.ImageConversionHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
@@ -25,19 +23,15 @@ class UserRegistrationFirebaseStorage @Inject constructor(
             imagePath = profileImageLocalPath
         )
 
-        try {
-            val storageRef =
-                Firebase.storage.reference.child(
-                    "profile-pictures/${Firebase.auth.currentUser!!.uid}"
-                )
+        val storageRef =
+            Firebase.storage.reference.child(
+                "profile-pictures/${Firebase.auth.currentUser!!.uid}"
+            )
 
-            val uploadTask = storageRef.putBytes(imageData).await()
+        val uploadTask = storageRef.putBytes(imageData).await()
 
-            val userProfileImageUrl = uploadTask.storage.downloadUrl.await()
+        val userProfileImageUrl = uploadTask.storage.downloadUrl.await()
 
-            return userProfileImageUrl.toString()
-        } catch (_: StorageException) {
-            throw NoInternetConnectionException()
-        }
+        return userProfileImageUrl.toString()
     }
 }
