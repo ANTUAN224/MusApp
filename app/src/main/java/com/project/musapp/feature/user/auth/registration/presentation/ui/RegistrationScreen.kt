@@ -163,7 +163,7 @@ fun UserRegistrationScreenBody(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileImage(viewModel = viewModel, context = context)
+                    ProfileImage(viewModel = viewModel)
                     ImageSelectionButton(viewModel = viewModel, context = context)
                 }
             }
@@ -382,7 +382,7 @@ fun PasswordTextField(viewModel: UserRegistrationViewModel) {
 }
 
 @Composable
-fun ProfileImage(viewModel: UserRegistrationViewModel, context: Context) {
+fun ProfileImage(viewModel: UserRegistrationViewModel) {
     val profileImagePath by viewModel.imagePath.observeAsState()
 
     AsyncImage(
