@@ -9,6 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -30,4 +31,9 @@ fun CommonNoInternetConnectionModal() {
         title = { Text(text = "Sin conexión a Internet") },
         text = { Text(text = "Actualmente, no tienes acceso a Internet, por lo que no podrás acceder a la app. Verifica tu conexión y vuelva a intentarlo en otra ocasión.") }
     )
+}
+
+@Composable
+fun BoldText(text: String) {
+    Text(text = text, fontWeight = FontWeight.Bold)
 }
