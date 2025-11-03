@@ -4,6 +4,7 @@ import com.project.musapp.feature.user.auth.registration.domain.repository.UserR
 import javax.inject.Inject
 
 class CreateUserUseCase @Inject constructor(private val repository: UserRegistrationRepository) {
-    suspend operator fun invoke(email: String, password: String) =
-        repository.createUser(email, password)
+    suspend operator fun invoke(email: String, password: String): Result<Unit> {
+        return runCatching { repository.createUser(email, password) }
+    }
 }

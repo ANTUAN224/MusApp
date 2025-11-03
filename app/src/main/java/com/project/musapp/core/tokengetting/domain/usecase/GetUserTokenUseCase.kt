@@ -4,5 +4,7 @@ import com.project.musapp.core.tokengetting.domain.repository.UserTokenGettingRe
 import javax.inject.Inject
 
 class GetUserTokenUseCase @Inject constructor(private val repository: UserTokenGettingRepository) {
-    suspend operator fun invoke(): String = this.repository.getUserToken()
+    suspend operator fun invoke(): Result<String> {
+        return runCatching { this.repository.getUserToken() }
+    }
 }
