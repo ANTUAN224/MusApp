@@ -1,25 +1,32 @@
 package com.project.musapp.core.component.presentation.ui
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CommonCircularProgressIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier.size(60.dp),
-        color = Color(color = 0xFF12AA7A),
-        trackColor = Color.LightGray,
-        strokeWidth = 5.dp
-    )
+fun CommonLoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(60.dp),
+            color = Color(color = 0xFF12AA7A),
+            trackColor = Color.LightGray,
+            strokeWidth = 5.dp
+        )
+    }
 }
 
 @Composable
@@ -36,4 +43,9 @@ fun CommonNoInternetConnectionModal() {
 @Composable
 fun BoldText(text: String) {
     Text(text = text, fontWeight = FontWeight.Bold)
+}
+
+@Composable
+fun CommonSpacer() {
+    Spacer(modifier = Modifier.height(23.dp))
 }
