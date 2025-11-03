@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UserLogoutRepositoryImp @Inject constructor(
     private val userLogoutFirebaseAuth: UserLogoutFirebaseAuth
 ) : UserLogoutRepository {
-    override fun logoutUser() {
-        this.userLogoutFirebaseAuth.logoutUser()
+    override fun logOutUser() {
+        this.userLogoutFirebaseAuth.logOutUser()
     }
 }

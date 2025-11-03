@@ -5,5 +5,5 @@ import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class UserLogoutFirebaseAuth @Inject constructor() {
-    fun logoutUser() = Firebase.auth.signOut()
+    fun logOutUser() = Firebase.auth.signOut()
 }
