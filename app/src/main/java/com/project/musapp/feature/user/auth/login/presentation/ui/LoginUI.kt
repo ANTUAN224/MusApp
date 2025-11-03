@@ -1,9 +1,6 @@
 package com.project.musapp.feature.user.auth.login.presentation.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -19,75 +16,48 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.project.musapp.core.component.presentation.ui.CommonCircularProgressIndicator
-import com.project.musapp.core.component.presentation.ui.CommonNoInternetConnectionModal
 import com.project.musapp.feature.user.auth.login.presentation.viewmodel.UserLoginViewModel
 
 @Composable
-fun LoginPart(
-    viewModel: UserLoginViewModel,
-    isLoading: Boolean,
-    navigateToHome: Boolean?,
-    showNoInternetConnectionModal: Boolean,
-    showUserNotFoundModal: Boolean,
-    onUserNotFoundModalClosing: () -> Unit
+fun LoginModal(
+    userLoginViewModel: UserLoginViewModel
 ) {
-    if (!isLoading && navigateToHome == null) {
-        val isLoginAcceptButtonEnabled by viewModel.isLoginAcceptButtonEnabled.observeAsState(
-            initial = false
-        )
+    val isLoginAcceptButtonEnabled by userLoginViewModel.isLoginAcceptButtonEnabled.observeAsState(
+        initial = false
+    )
 
-        AlertDialog(onDismissRequest = { viewModel.onLoginModalClosing() }, dismissButton = {
-            TextButton(
-                onClick = { viewModel.onLoginModalClosing() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black, contentColor = Color.White
-                )
-            ) {
-                Text(text = "Cancelar")
-            }
-        }, confirmButton = {
-            TextButton(
-                onClick = { viewModel.onLoginAcceptButtonClick() },
-                colors = ButtonDefaults.buttonColors(
-                    disabledContainerColor = Color.LightGray,
-                    disabledContentColor = Color.Black,
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                enabled = isLoginAcceptButtonEnabled
-            ) {
-                Text(text = "Aceptar")
-            }
-        }, title = { Text(text = "Inicio de sesión") }, text = {
-            Column {
-                LoginEmailTextField(viewModel = viewModel)
-                LoginPasswordTextField(viewModel = viewModel)
-            }
-        })
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Black.copy(alpha = 0.5f)),
-            contentAlignment = Alignment.Center
+    AlertDialog(onDismissRequest = { userLoginViewModel.onLoginModalClosing() }, dismissButton = {
+        TextButton(
+            onClick = { userLoginViewModel.onLoginModalClosing() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black, contentColor = Color.White
+            )
         ) {
-            CommonCircularProgressIndicator()
-            if (navigateToHome == false) {
-                if (showNoInternetConnectionModal) {
-                    CommonNoInternetConnectionModal()
-                } else if (showUserNotFoundModal) {
-                    UserNotFoundModal { onUserNotFoundModalClosing() }
-                }
-            }
+            Text(text = "Cancelar")
         }
-    }
+    }, confirmButton = {
+        TextButton(
+            onClick = { userLoginViewModel.onLoginAcceptButtonClick() },
+            colors = ButtonDefaults.buttonColors(
+                disabledContainerColor = Color.LightGray,
+                disabledContentColor = Color.Black,
+                containerColor = Color.Black,
+                contentColor = Color.White
+            ),
+            enabled = isLoginAcceptButtonEnabled
+        ) {
+            Text(text = "Aceptar")
+        }
+    }, title = { Text(text = "Inicio de sesión") }, text = {
+        Column {
+            LoginEmailTextField(viewModel = userLoginViewModel)
+            LoginPasswordTextField(viewModel = userLoginViewModel)
+        }
+    })
 }
 
 @Composable
