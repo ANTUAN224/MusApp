@@ -14,11 +14,11 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     private val _showNavBar = MutableLiveData<Boolean>()
     val showNavBar : LiveData<Boolean> = _showNavBar
 
-    fun onHomeScreenNavigation() {
+    fun showNavBar() {
         _showNavBar.value = true
     }
 
-    fun onInitialMenuScreenNavigation() {
+    fun hideNavBar() {
         _showNavBar.value = false
     }
 
