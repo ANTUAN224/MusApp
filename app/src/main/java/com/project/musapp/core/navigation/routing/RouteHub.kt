@@ -14,16 +14,10 @@ sealed class RouteHub {
     object Registration : RouteHub()
 
     @Serializable
-    object Home : RouteHub() {
-        @Serializable
-        object FavoriteArtworkShowing : RouteHub() {
-            @Serializable
-            object Information : RouteHub()
-        }
+    object Home : RouteHub()
 
-        @Serializable
-        object ArtworkInformation : RouteHub()
-    }
+    @Serializable
+    object Artwork : RouteHub()
 
     @Serializable
     object Collection : RouteHub() {
