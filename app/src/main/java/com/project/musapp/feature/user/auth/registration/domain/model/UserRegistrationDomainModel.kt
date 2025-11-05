@@ -2,19 +2,19 @@ package com.project.musapp.feature.user.auth.registration.domain.model
 
 import com.project.musapp.feature.user.auth.registration.data.model.dto.UserRegistrationDTO
 
-class UserRegistrationModel(
+data class UserRegistrationDomainModel(
     val name: String,
     val surnames: String,
     val birthdateText: String,
     val email: String,
-    val profileImageUrl: String
+    val profileImageUrlText: String
 )
 
-fun UserRegistrationModel.toDTO() =
+fun UserRegistrationDomainModel.toDTO() =
     UserRegistrationDTO(
         name = this.name,
         surnames = this.surnames,
-        birthdate = this.birthdateText,
+        birthdateText = this.birthdateText,
         email = this.email,
-        profileImageUrl = this.profileImageUrl
+        profileImageUrlText = this.profileImageUrlText
     )

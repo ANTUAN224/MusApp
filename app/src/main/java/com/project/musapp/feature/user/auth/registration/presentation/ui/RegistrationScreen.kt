@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -53,8 +53,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.project.musapp.core.component.presentation.ui.CommonCircularProgressIndicator
-import com.project.musapp.core.component.presentation.ui.CommonNoInternetConnectionModal
+import com.project.musapp.core.component.presentation.ui.CommonSpacer
 import com.project.musapp.feature.user.auth.registration.presentation.viewmodel.UserRegistrationViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -63,35 +62,18 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun UserRegistrationScreen(
-    viewModel: UserRegistrationViewModel,
+    userRegistrationViewModel: UserRegistrationViewModel,
     context: Context,
     onReturnButtonPress: () -> Unit,
-    isLoading: Boolean,
-    navigateToHome: Boolean?,
-    showNoInternetConnectionModal: Boolean,
     onRegisterButtonPress: () -> Unit,
-    onReturnToInitialMenu: () -> Unit
 ) {
-    if (!isLoading && navigateToHome == null) {
-        Scaffold(topBar = {
-            UserRegistrationTopBar(onReturnButtonPress = onReturnButtonPress)
-        }, bottomBar = {}) { innerPadding ->
-            UserRegistrationScreenBody(
-                viewModel = viewModel, context = context
-            ) {
-                onRegisterButtonPress()
-            }
-        }
-    } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CommonCircularProgressIndicator()
-            if (navigateToHome == false) {
-                if (showNoInternetConnectionModal) {
-                    CommonNoInternetConnectionModal()
-                } else {
-                    EmailAlreadyInUseModal { onReturnToInitialMenu() }
-                }
-            }
+    Scaffold(topBar = {
+        UserRegistrationTopBar(onReturnButtonPress = onReturnButtonPress)
+    }) { _ ->
+        UserRegistrationScreenBody(
+            userRegistrationViewModel = userRegistrationViewModel, context = context
+        ) {
+            onRegisterButtonPress()
         }
     }
 }
@@ -129,7 +111,7 @@ fun UserRegistrationScreenBodyTitle() {
 
 @Composable
 fun UserRegistrationScreenBody(
-    viewModel: UserRegistrationViewModel,
+    userRegistrationViewModel: UserRegistrationViewModel,
     context: Context,
     onLastRegisterButtonPress: () -> Unit
 ) {
@@ -150,11 +132,9 @@ fun UserRegistrationScreenBody(
         ) {
             val fieldNames = getFieldNames()
 
-            fieldNames.forEach { fieldName ->
-                item {
-                    FieldView(fieldName = fieldName, viewModel = viewModel)
-                    Spacer(modifier = Modifier.height(23.dp))
-                }
+            items(fieldNames) { fieldName ->
+                FieldView(fieldName = fieldName, viewModel = userRegistrationViewModel)
+                CommonSpacer()
             }
 
             item {
@@ -163,8 +143,8 @@ fun UserRegistrationScreenBody(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileImage(viewModel = viewModel)
-                    ImageSelectionButton(viewModel = viewModel, context = context)
+                    ProfileImage(viewModel = userRegistrationViewModel)
+                    ImageSelectionButton(viewModel = userRegistrationViewModel, context = context)
                 }
             }
         }
@@ -175,7 +155,7 @@ fun UserRegistrationScreenBody(
                 .weight(1f), contentAlignment = Alignment.Center
         ) {
             UserRegistrationScreenButton(
-                content = "Completar el registro", viewModel = viewModel
+                content = "Completar el registro", viewModel = userRegistrationViewModel
             ) {
                 onLastRegisterButtonPress()
             }

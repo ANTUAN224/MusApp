@@ -1,10 +1,8 @@
 package com.project.musapp.feature.user.auth.registration.data.source.remote
 
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
-import com.project.musapp.feature.user.auth.registration.data.model.dto.UserRegistrationDTO
-import com.project.musapp.feature.user.auth.registration.data.source.remote.service.UserRegistrationApiService
-import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationModel
-import java.io.IOException
+import com.project.musapp.feature.user.auth.registration.data.source.remote.apiservice.UserRegistrationApiService
+import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationDomainModel
+import com.project.musapp.feature.user.auth.registration.domain.model.toDTO
 import javax.inject.Inject
 
 class UserRegistrationRetrofit @Inject constructor(
@@ -12,12 +10,12 @@ class UserRegistrationRetrofit @Inject constructor(
 ) {
     suspend fun insertUser(
         firebaseUserToken: String,
-        userRegistrationDTO: UserRegistrationDTO
+        userRegistrationDomainModel: UserRegistrationDomainModel
     ) {
         userRegistrationApiService
             .insertUser(
                 headerCompanionValue = "Bearer $firebaseUserToken",
-                userRegistrationDTO = userRegistrationDTO
+                userRegistrationDTO = userRegistrationDomainModel.toDTO()
             )
     }
 }

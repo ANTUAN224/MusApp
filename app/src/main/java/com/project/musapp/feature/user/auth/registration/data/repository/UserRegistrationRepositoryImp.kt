@@ -4,13 +4,12 @@ import android.net.Uri
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.storage.StorageException
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
+import com.project.musapp.core.internetconnectionverification.domain.exception.InternetConnectionVerificationException
 import com.project.musapp.feature.user.auth.registration.data.source.remote.UserRegistrationFirebaseAuth
 import com.project.musapp.feature.user.auth.registration.data.source.remote.UserRegistrationFirebaseStorage
 import com.project.musapp.feature.user.auth.registration.data.source.remote.UserRegistrationRetrofit
-import com.project.musapp.feature.user.auth.registration.domain.exception.EmailAlreadyInUseException
-import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationModel
-import com.project.musapp.feature.user.auth.registration.domain.model.toDTO
+import com.project.musapp.feature.user.auth.registration.domain.exception.UserRegistrationException
+import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationDomainModel
 import com.project.musapp.feature.user.auth.registration.domain.repository.UserRegistrationRepository
 import java.io.IOException
 import javax.inject.Inject
@@ -25,31 +24,31 @@ class UserRegistrationRepositoryImp @Inject constructor(
         try {
             userRegistrationFirebaseAuth.createUser(email = email, password = password)
         } catch (_: FirebaseNetworkException) {
-            throw NoInternetConnectionException()
+            throw InternetConnectionVerificationException.NoInternetConnectionException
         } catch (_: FirebaseAuthUserCollisionException) {
-            throw EmailAlreadyInUseException()
+            throw UserRegistrationException.EmailAlreadyInUseException
         }
     }
 
-    override suspend fun getProfileImageUrl(profileImageLocalPath: Uri): String {
+    override suspend fun getProfileImageUrlText(profileImageLocalPath: Uri): String {
         try {
             return userRegistrationFirebaseStorage.uploadUserProfileImage(profileImageLocalPath)
         } catch (_: StorageException) {
-            throw NoInternetConnectionException()
+            throw InternetConnectionVerificationException.NoInternetConnectionException
         }
     }
 
     override suspend fun insertUser(
         userToken: String,
-        userRegisterModel: UserRegistrationModel
+        userRegistrationDomainModel: UserRegistrationDomainModel
     ) {
         try {
             userRegistrationRetrofit.insertUser(
                 firebaseUserToken = userToken,
-                userRegistrationDTO = userRegisterModel.toDTO()
+                userRegistrationDomainModel = userRegistrationDomainModel
             )
         } catch (_: IOException) {
-            throw NoInternetConnectionException()
+            throw InternetConnectionVerificationException.NoInternetConnectionException
         }
     }
 }

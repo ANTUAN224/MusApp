@@ -11,7 +11,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRegistrationFirebaseStorage @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     suspend fun uploadUserProfileImage(profileImageLocalPath: Uri): String {
         Firebase.storage.maxUploadRetryTimeMillis = 5000
