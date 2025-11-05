@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
+import com.project.musapp.core.internetconnectionverification.domain.exception.InternetConnectionVerificationException
 import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.feature.user.auth.helper.RegisterOrLoginRegexHelper
-import com.project.musapp.feature.user.auth.login.domain.exception.UserNotFoundException
-import com.project.musapp.feature.user.auth.login.domain.useCase.VerifyUserLoginUseCase
+import com.project.musapp.feature.user.auth.login.domain.exception.UserLoginException
+import com.project.musapp.feature.user.auth.login.domain.useCase.LogInUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserLoginViewModel @Inject constructor(
     private val verifyUserInternetConnectionUseCase: VerifyUserInternetConnectionUseCase,
-    private val verifyUserLoginUseCase: VerifyUserLoginUseCase
+    private val logInUserUseCase: LogInUserUseCase
 ) :
     ViewModel() {
     private val _showLoginModal = MutableLiveData<Boolean>()
@@ -112,6 +112,7 @@ class UserLoginViewModel @Inject constructor(
     fun onUserNotFoundModalClosing() {
         _navigateToHome.value = null
         _showUserNotFoundModal.value = false
+        _showLoginModal.value = false
     }
 
     fun onLoginAcceptButtonClick() {
@@ -120,25 +121,27 @@ class UserLoginViewModel @Inject constructor(
 
             delay(2000)
 
-            try {
+            runCatching {
+                verifyUserInternetConnectionUseCase().getOrThrow()
+
                 withContext(context = Dispatchers.IO) {
-                    verifyUserLoginUseCase(email = email.value!!, password.value!!)
+                    logInUserUseCase(email = email.value!!, password.value!!).getOrThrow()
                 }
-
+            }.onSuccess {
                 _navigateToHome.value = true
-            } catch (e: Exception) {
-                _navigateToHome.value = false
-
-                when (e) {
-                    is NoInternetConnectionException ->
+            }.onFailure { throwable ->
+                when (throwable) {
+                    is InternetConnectionVerificationException ->
                         _showNoInternetConnectionModal.value = true
 
-                    is UserNotFoundException ->
+                    is UserLoginException.UserNotFoundException ->
                         _showUserNotFoundModal.value = true
                 }
-            } finally {
-                _isLoading.value = false
+
+                _navigateToHome.value = false
             }
+
+            _isLoading.value = false
         }
     }
 }

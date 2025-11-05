@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
+import com.project.musapp.core.internetconnectionverification.domain.exception.InternetConnectionVerificationException
 import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.core.sessionstateverification.domain.usecase.VerifyUserSessionStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,12 +28,16 @@ class UserStateInitialCheckingViewModel
         viewModelScope.launch {
             delay(2000) //Simula el tiempo de carga inicial
 
-            try {
-                verifyUserInternetConnectionUseCase()
+            runCatching {
+                verifyUserInternetConnectionUseCase().getOrThrow()
+            }.onSuccess {
                 _hasInternetConnection.value = true
                 _hasActiveSession.value = verifyUserSessionStateUseCase()
-            } catch (_: NoInternetConnectionException) {
-                _hasInternetConnection.value = false
+            }.onFailure { throwable ->
+                when (throwable) {
+                    is InternetConnectionVerificationException.NoInternetConnectionException ->
+                        _hasInternetConnection.value = false
+                }
             }
         }
     }

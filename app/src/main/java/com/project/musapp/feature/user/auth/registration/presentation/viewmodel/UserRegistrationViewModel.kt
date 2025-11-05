@@ -8,17 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.R
-import com.project.musapp.core.feature.logout.domain.usecase.LogoutUserUseCase
-import com.project.musapp.core.internetconnectionverification.domain.exception.NoInternetConnectionException
+import com.project.musapp.core.feature.logout.domain.usecase.LogOutUserUseCase
+import com.project.musapp.core.internetconnectionverification.domain.exception.InternetConnectionVerificationException
 import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.core.sessionstateverification.domain.usecase.VerifyUserSessionStateUseCase
 import com.project.musapp.feature.user.auth.helper.RegisterOrLoginRegexHelper
-import com.project.musapp.core.tokengetting.domain.usecase.GetUserTokenUseCase
-import com.project.musapp.feature.user.auth.registration.domain.exception.EmailAlreadyInUseException
-import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationModel
+import com.project.musapp.feature.user.auth.registration.domain.exception.UserRegistrationException
 import com.project.musapp.feature.user.auth.registration.domain.usecase.CreateUserUseCase
-import com.project.musapp.feature.user.auth.registration.domain.usecase.GetProfileImageUrlUseCase
+import com.project.musapp.feature.user.auth.registration.domain.usecase.GetProfileImageUrlTextUseCase
 import com.project.musapp.feature.user.auth.registration.domain.usecase.InsertUserUseCase
+import com.project.musapp.feature.user.auth.registration.presentation.model.UserRegistrationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -28,18 +27,16 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class UserRegistrationViewModel @Inject constructor(
     private val verifyUserInternetConnectionUseCase: VerifyUserInternetConnectionUseCase,
     private val createUserUseCase: CreateUserUseCase,
-    private val getProfileImageUrlUseCase: GetProfileImageUrlUseCase,
-    private val getUserTokenUseCase: GetUserTokenUseCase,
+    private val getProfileImageUrlTextUseCase: GetProfileImageUrlTextUseCase,
     private val insertUserUseCase: InsertUserUseCase,
     private val verifyUserSessionStateUseCase: VerifyUserSessionStateUseCase,
-    private val logoutUserUseCase: LogoutUserUseCase,
-    @ApplicationContext private val context: Context
+    private val logOutUserUseCase: LogOutUserUseCase,
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
@@ -77,7 +74,7 @@ class UserRegistrationViewModel @Inject constructor(
     private val _passwordError = MutableLiveData<String>()
     val passwordError: LiveData<String> = _passwordError
 
-    private val _imagePath = MutableLiveData<Uri>(
+    private val _imagePath = MutableLiveData(
         ("android.resource://${context.packageName}/" +
                 "${R.drawable.default_image}").toUri()
     )
@@ -224,46 +221,49 @@ class UserRegistrationViewModel @Inject constructor(
 
             delay(2000)
 
-            try {
-                verifyUserInternetConnectionUseCase()
+            runCatching {
+                verifyUserInternetConnectionUseCase().getOrThrow()
 
                 withContext(context = Dispatchers.IO) {
-                    createUserUseCase(email = email.value!!, password = password.value!!)
+                    createUserUseCase(
+                        email = email.value!!,
+                        password = password.value!!
+                    ).getOrThrow()
 
-                    val profileImageUrl =
-                        getProfileImageUrlUseCase(profileImageLocalPath = imagePath.value!!)
-
-                    val userToken = getUserTokenUseCase()
+                    val profileImageUrlText =
+                        getProfileImageUrlTextUseCase(profileImageLocalPath = imagePath.value!!).getOrThrow()
 
                     insertUserUseCase(
-                        userToken = userToken,
-                        userRegistrationModel = UserRegistrationModel(
+                        userRegistrationUiModel = UserRegistrationUiModel(
                             name = name.value!!,
                             surnames = surnames.value!!,
                             birthdateText = birthdateText.value!!,
                             email = email.value!!,
-                            profileImageUrl = profileImageUrl
-                        )
-                    )
+                            profileImageUrlText = profileImageUrlText
+                        ),
+                    ).getOrThrow()
                 }
-
+            }.onSuccess {
                 _navigateToHome.value = true
-            } catch (e: Exception) {
-                if (verifyUserSessionStateUseCase()) {
-                    logoutUserUseCase()
+            }.onFailure { throwable ->
+                when (throwable) {
+                    is InternetConnectionVerificationException.NoInternetConnectionException -> {
+                        if (verifyUserSessionStateUseCase()) {
+                            logOutUserUseCase()
+                        }
+
+                        _showNoInternetConnectionModal.value = true
+                    }
+
+                    is UserRegistrationException.EmailAlreadyInUseException -> {
+                        _showNoInternetConnectionModal.value = false
+                    }
                 }
 
                 _navigateToHome.value = false
-                when (e) {
-                    is NoInternetConnectionException ->
-                        _showNoInternetConnectionModal.value = true
-
-                    is EmailAlreadyInUseException ->
-                        _showNoInternetConnectionModal.value = false
-                }
-            } finally {
-                _isLoading.value = false
             }
+
+            _isLoading.value = false
         }
     }
 }
