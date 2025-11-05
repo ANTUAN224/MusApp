@@ -1,7 +1,8 @@
 package com.project.musapp.core.di.module
 
 import com.project.musapp.BuildConfig
-import com.project.musapp.feature.user.auth.registration.data.source.remote.service.UserRegistrationApiService
+import com.project.musapp.feature.home.data.source.remote.apiservice.HomeApiService
+import com.project.musapp.feature.user.auth.registration.data.source.remote.apiservice.UserRegistrationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +17,18 @@ object RetrofitModule {
     @Provides //Se utiliza cuando no se puede aplicar @Inject en el constructor de una clase.
     @Singleton //Indica que esta función me devuelve la misma instancia siempre (patrón de diseño Singleton).
     fun provideRetrofit(): Retrofit = Retrofit
-            .Builder()
-            .baseUrl(BuildConfig.API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        .Builder()
+        .baseUrl(BuildConfig.API_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
     @Provides
     @Singleton
     fun provideUserRegistrationApiService(retrofit: Retrofit): UserRegistrationApiService =
         retrofit.create(UserRegistrationApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHomeApiService(retrofit: Retrofit): HomeApiService =
+        retrofit.create(HomeApiService::class.java)
 }
