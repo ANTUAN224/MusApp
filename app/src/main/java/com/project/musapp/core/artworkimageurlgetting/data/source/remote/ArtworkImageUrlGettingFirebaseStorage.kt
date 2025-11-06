@@ -1,4 +1,4 @@
-package com.project.musapp.feature.home.data.source.remote
+package com.project.musapp.core.artworkimageurlgetting.data.source.remote
 
 import android.net.Uri
 import com.google.firebase.ktx.Firebase
@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class ArtworkImageUrlGettingFirebaseStorage @Inject constructor() {
     suspend fun getArtworkImageUrl(artworkImagePath: String): Uri {
-//        Firebase.storage.maxDownloadRetryTimeMillis = 5000
+        Firebase.storage.maxDownloadRetryTimeMillis = 5000
 
         val storageRef = Firebase.storage.reference
 
