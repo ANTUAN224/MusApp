@@ -50,8 +50,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.musapp.feature.auth.presentation.registration.viewmodel.UserRegistrationViewModel
-import com.project.musapp.feature.profile.presentation.ui.UserProfileImage
 import com.project.musapp.ui.commoncomponents.CommonSpacer
+import com.project.musapp.ui.commoncomponents.UserProfileImage
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset

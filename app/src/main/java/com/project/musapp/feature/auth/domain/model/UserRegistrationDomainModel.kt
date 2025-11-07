@@ -1,6 +1,6 @@
 package com.project.musapp.feature.auth.domain.model
 
-import com.project.musapp.feature.user.auth.data.model.dto.UserRegistrationDTO
+import com.project.musapp.feature.auth.data.model.dto.UserRegistrationDTO
 
 data class UserRegistrationDomainModel(
     val name: String,

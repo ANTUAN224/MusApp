@@ -5,7 +5,7 @@ import android.net.Uri
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.project.musapp.feature.user.auth.helper.ImageConversionHelper
+import com.project.musapp.feature.auth.helper.ImageConversionHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
