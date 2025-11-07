@@ -17,7 +17,7 @@ sealed class RouteHub {
     object Home : RouteHub()
 
     @Serializable
-    object ArtworkInformation : RouteHub()
+    object Artwork : RouteHub()
 
     @Serializable
     object Collection : RouteHub() {
