@@ -343,9 +343,7 @@ fun HomeScreenBody(
     }
 
     if (showUserProfileModal) {
-        UserProfileModal(userProfile = userProfile) {
-            homeViewModel.onUserProfileModalClosing()
-        }
+        UserProfileModal(userProfile = userProfile, homeViewModel = homeViewModel)
     }
 }
 
