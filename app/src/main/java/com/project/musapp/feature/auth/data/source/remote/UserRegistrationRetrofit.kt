@@ -1,7 +1,7 @@
 package com.project.musapp.feature.auth.data.source.remote
 
-import com.project.musapp.feature.user.auth.data.model.dto.UserRegistrationDTO
-import com.project.musapp.feature.user.auth.data.source.remote.apiservice.UserAuthApiService
+import com.project.musapp.feature.auth.data.model.dto.UserRegistrationDTO
+import com.project.musapp.feature.auth.data.source.remote.apiservice.UserAuthApiService
 import javax.inject.Inject
 
 class UserRegistrationRetrofit @Inject constructor(

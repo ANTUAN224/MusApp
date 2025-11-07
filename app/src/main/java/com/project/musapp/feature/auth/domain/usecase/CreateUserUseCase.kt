@@ -1,6 +1,6 @@
 package com.project.musapp.feature.auth.domain.usecase
 
-import com.project.musapp.feature.user.auth.domain.repository.UserAuthRepository
+import com.project.musapp.feature.auth.domain.repository.UserAuthRepository
 import javax.inject.Inject
 
 class CreateUserUseCase @Inject constructor(private val repository: UserAuthRepository) {

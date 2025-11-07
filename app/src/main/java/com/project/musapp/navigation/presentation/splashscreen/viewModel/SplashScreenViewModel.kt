@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
-import com.project.musapp.feature.user.auth.domain.usecase.VerifyUserSessionStateUseCase
+import com.project.musapp.feature.auth.domain.usecase.VerifyUserSessionStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
