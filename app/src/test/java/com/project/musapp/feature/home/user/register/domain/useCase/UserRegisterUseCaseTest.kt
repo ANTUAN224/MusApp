@@ -1,15 +1,10 @@
 package com.project.musapp.feature.home.user.register.domain.useCase
 
-import com.project.musapp.feature.user.auth.registration.domain.model.UserRegistrationModel
 import com.project.musapp.feature.user.auth.registration.domain.repository.UserRegistrationRepository
 import com.project.musapp.feature.user.auth.registration.domain.usecase.InsertUserUseCase
-import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

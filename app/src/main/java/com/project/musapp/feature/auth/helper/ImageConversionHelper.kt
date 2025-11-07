@@ -1,0 +1,29 @@
+package com.project.musapp.feature.auth.helper
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import java.io.File
+
+object ImageConversionHelper {
+    fun toByteArray(context: Context, imagePath: Uri): ByteArray {
+    return when (imagePath.scheme) {
+                "content", "android.resource" -> { //Imagen seleccionada desde un content provider o la de por defecto de la app (android resource).
+                    context.contentResolver.openInputStream(imagePath)!!.use { inputStream ->
+                        inputStream.readBytes()
+                    }
+                }
+
+                else -> { //Imagen seleccionada desde el sistema de archivos (file).
+                    val file = File(imagePath.path!!)
+                    file.readBytes()
+                }
+            }
+
+    }
+
+    fun toBitmap(byteArray: ByteArray): Bitmap {
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+}

@@ -1,17 +1,16 @@
 package com.project.musapp.feature.home.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.musapp.core.feature.logout.domain.usecase.LogOutUserUseCase
-import com.project.musapp.core.internetconnectionverification.domain.exception.InternetConnectionVerificationException
-import com.project.musapp.core.internetconnectionverification.domain.usecase.VerifyUserInternetConnectionUseCase
-import com.project.musapp.feature.home.domain.usecase.GetUserFavoriteArtworksUseCase
-import com.project.musapp.feature.home.domain.usecase.GetUserProfileUseCase
-import com.project.musapp.feature.home.presentation.model.ArtworkPreviewUiModel
-import com.project.musapp.feature.home.presentation.model.UserProfileUiModel
+import com.project.musapp.core.network.domain.exception.NetworkException
+import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
+import com.project.musapp.feature.artwork.domain.usecase.GetUserFavoriteArtworksUseCase
+import com.project.musapp.feature.auth.domain.usecase.LogOutUserUseCase
+import com.project.musapp.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
+import com.project.musapp.feature.profile.presentation.model.UserProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,19 +54,19 @@ class HomeViewModel @Inject constructor(
     private val _showUserProfileModal = MutableLiveData<Boolean>()
     val showUserProfileModal: LiveData<Boolean> = _showUserProfileModal
 
-    fun onFirstDropdownMenuExpanded() {
+    fun onFirstDropdownMenuExpansion() {
         _isFirstDropdownMenuExpanded.value = true
     }
 
-    fun onFirstDropdownMenuCollapsed() {
+    fun onFirstDropdownMenuCollapse() {
         _isFirstDropdownMenuExpanded.value = false
     }
 
-    fun onSettingDropdownMenuExpanded() {
+    fun onSettingDropdownMenuExpansion() {
         _isSettingDropdownMenuExpanded.value = true
     }
 
-    fun onSettingDropdownMenuCollapsed() {
+    fun onSettingDropdownMenuCollapse() {
         _isSettingDropdownMenuExpanded.value = false
     }
 
@@ -83,11 +82,11 @@ class HomeViewModel @Inject constructor(
         _showContactWithSupportModal.value = false
     }
 
-    fun onUserProfileDropdownMenuExpanded() {
+    fun onUserProfileDropdownMenuExpansion() {
         _isProfileDropdownMenuExpanded.value = true
     }
 
-    fun onUserProfileDropdownMenuCollapsed() {
+    fun onUserProfileDropdownMenuCollapse() {
         _isProfileDropdownMenuExpanded.value = false
     }
 
@@ -105,18 +104,14 @@ class HomeViewModel @Inject constructor(
                 verifyUserInternetConnectionUseCase().getOrThrow()
 
                 withContext(context = Dispatchers.IO) {
-                    Log.d("EJECUCIÓN", "Vamos a obtener el perfil del usuario")
                     _userProfile.postValue(getUserProfileUseCase().getOrThrow())
-                    Log.d("EJECUCIÓN", "Vamos a obtener los cuadros favoritos del usuario")
                     _userFavoriteArtworks.postValue(getUserFavoriteArtworksUseCase().getOrThrow())
-                    Log.d("EJECUCIÓN", "¡Objetivo conseguido!")
                 }
             }.onFailure { throwable ->
                 when (throwable) {
-                    is InternetConnectionVerificationException.NoInternetConnectionException ->
+                    is NetworkException.NoInternetConnectionException ->
                         _showNoInternetConnectionModal.value = true
                 }
-                Log.e("EJECUCIÓN", "Pasaron cosas -> $throwable")
             }
 
             _isLoading.value = false
@@ -124,9 +119,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun logOutUser() {
-        onSettingDropdownMenuCollapsed()
-        onUserProfileDropdownMenuCollapsed()
-        onFirstDropdownMenuCollapsed()
+        onUserProfileDropdownMenuCollapse()
+        onFirstDropdownMenuCollapse()
         logOutUserUseCase()
     }
 }

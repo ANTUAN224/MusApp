@@ -1,7 +1,6 @@
 package com.project.musapp
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,16 +14,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
-import com.project.musapp.core.navigation.item.presentation.ui.MusAppNavigationBar
-import com.project.musapp.core.navigation.item.presentation.viewmodel.NavigationViewModel
-import com.project.musapp.core.navigation.routing.RouteHub
-import com.project.musapp.feature.user.auth.login.presentation.ui.LoginPart
-import com.project.musapp.feature.user.auth.login.presentation.viewmodel.UserLoginViewModel
-import com.project.musapp.feature.user.auth.registration.presentation.ui.UserRegistrationScreen
-import com.project.musapp.feature.user.auth.registration.presentation.viewmodel.UserRegistrationViewModel
-import com.project.musapp.initialchecking.presentation.ui.UserStateInitialCheckingScreen
-import com.project.musapp.initialchecking.presentation.viewModel.UserStateInitialCheckingViewModel
-import com.project.musapp.feature.initialmenu.presentation.ui.InitialMenuScreen
+import com.project.musapp.feature.auth.presentation.login.ui.LoginModal
+import com.project.musapp.feature.auth.presentation.login.ui.UserNotFoundModal
+import com.project.musapp.feature.auth.presentation.login.viewmodel.UserLoginViewModel
+import com.project.musapp.feature.auth.presentation.registration.ui.EmailAlreadyInUseModal
+import com.project.musapp.feature.auth.presentation.registration.ui.UserRegistrationScreen
+import com.project.musapp.feature.auth.presentation.registration.viewmodel.UserRegistrationViewModel
+import com.project.musapp.ui.commoncomponents.CommonLoadingScreen
+import com.project.musapp.ui.commoncomponents.CommonNoInternetConnectionModal
+import com.project.musapp.navigation.presentation.navigationbar.ui.MusAppNavigationBar
+import com.project.musapp.navigation.presentation.navigationbar.viewmodel.NavigationViewModel
+import com.project.musapp.navigation.routing.RouteHub
+import com.project.musapp.feature.home.presentation.ui.HomeScreen
+import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
+import com.project.musapp.navigation.presentation.initialmenu.ui.InitialMenuScreen
+import com.project.musapp.navigation.presentation.splashscreen.viewModel.SplashScreenViewModel
 import com.project.musapp.ui.theme.MusAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -52,38 +56,39 @@ class MainActivity : ComponentActivity() {
                         navigationViewModel = navigationViewModel,
                         navItemIndex = currentNavItemIndex
                     )
-                }) { innerPadding ->
+                }) { _ ->
 
                     NavHost(
                         navController = navController,
                         startDestination = RouteHub.UserStateInitialChecking
                     ) {
                         composable<RouteHub.UserStateInitialChecking> { navBackStackEntry ->
-                            val userStateInitialCheckingViewModel: UserStateInitialCheckingViewModel =
+                            val splashScreenViewModel: SplashScreenViewModel =
                                 hiltViewModel(viewModelStoreOwner = navBackStackEntry)
 
                             LaunchedEffect(Unit) {
-                                userStateInitialCheckingViewModel.onUserInitialChecking()
+                                splashScreenViewModel.onUserInitialChecking()
                             }
 
                             val hasInternetConnection by
-                            userStateInitialCheckingViewModel.hasInternetConnection.observeAsState(
+                            splashScreenViewModel.hasInternetConnection.observeAsState(
                                 initial = null
                             )
 
                             val hasActiveSession by
-                            userStateInitialCheckingViewModel.hasActiveSession.observeAsState(
+                            splashScreenViewModel.hasActiveSession.observeAsState(
                                 initial = null
                             )
 
-                            LaunchedEffect(hasInternetConnection, hasActiveSession) {
-                                if (hasInternetConnection == null || hasActiveSession == null)
-                                    return@LaunchedEffect
+                            if (hasInternetConnection == null) {
+                                CommonLoadingScreen()
+                            } else if (hasInternetConnection == false) {
+                                CommonNoInternetConnectionModal()
+                            }
 
+                            LaunchedEffect(hasInternetConnection) {
                                 if (hasInternetConnection == true) {
                                     if (hasActiveSession == true) {
-                                        navigationViewModel.onHomeScreenNavigation()
-
                                         navController.navigate(route = RouteHub.Home) {
                                             popUpTo<RouteHub.UserStateInitialChecking> {
                                                 inclusive = true
@@ -98,12 +103,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                             }
-
-                            UserStateInitialCheckingScreen(
-                                hasInternetConnection = hasInternetConnection
-                            )
                         }
-
                         composable<RouteHub.InitialMenu> { navBackStackEntry ->
                             val userLoginViewModel: UserLoginViewModel =
                                 hiltViewModel(viewModelStoreOwner = navBackStackEntry)
@@ -118,36 +118,41 @@ class MainActivity : ComponentActivity() {
                             userLoginViewModel.navigateToHome.observeAsState(initial = null)
 
                             val showNoInternetConnectionModal by
-                            userLoginViewModel.showNoInternetConnectionModal.observeAsState(initial = false)
+                            userLoginViewModel.showNoInternetConnectionModal.observeAsState(
+                                initial = false
+                            )
 
                             val showUserNotFountModal by
                             userLoginViewModel.showUserNotFoundModal.observeAsState(initial = false)
 
-                            InitialMenuScreen(onGoToRegisterButtonPress = {
-                                navController.navigate(
-                                    route = RouteHub.Registration
-                                )
-                            }) {
-                                userLoginViewModel.onLoginModalOpening()
-                            }
-
-                            if (showLoginModal) {
-                                LoginPart(
-                                    viewModel = userLoginViewModel,
-                                    isLoading = isLoading,
-                                    navigateToHome = navigateToHome,
-                                    showNoInternetConnectionModal = showNoInternetConnectionModal,
-                                    showUserNotFoundModal = showUserNotFountModal
-                                ) {
-                                    userLoginViewModel.onUserNotFoundModalClosing()
-                                    userLoginViewModel.onLoginModalClosing()
+                            if (!isLoading && navigateToHome == null) {
+                                InitialMenuScreen(onGoToRegisterButtonPress = {
+                                    navController.navigate(
+                                        route = RouteHub.Registration
+                                    )
+                                }) {
+                                    userLoginViewModel.onLoginModalOpening()
                                 }
+
+                                if (showLoginModal) {
+                                    LoginModal(
+                                        userLoginViewModel = userLoginViewModel
+                                    )
+                                }
+                            } else if (navigateToHome == false) {
+                                if (showNoInternetConnectionModal) {
+                                    CommonNoInternetConnectionModal()
+                                } else if (showUserNotFountModal) {
+                                    UserNotFoundModal {
+                                        userLoginViewModel.onUserNotFoundModalClosing()
+                                    }
+                                }
+                            } else {
+                                CommonLoadingScreen()
                             }
 
                             LaunchedEffect(navigateToHome) {
                                 if (navigateToHome == true) {
-                                    navigationViewModel.onHomeScreenNavigation()
-
                                     navController.navigate(route = RouteHub.Home) {
                                         popUpTo<RouteHub.InitialMenu> { inclusive = true }
                                     }
@@ -171,25 +176,33 @@ class MainActivity : ComponentActivity() {
                                 initial = false
                             )
 
-                            UserRegistrationScreen(
-                                viewModel = userRegistrationViewModel,
-                                context = applicationContext,
-                                isLoading = isLoading,
-                                navigateToHome = navigateToHome,
-                                showNoInternetConnectionModal = showNoInternetConnectionModal,
-                                onReturnButtonPress = { navController.popBackStack() },
-                                onRegisterButtonPress = {
-                                    userRegistrationViewModel.onUserRegistrationScreenButtonPress()
-                                }) {
-                                navController.navigate(route = RouteHub.UserStateInitialChecking) {
-                                    popUpTo<RouteHub.Registration> { inclusive = true }
+                            if (!isLoading && navigateToHome == null) {
+                                UserRegistrationScreen(
+                                    userRegistrationViewModel = userRegistrationViewModel,
+                                    context = applicationContext,
+                                    onReturnButtonPress = { navController.popBackStack() },
+                                    onRegisterButtonPress = {
+                                        userRegistrationViewModel.onUserRegistrationScreenButtonPress()
+                                    })
+                            } else {
+                                CommonLoadingScreen()
+
+                                if (navigateToHome == false) {
+                                    if (showNoInternetConnectionModal) {
+                                        CommonNoInternetConnectionModal()
+                                    } else {
+                                        EmailAlreadyInUseModal {
+                                            navController.navigate(route = RouteHub.UserStateInitialChecking) {
+                                                popUpTo<RouteHub.Registration> {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
-
                             LaunchedEffect(navigateToHome) {
                                 if (navigateToHome == true) {
-                                    navigationViewModel.onHomeScreenNavigation()
-
                                     navController.navigate(route = RouteHub.Home) {
                                         popUpTo<RouteHub.Registration> { inclusive = true }
                                     }
@@ -197,13 +210,40 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        composable<RouteHub.Home> {
+                        composable<RouteHub.Home> { navBackStackEntry ->
+                            val homeViewModel: HomeViewModel =
+                                hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                            val isLoading by homeViewModel.isLoading.observeAsState(initial = true)
+
+                            val showNoInternetConnectionModal by homeViewModel.showNoInternetConnectionModal.observeAsState(
+                                initial = false
+                            )
+
                             LaunchedEffect(Unit) {
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Bienvenido a casita",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                homeViewModel.getHomeData()
+                            }
+
+                            if (isLoading) {
+                                CommonLoadingScreen()
+                            } else if (showNoInternetConnectionModal) {
+                                CommonNoInternetConnectionModal()
+                            } else {
+                                LaunchedEffect(Unit) {
+                                    navigationViewModel.onNavBarShowing()
+                                }
+
+                                HomeScreen(homeViewModel = homeViewModel) {
+                                    homeViewModel.logOutUser()
+
+                                    navigationViewModel.onNavBarHiding()
+
+                                    navController.navigate(route = RouteHub.UserStateInitialChecking) {
+                                        popUpTo<RouteHub.Home> {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
