@@ -41,7 +41,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
     Scaffold(bottomBar = {
         if (showNavBar) MusAppNavigationBar(
             navigationViewModel = navigationViewModel,
-            navItemIndex = currentNavItemIndex
+            currentNavItemIndex = currentNavItemIndex
         )
     }) { _ ->
 
