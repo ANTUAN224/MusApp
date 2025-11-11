@@ -10,6 +10,12 @@ fun EmailAlreadyInUseModal(onReturnToInitialMenu: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onReturnToInitialMenu() },
         confirmButton = { TextButton(onClick = { onReturnToInitialMenu() }) { Text(text = "Volver al menú inicial") } },
-        title = { Text(text = "Email introducido ya existente") },
-        text = { Text(text = "El email que has ingresado en el registro ya existe. Vuelve al menú inicial e inténtalo de nuevo.") })
+        title = { Text(text = "Error en el registro de usuario") },
+        text = {
+            Text(
+                text =
+                    "Se ha producido un error en el registro de usuario. Vuelve al menú inicial e " +
+                            "inténtalo de nuevo."
+            )
+        })
 }

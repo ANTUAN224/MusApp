@@ -1,17 +1,17 @@
 package com.project.musapp.feature.artwork.data.model.dto
 
-import com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrend
 import com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrendDomainModel
+import com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrendType
 
 data class ArtisticTrendDTO(
     val name: String,
     val centuryRange: String,
-    val artisticTrend: com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrend
+    val type: ArtisticTrendType
 )
 
-fun com.project.musapp.feature.artwork.data.model.dto.ArtisticTrendDTO.toDomainModel() =
-    _root_ide_package_.com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrendDomainModel(
+fun ArtisticTrendDTO.toDomainModel() =
+    ArtisticTrendDomainModel(
         name = this.name,
         centuryRange = this.centuryRange,
-        artisticTrend = this.artisticTrend
+        type = this.type
     )

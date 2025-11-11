@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -69,8 +71,13 @@ fun BoldText(
 }
 
 @Composable
-fun CommonSpacer() {
-    Spacer(modifier = Modifier.height(23.dp))
+fun CommonVerticalSpacer(height: Dp) {
+    Spacer(modifier = Modifier.height(height = height))
+}
+
+@Composable
+fun CommonHorizontalSpacer() {
+    Spacer(modifier = Modifier.width(15.dp))
 }
 
 @Composable
@@ -82,4 +89,42 @@ fun UserProfileImage(userProfileImageUri: Uri, size: Dp) {
         model = userProfileImageUri,
         contentDescription = "Imagen del perfil del usuario"
     )
+}
+
+@Composable
+fun ArtworkPreviewCard(
+    modifier: Modifier,
+    userFavoriteArtworkPreview: ArtworkPreviewUiModel,
+    onArtworkPreviewCardClick: () -> Unit
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(
+            width = 2.dp, color = Color.Black
+        ),
+        onClick = { onArtworkPreviewCardClick() }
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .height(height = 120.dp)
+                .fillMaxWidth(),
+            model = userFavoriteArtworkPreview.imageUrl,
+            contentDescription = "Imagen del cuadro ${userFavoriteArtworkPreview.title}",
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        BoldText(
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .padding(top = 18.dp),
+            text = userFavoriteArtworkPreview.title
+        )
+
+        Text(
+            modifier = Modifier.padding(horizontal = 5.dp, vertical = 3.dp),
+            text = userFavoriteArtworkPreview.authorHistoricallyKnownName
+        )
+    }
 }

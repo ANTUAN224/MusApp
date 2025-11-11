@@ -28,6 +28,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -50,7 +51,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.musapp.feature.auth.presentation.registration.viewmodel.UserRegistrationViewModel
-import com.project.musapp.ui.commoncomponents.CommonSpacer
+import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 import java.time.Instant
 import java.time.LocalDate
@@ -133,7 +134,7 @@ fun UserRegistrationScreenBody(
 
             items(fieldNames) { fieldName ->
                 FieldView(fieldName = fieldName, viewModel = userRegistrationViewModel)
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
             }
 
             item {
@@ -340,7 +341,7 @@ fun PasswordTextField(viewModel: UserRegistrationViewModel) {
         colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
-                text = passwordError
+                text = passwordError.ifBlank { "Caracteres especiales válidos: *, +, _, -, #, ? y @" }
             )
         },
         trailingIcon = {

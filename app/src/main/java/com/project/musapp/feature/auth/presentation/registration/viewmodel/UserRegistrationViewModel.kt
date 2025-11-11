@@ -173,7 +173,9 @@ class UserRegistrationViewModel @Inject constructor(
         _passwordError.value = when {
             password.isBlank() -> "La contraseña no pueden estar en blanco."
             password.length < 8 -> "La contraseña debe tener al menos 8 caracteres."
-            !RegexHelper.passwordRegex.matches(password) -> "La contraseña no tiene un formato correcto."
+            !Regex(pattern = ".*[A-Za-z].*").matches(password) -> "La contraseña debe tener al menos una letra."
+            !Regex(pattern = ".*[0-9].*").matches(password) -> "La contraseña debe tener al menos un número."
+            !Regex(pattern = ".*[*_+\\-#?@].*").matches(password) -> "La contraseña debe tener al menos una carácter especial válido."
             password.length > 30 -> "La contraseña no puede tener más de 30 caracteres."
             else -> ""
         }
@@ -230,19 +232,17 @@ class UserRegistrationViewModel @Inject constructor(
                         password = password.value!!
                     ).getOrThrow()
 
-                    val profileImageUrlText =
-
-                        insertUserUseCase(
-                            userRegistrationUiModel = UserRegistrationUiModel(
-                                name = name.value!!,
-                                surnames = surnames.value!!,
-                                birthdateText = birthdateText.value!!,
-                                email = email.value!!,
-                                profileImageUrlText = uploadUserProfileImageUseCase(
-                                    profileImageLocalPath = userProfileImageUri.value!!
-                                ).getOrThrow()
-                            ),
-                        ).getOrThrow()
+                    insertUserUseCase(
+                        userRegistrationUiModel = UserRegistrationUiModel(
+                            name = name.value!!,
+                            surnames = surnames.value!!,
+                            birthdateText = birthdateText.value!!,
+                            email = email.value!!,
+                            profileImageUrlText = uploadUserProfileImageUseCase(
+                                profileImageLocalPath = userProfileImageUri.value!!
+                            ).getOrThrow()
+                        ),
+                    ).getOrThrow()
                 }
             }.onSuccess {
                 _navigateToHome.value = true

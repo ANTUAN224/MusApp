@@ -14,10 +14,13 @@ sealed class RouteHub {
     object Registration : RouteHub()
 
     @Serializable
-    object Home : RouteHub()
+    data class Home(
+        val artworkId: Long? = null,
+        val addArtworkToUserFavoriteArtworks: Boolean = false
+    ) : RouteHub()
 
     @Serializable
-    object Artwork : RouteHub()
+    data class Artwork(val artworkId: Long) : RouteHub()
 
     @Serializable
     object Collection : RouteHub() {

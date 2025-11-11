@@ -5,12 +5,12 @@ import com.project.musapp.feature.artwork.presentation.model.ArtisticTrendUiMode
 data class ArtisticTrendDomainModel(
     val name: String,
     val centuryRange: String,
-    val artisticTrend: com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrend
+    val type: ArtisticTrendType
 )
 
-fun com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrendDomainModel.toUiModel() =
-    _root_ide_package_.com.project.musapp.feature.artwork.presentation.model.ArtisticTrendUiModel(
+fun ArtisticTrendDomainModel.toUiModel() =
+    ArtisticTrendUiModel(
         name = this.name,
         centuryRange = this.centuryRange,
-        artisticTrend = this.artisticTrend
+        type = this.type
     )

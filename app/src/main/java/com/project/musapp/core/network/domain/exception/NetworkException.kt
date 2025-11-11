@@ -1,5 +1,5 @@
 package com.project.musapp.core.network.domain.exception
 
-sealed class NetworkException(message: String? = null) : RuntimeException(message) {
+sealed class NetworkException() : RuntimeException("") {
     data object NoInternetConnectionException : NetworkException()
 }

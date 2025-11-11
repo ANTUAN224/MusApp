@@ -5,7 +5,7 @@ import com.project.musapp.feature.artwork.domain.repository.ArtworkRepository
 import javax.inject.Inject
 
 class GetArtworkImageUrlUseCase @Inject constructor(private val repository: ArtworkRepository) {
-    suspend operator fun invoke(artworkImagePath: String): Result<Uri> {
-        return runCatching { repository.getArtworkImageUrl(artworkImagePathText = artworkImagePath) }
+    suspend operator fun invoke(artworkImagePathText: String): Result<Uri> {
+        return runCatching { repository.getArtworkImageUrl(artworkImagePathText = artworkImagePathText) }
     }
 }

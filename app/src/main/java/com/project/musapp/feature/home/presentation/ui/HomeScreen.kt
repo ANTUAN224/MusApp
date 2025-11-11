@@ -1,6 +1,5 @@
 package com.project.musapp.feature.home.presentation.ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,8 +21,6 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,18 +44,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil3.compose.AsyncImage
-import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 import com.project.musapp.ui.commoncomponents.BoldText
-import com.project.musapp.ui.commoncomponents.CommonSpacer
-import com.project.musapp.feature.profile.presentation.model.UserProfileUiModel
+import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
+import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
+import com.project.musapp.ui.commoncomponents.ArtworkPreviewCard
+import com.project.musapp.ui.commoncomponents.CommonHorizontalSpacer
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    onArtworkPreviewClick: (Long) -> Unit,
     onReturnToInitialMenu: () -> Unit
 ) {
     val userProfile by homeViewModel.userProfile.observeAsState()
@@ -69,12 +66,12 @@ fun HomeScreen(
             HomeScreenTopBar(homeViewModel = homeViewModel, userProfile = userProfile!!) {
                 onReturnToInitialMenu()
             }
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         HomeScreenBody(
             modifier = Modifier.padding(paddingValues = innerPadding),
             homeViewModel = homeViewModel,
-            userProfile = userProfile!!
+            userProfile = userProfile!!,
+            onArtworkPreviewClick = onArtworkPreviewClick
         )
     }
 }
@@ -82,9 +79,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenTopBar(
-    homeViewModel: HomeViewModel,
-    userProfile: UserProfileUiModel,
-    onReturnToInitialMenu: () -> Unit
+    homeViewModel: HomeViewModel, userProfile: UserProfileUiModel, onReturnToInitialMenu: () -> Unit
 ) {
     val isFirstDropdownMenuExpanded by homeViewModel.isFirstDropdownMenuExpanded.observeAsState(
         initial = false
@@ -98,8 +93,7 @@ fun HomeScreenTopBar(
     val isDarkModeActivated by homeViewModel.isDarkModeActivated.observeAsState(initial = false)
 
     TopAppBar(
-        title = { Text("MusApp", color = Color.White) },
-        actions = {
+        title = { Text("MusApp", color = Color.White) }, actions = {
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -120,119 +114,89 @@ fun HomeScreenTopBar(
                 DropdownMenu(
                     expanded = isFirstDropdownMenuExpanded,
                     onDismissRequest = { homeViewModel.onFirstDropdownMenuCollapse() }) {
-                    DropdownMenuItem(
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.settings_24px),
-                                contentDescription = "Ajustes",
-                                tint = Color.Black
-                            )
-                        },
-                        text = { Text("Ajustes") },
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                contentDescription = "Acceso al submenú de ajustes",
-                                tint = Color.Black
-                            )
-                        },
-                        onClick = { homeViewModel.onSettingDropdownMenuExpansion() }
-                    )
+                    DropdownMenuItem(leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.settings_24px),
+                            contentDescription = "Ajustes",
+                            tint = Color.Black
+                        )
+                    }, text = { Text("Ajustes") }, trailingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = "Acceso al submenú de ajustes",
+                            tint = Color.Black
+                        )
+                    }, onClick = { homeViewModel.onSettingDropdownMenuExpansion() })
 
-                    DropdownMenuItem(
-                        leadingIcon = {
-                            UserProfileImage(
-                                userProfileImageUri = userProfile.profileImageUrl,
-                                size = 30.dp
-                            )
-                        },
-                        text = { Text("Cuenta") },
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                contentDescription = "Acceso al submenú de cuenta del usuario",
-                                tint = Color.Black
-                            )
-                        },
-                        onClick = { homeViewModel.onUserProfileDropdownMenuExpansion() }
-                    )
+                    DropdownMenuItem(leadingIcon = {
+                        UserProfileImage(
+                            userProfileImageUri = userProfile.profileImageUrl, size = 30.dp
+                        )
+                    }, text = { Text("Cuenta") }, trailingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = "Acceso al submenú de cuenta del usuario",
+                            tint = Color.Black
+                        )
+                    }, onClick = { homeViewModel.onUserProfileDropdownMenuExpansion() })
                 }
 
                 DropdownMenu(
                     expanded = isSettingDropdownMenuExpanded,
-                    onDismissRequest = { homeViewModel.onSettingDropdownMenuCollapse() }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Tema") },
-                        trailingIcon = {
-                            Switch(
-                                checked = isDarkModeActivated,
-                                onCheckedChange = { homeViewModel.onSwitchClick(it) },
-                                thumbContent = {
-                                    Icon(
-                                        imageVector = if (isDarkModeActivated) Icons.Filled.DarkMode else Icons.Filled.LightMode,
-                                        contentDescription = "Tema de la app"
-                                    )
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedBorderColor = Color.Black,
-                                    uncheckedBorderColor = Color.Black,
-                                    checkedTrackColor = Color.Black,
-                                    uncheckedTrackColor = Color.Black,
-                                    checkedThumbColor = Color.White,
-                                    uncheckedThumbColor = Color.White,
-                                    checkedIconColor = Color.Black,
-                                    uncheckedIconColor = Color.Black
+                    onDismissRequest = { homeViewModel.onSettingDropdownMenuCollapse() }) {
+                    DropdownMenuItem(text = { Text("Tema") }, trailingIcon = {
+                        Switch(
+                            checked = isDarkModeActivated,
+                            onCheckedChange = { homeViewModel.onSwitchClick(it) },
+                            thumbContent = {
+                                Icon(
+                                    imageVector = if (isDarkModeActivated) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                                    contentDescription = "Tema de la app"
                                 )
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedBorderColor = Color.Black,
+                                uncheckedBorderColor = Color.Black,
+                                checkedTrackColor = Color.Black,
+                                uncheckedTrackColor = Color.Black,
+                                checkedThumbColor = Color.White,
+                                uncheckedThumbColor = Color.White,
+                                checkedIconColor = Color.Black,
+                                uncheckedIconColor = Color.Black
                             )
-                        },
-                        onClick = { homeViewModel.onSwitchClick(!isDarkModeActivated) }
-                    )
+                        )
+                    }, onClick = { homeViewModel.onSwitchClick(!isDarkModeActivated) })
 
-                    DropdownMenuItem(
-                        text = { Text("Ayuda") },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.contact_support_24px),
-                                contentDescription = "Contacto con el soporte",
-                                tint = Color.Black
-                            )
-                        },
-                        onClick = { homeViewModel.onContactWithSupportModalOpening() }
-                    )
+                    DropdownMenuItem(text = { Text("Ayuda") }, trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.contact_support_24px),
+                            contentDescription = "Contacto con el soporte",
+                            tint = Color.Black
+                        )
+                    }, onClick = { homeViewModel.onContactWithSupportModalOpening() })
                 }
 
                 DropdownMenu(
                     expanded = isProfileDropdownMenuExpanded,
-                    onDismissRequest = { homeViewModel.onUserProfileDropdownMenuCollapse() }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Mostrar perfil") },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.article_person_24px),
-                                contentDescription = "Información del perfil de usuario",
-                                tint = Color.Black
-                            )
-                        },
-                        onClick = { homeViewModel.onUserProfileModalOpening() }
-                    )
+                    onDismissRequest = { homeViewModel.onUserProfileDropdownMenuCollapse() }) {
+                    DropdownMenuItem(text = { Text("Mostrar perfil") }, trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.article_person_24px),
+                            contentDescription = "Información del perfil de usuario",
+                            tint = Color.Black
+                        )
+                    }, onClick = { homeViewModel.onUserProfileModalOpening() })
 
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Logout,
-                                contentDescription = "Cierre de sesión del usuario",
-                                tint = Color.Black
-                            )
-                        },
-                        onClick = { onReturnToInitialMenu() }
-                    )
+                    DropdownMenuItem(text = { Text("Cerrar sesión") }, trailingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = "Cierre de sesión del usuario",
+                            tint = Color.Black
+                        )
+                    }, onClick = { onReturnToInitialMenu() })
                 }
             }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
+        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
     )
 }
 
@@ -241,10 +205,11 @@ fun HomeScreenBody(
     modifier: Modifier,
     homeViewModel: HomeViewModel,
     userProfile: UserProfileUiModel,
+    onArtworkPreviewClick: (Long) -> Unit
 ) {
     val showSupportContactModal by homeViewModel.showContactWithSupportModal.observeAsState(initial = false)
     val showUserProfileModal by homeViewModel.showUserProfileModal.observeAsState(initial = false)
-    val userFavoriteArtworks by homeViewModel.userFavoriteArtworks.observeAsState()
+    val userFavoriteArtworkPreviews by homeViewModel.userFavoriteArtworks.observeAsState()
 
     ConstraintLayout(
         modifier = modifier
@@ -256,15 +221,16 @@ fun HomeScreenBody(
 
         BoldText(
             modifier = Modifier
-                .padding(vertical = 30.dp)
                 .constrainAs(ref = bodyTitle) {
                     top.linkTo(anchor = parent.top)
                     bottom.linkTo(anchor = parent.bottom)
-                    verticalBias = 0f
-                }, text = "Tus cuadros favoritos", fontSize = 20.sp
+                    verticalBias = 0.01f
+                }
+                .padding(vertical = 30.dp),
+            text = "Tus cuadros favoritos", fontSize = 20.sp
         )
 
-        if (userFavoriteArtworks!!.isEmpty()) {
+        if (userFavoriteArtworkPreviews!!.isEmpty()) {
             Column(
                 modifier = Modifier
                     .constrainAs(ref = bodyContent) {
@@ -275,20 +241,19 @@ fun HomeScreenBody(
                         verticalBias = 0.35f
                     }
                     .padding(horizontal = 15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     modifier = Modifier.size(size = 80.dp),
                     painter = painterResource(R.drawable.wall_art_24px),
-                    contentDescription = "Icono de un cuadro pegado en la pared",
+                    contentDescription = "Cuadro pegado en la pared",
                     tint = Color.Black
                 )
 
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
 
                 BoldText(text = "Todavía no tienes ningún cuadro favorito.")
 
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
 
                 BoldText(
                     text = "¡Comienza a explorar obras de arte y descubre aquí tus favoritas!",
@@ -299,13 +264,14 @@ fun HomeScreenBody(
             LazyColumn(
                 modifier = modifier
                     .constrainAs(ref = bodyContent) {
-                        top.linkTo(anchor = bodyTitle.bottom)
+                        top.linkTo(anchor = parent.top)
                         bottom.linkTo(anchor = parent.bottom)
-                        verticalBias = 1f
+                        verticalBias = 0f
                     }
-                    .padding(bottom = 80.dp)
-            ) {
-                items(userFavoriteArtworks!!.chunkInPairs()) { (firstArtwork, secondArtwork) ->
+                    .fillMaxHeight()
+                    .padding(bottom = 80.dp)) {
+                items(userFavoriteArtworkPreviews!!.chunkInPairs())
+                { (firstArtworkPreview, secondArtworkPreview) ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -313,26 +279,28 @@ fun HomeScreenBody(
                     ) {
                         ArtworkPreviewCard(
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            userFavoriteArtworkPreview = firstArtwork
-                        )
+                                .weight(1f),
+                            userFavoriteArtworkPreview = firstArtworkPreview
+                        ) {
+                            onArtworkPreviewClick(firstArtworkPreview.id)
+                        }
 
-                        Spacer(modifier = Modifier.width(10.dp))
+                        CommonHorizontalSpacer()
 
-                        if (secondArtwork != null) {
+                        if (secondArtworkPreview != null) {
                             ArtworkPreviewCard(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
-                                userFavoriteArtworkPreview = secondArtwork
-                            )
+                                    .weight(1f),
+                                userFavoriteArtworkPreview = secondArtworkPreview
+                            ) {
+                                onArtworkPreviewClick(secondArtworkPreview.id)
+                            }
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
                     }
 
-                    CommonSpacer()
+                    CommonVerticalSpacer(height = 23.dp)
                 }
             }
         }
@@ -344,38 +312,5 @@ fun HomeScreenBody(
 
     if (showUserProfileModal) {
         UserProfileModal(userProfile = userProfile, homeViewModel = homeViewModel)
-    }
-}
-
-@Composable
-fun ArtworkPreviewCard(modifier: Modifier, userFavoriteArtworkPreview: ArtworkPreviewUiModel) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(
-            width = 2.dp,
-            color = Color.Black
-        )
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
-            model = userFavoriteArtworkPreview.imageUrl,
-            contentDescription = "Imagen del cuadro ${userFavoriteArtworkPreview.title}",
-        )
-
-        BoldText(
-            modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .padding(top = 18.dp),
-            text = userFavoriteArtworkPreview.title
-        )
-
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 5.dp, vertical = 3.dp),
-            text = userFavoriteArtworkPreview.authorHistoricallyKnownName
-        )
     }
 }

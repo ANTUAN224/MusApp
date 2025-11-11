@@ -1,16 +1,19 @@
 package com.project.musapp.feature.home.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
-import com.project.musapp.feature.artwork.domain.usecase.GetUserFavoriteArtworksUseCase
+import com.project.musapp.feature.user.domain.usecase.GetUserFavoriteArtworksUseCase
 import com.project.musapp.feature.auth.domain.usecase.LogOutUserUseCase
-import com.project.musapp.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.project.musapp.feature.user.domain.usecase.GetUserProfileUseCase
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
-import com.project.musapp.feature.profile.presentation.model.UserProfileUiModel
+import com.project.musapp.feature.user.domain.usecase.AddArtworkToUserFavoriteArtworksUseCase
+import com.project.musapp.feature.user.domain.usecase.DeleteArtworkFromUserFavoriteArtworksUseCase
+import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +24,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val verifyUserInternetConnectionUseCase: VerifyUserInternetConnectionUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val addArtworkToUserFavoriteArtworksUseCase: AddArtworkToUserFavoriteArtworksUseCase,
+    private val deleteArtworkFromUserFavoriteArtworksUseCase: DeleteArtworkFromUserFavoriteArtworksUseCase,
     private val getUserFavoriteArtworksUseCase: GetUserFavoriteArtworksUseCase,
     private val logOutUserUseCase: LogOutUserUseCase
 ) : ViewModel() {
@@ -98,14 +103,30 @@ class HomeViewModel @Inject constructor(
         _showUserProfileModal.value = false
     }
 
-    fun getHomeData() {
+    fun onHomeScreenArrival(
+        artworkId: Long?,
+        addArtworkToUserFavoriteArtworks: Boolean
+    ) {
         viewModelScope.launch {
             runCatching {
                 verifyUserInternetConnectionUseCase().getOrThrow()
 
                 withContext(context = Dispatchers.IO) {
                     _userProfile.postValue(getUserProfileUseCase().getOrThrow())
-                    _userFavoriteArtworks.postValue(getUserFavoriteArtworksUseCase().getOrThrow())
+
+                    if (artworkId != null) {
+                        if (addArtworkToUserFavoriteArtworks) {
+                            _userFavoriteArtworks.postValue(
+                                addArtworkToUserFavoriteArtworksUseCase(artworkId).getOrThrow()
+                            )
+                        } else {
+                            _userFavoriteArtworks.postValue(
+                                deleteArtworkFromUserFavoriteArtworksUseCase(artworkId).getOrThrow()
+                            )
+                        }
+                    } else {
+                        _userFavoriteArtworks.postValue(getUserFavoriteArtworksUseCase().getOrThrow())
+                    }
                 }
             }.onFailure { throwable ->
                 when (throwable) {

@@ -5,13 +5,7 @@ import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkDomainMode
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 
 interface ArtworkRepository {
-    suspend fun getArtworkInformation(userToken: String): ArtworkDomainModel
-
-    suspend fun addArtworkToCollections(userToken: String)
-
-    suspend fun deleteArtworkFromCollections(userToken: String)
+    suspend fun getArtwork(userToken: String, artworkId: Long): ArtworkDomainModel
 
     suspend fun getArtworkImageUrl(artworkImagePathText: String): Uri
-
-    suspend fun getUserFavoriteArtworks(userToken: String): List<ArtworkPreviewDomainModel>
 }

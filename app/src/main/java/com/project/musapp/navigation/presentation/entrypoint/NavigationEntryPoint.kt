@@ -1,6 +1,8 @@
 package com.project.musapp.navigation.presentation.entrypoint
 
 import android.content.Context
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +12,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkScreen
+import com.project.musapp.feature.artwork.presentation.viewmodel.ArtworkViewModel
 import com.project.musapp.feature.auth.presentation.login.ui.LoginModal
 import com.project.musapp.feature.auth.presentation.login.ui.UserNotFoundModal
 import com.project.musapp.feature.auth.presentation.login.viewmodel.UserLoginViewModel
@@ -73,10 +78,10 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     CommonNoInternetConnectionModal()
                 }
 
-                LaunchedEffect(hasInternetConnection) {
+                LaunchedEffect(hasActiveSession) {
                     if (hasInternetConnection == true) {
                         if (hasActiveSession == true) {
-                            navController.navigate(route = RouteHub.Home) {
+                            navController.navigate(route = RouteHub.Home()) {
                                 popUpTo<RouteHub.UserStateInitialChecking> {
                                     inclusive = true
                                 }
@@ -140,7 +145,8 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                 LaunchedEffect(navigateToHome) {
                     if (navigateToHome == true) {
-                        navController.navigate(route = RouteHub.Home) {
+                        Log.d("EJECUCIÓN", "Navegando hacia home...")
+                        navController.navigate(route = RouteHub.Home()) {
                             popUpTo<RouteHub.InitialMenu> { inclusive = true }
                         }
                     }
@@ -190,7 +196,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                 }
                 LaunchedEffect(navigateToHome) {
                     if (navigateToHome == true) {
-                        navController.navigate(route = RouteHub.Home) {
+                        navController.navigate(route = RouteHub.Home()) {
                             popUpTo<RouteHub.Registration> { inclusive = true }
                         }
                     }
@@ -198,6 +204,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
             }
 
             composable<RouteHub.Home> { navBackStackEntry ->
+                Log.d("EJECUCIÓN", "He llegado a home")
+                val homeDestination: RouteHub.Home = navBackStackEntry.toRoute()
+
                 val homeViewModel: HomeViewModel =
                     hiltViewModel(viewModelStoreOwner = navBackStackEntry)
 
@@ -208,7 +217,10 @@ fun NavigationEntryPoint(applicationContext: Context) {
                 )
 
                 LaunchedEffect(Unit) {
-                    homeViewModel.getHomeData()
+                    homeViewModel.onHomeScreenArrival(
+                        artworkId = homeDestination.artworkId,
+                        addArtworkToUserFavoriteArtworks = homeDestination.addArtworkToUserFavoriteArtworks
+                    )
                 }
 
                 if (isLoading) {
@@ -220,15 +232,90 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         navigationViewModel.onNavBarShowing()
                     }
 
-                    HomeScreen(homeViewModel = homeViewModel) {
+                    HomeScreen(homeViewModel = homeViewModel, onArtworkPreviewClick = { artworkId ->
+                        Log.d("EJECUCIÓN", "Id del cuadro seleccionado -> $artworkId")
+                        Log.d("EJECUCIÓN", "Navegando hacia la pantalla del cuadro")
+
+                        navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
+
+                        navigationViewModel.onNavBarHiding()
+                    }) {
                         homeViewModel.logOutUser()
 
                         navigationViewModel.onNavBarHiding()
 
                         navController.navigate(route = RouteHub.UserStateInitialChecking) {
-                            popUpTo<RouteHub.Home> {
-                                inclusive = true
+                            popUpTo<RouteHub.Home> { inclusive = true }
+                        }
+                    }
+                }
+            }
+
+            composable<RouteHub.Artwork> { navBackStackEntry ->
+                val artworkDestination: RouteHub.Artwork = navBackStackEntry.toRoute()
+
+                val artworkViewModel: ArtworkViewModel =
+                    hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                val isLoading by artworkViewModel.isLoading.observeAsState(initial = true)
+
+                val showNoInternetConnectionModal by artworkViewModel.showNoInternetConnectionModal.observeAsState(
+                    initial = false
+                )
+
+                LaunchedEffect(Unit) {
+                    artworkViewModel.onArtworkInformationScreenArrival(artworkId = artworkDestination.artworkId)
+                }
+
+                if (isLoading) {
+                    CommonLoadingScreen()
+                } else if (showNoInternetConnectionModal) {
+                    CommonNoInternetConnectionModal()
+                } else {
+                    val artwork by artworkViewModel.artwork.observeAsState()
+
+                    val hasArtworkBeenMarkedAsFavorite by artworkViewModel.hasArtworkBeenMarkedAsFavorite.observeAsState(
+                        initial = artwork!!.hasBeenMarkedAsFavorite
+                    )
+
+                    ArtworkScreen(
+                        artworkViewModel = artworkViewModel,
+                        artwork = artwork!!,
+                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                    ) {
+                        if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                            Log.d("EJECUCIÓN", "Llegando al lado incorrecto...")
+                            navController.navigate(
+                                route =
+                                    RouteHub.Home(
+                                        artworkId = artwork!!.id,
+                                        addArtworkToUserFavoriteArtworks = hasArtworkBeenMarkedAsFavorite
+                                    )
+                            ) {
+                                popUpTo<RouteHub.Artwork> { inclusive = true }
                             }
+                        } else {
+                            Log.d("EJECUCIÓN", "Llegando al popBackStack()...")
+                            navController.popBackStack()
+                        }
+                    }
+
+                    BackHandler { //Este composable se ejecuta cuando el usuario pulsa al botón o
+                        // realiza el gesto de retroceder en el dispositivo.
+                        if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                            Log.d("EJECUCIÓN", "Llegando al lado incorrecto...")
+                            navController.navigate(
+                                route =
+                                    RouteHub.Home(
+                                        artworkId = artwork!!.id,
+                                        addArtworkToUserFavoriteArtworks = hasArtworkBeenMarkedAsFavorite
+                                    )
+                            ) {
+                                popUpTo<RouteHub.Artwork> { inclusive = true }
+                            }
+                        } else {
+                            Log.d("EJECUCIÓN", "Llegando al popBackStack()...")
+                            navController.popBackStack()
                         }
                     }
                 }

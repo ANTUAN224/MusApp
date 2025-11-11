@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
-import com.project.musapp.feature.profile.presentation.model.UserProfileUiModel
+import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.ui.commoncomponents.BoldText
-import com.project.musapp.ui.commoncomponents.CommonSpacer
+import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
 @Composable
@@ -65,17 +65,17 @@ fun UserProfileModal(userProfile: UserProfileUiModel, homeViewModel: HomeViewMod
                     BoldText(text = "Nombre")
                     Text(text = ": ${userProfile.name}.")
                 }
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
                 Row {
                     BoldText(text = "Apellidos")
                     Text(text = ": ${userProfile.surnames}.")
                 }
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
                 Row {
                     BoldText(text = "Fecha de nacimiento")
                     Text(text = ": ${userProfile.birthdateText}.")
                 }
-                CommonSpacer()
+                CommonVerticalSpacer(height = 23.dp)
                 Row {
                     BoldText(text = "Correo")
                     Text(text = ": ${userProfile.email}.")

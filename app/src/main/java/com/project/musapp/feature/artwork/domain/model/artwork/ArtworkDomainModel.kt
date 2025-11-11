@@ -1,5 +1,6 @@
 package com.project.musapp.feature.artwork.domain.model.artwork
 
+import android.net.Uri
 import com.project.musapp.feature.artwork.domain.model.LocationDomainModel
 import com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTrendDomainModel
 import com.project.musapp.feature.artwork.domain.model.artistictrend.toUiModel
@@ -16,6 +17,7 @@ data class ArtworkDomainModel(
     val historicalContext: String,
     val technique: String,
     val support: String,
+    val dimensions: String,
     val author: AuthorDomainModel,
     val culturalEra: String,
     val artisticTrend: ArtisticTrendDomainModel,
@@ -23,17 +25,19 @@ data class ArtworkDomainModel(
     val hasBeenMarkedAsFavorite: Boolean
 )
 
-fun ArtworkDomainModel.toUiModel() = ArtworkUiModel(
-    id = this.id,
-    title = this.title,
-    description = this.description,
-    imagePathText = this.imagePathText,
-    historicalContext = this.historicalContext,
-    technique = this.technique,
-    support = this.support,
-    author = this.author.toUiModel(),
-    culturalEra = this.culturalEra,
-    artisticTrend = this.artisticTrend.toUiModel(),
-    location = this.location.toUiModel(),
-    hasBeenMarkedAsFavorite = this.hasBeenMarkedAsFavorite
-)
+suspend fun ArtworkDomainModel.toUiModel(onImagePathProvision: suspend (String) -> Uri) =
+    ArtworkUiModel(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        imageUrl = onImagePathProvision(this.imagePathText),
+        historicalContext = this.historicalContext,
+        technique = this.technique,
+        support = this.support,
+        dimensions = this.dimensions,
+        author = this.author.toUiModel(),
+        culturalEra = this.culturalEra,
+        artisticTrend = this.artisticTrend.toUiModel(),
+        location = this.location.toUiModel(),
+        hasBeenMarkedAsFavorite = this.hasBeenMarkedAsFavorite
+    )

@@ -11,7 +11,7 @@ import com.project.musapp.feature.auth.data.source.local.UserSessionStateVerific
 import com.project.musapp.feature.auth.data.source.remote.UserLoginFirebaseAuth
 import com.project.musapp.feature.auth.data.source.remote.UserRegistrationFirebaseAuth
 import com.project.musapp.feature.auth.data.source.remote.UserRegistrationFirebaseStorage
-import com.project.musapp.feature.auth.data.source.remote.UserRegistrationRetrofit
+import com.project.musapp.feature.auth.data.source.remote.apiservice.UserRegistrationRetrofit
 import com.project.musapp.feature.auth.data.source.remote.UserTokenGettingFirebaseAuth
 import com.project.musapp.feature.auth.domain.exception.UserLoginException
 import com.project.musapp.feature.auth.domain.exception.UserRegistrationException
@@ -55,7 +55,7 @@ class UserAuthRepositoryImp @Inject constructor(
     ) {
         try {
             userRegistrationRetrofit.insertUser(
-                firebaseUserToken = userToken,
+                userToken = userToken,
                 userRegistrationDTO = userRegistrationDomainModel.toDTO()
             )
         } catch (_: IOException) {

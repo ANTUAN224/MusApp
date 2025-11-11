@@ -1,5 +1,6 @@
 package com.project.musapp.feature.auth.presentation.login.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -78,8 +79,6 @@ class UserLoginViewModel @Inject constructor(
     private fun setEmailErrorMessage(email: String) {
         _emailError.value = when {
             email.isBlank() -> "El email no puede estar en blanco."
-            !RegexHelper.emailRegex.matches(email) -> "El email no tiene un formato correcto."
-            email.length > 30 -> "El email no puede tener más de 30 caracteres."
             else -> ""
         }
     }
@@ -93,9 +92,6 @@ class UserLoginViewModel @Inject constructor(
     private fun setPasswordErrorMessage(password: String) {
         _passwordError.value = when {
             password.isBlank() -> "La contraseña no pueden estar en blanco."
-            password.length < 8 -> "La contraseña debe tener al menos 8 caracteres."
-            !RegexHelper.passwordRegex.matches(password) -> "La contraseña no tiene un formato correcto."
-            password.length > 30 -> "La contraseña no puede tener más de 30 caracteres."
             else -> ""
         }
     }
@@ -112,7 +108,7 @@ class UserLoginViewModel @Inject constructor(
     fun onUserNotFoundModalClosing() {
         _navigateToHome.value = null
         _showUserNotFoundModal.value = false
-        _showLoginModal.value = false
+        onLoginModalClosing()
     }
 
     fun onLoginAcceptButtonClick() {
