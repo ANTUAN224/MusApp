@@ -26,7 +26,7 @@ fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, currentNavItem
         ),
         NavItem(
             label = "Colecciones",
-            imageVector = Icons.Outlined.Folder,
+            painter = painterResource(R.drawable.perm_media_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
             contentDescription = "Apartado de colecciones creadas por el usuario"
         ),
         NavItem(
