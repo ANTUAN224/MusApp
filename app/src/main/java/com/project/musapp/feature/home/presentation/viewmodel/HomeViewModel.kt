@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
+import com.project.musapp.feature.artwork.domain.usecase.GetSearchArtworksUseCase
 import com.project.musapp.feature.user.domain.usecase.GetUserFavoriteArtworksUseCase
 import com.project.musapp.feature.auth.domain.usecase.LogOutUserUseCase
 import com.project.musapp.feature.user.domain.usecase.GetUserProfileUseCase
@@ -27,6 +28,7 @@ class HomeViewModel @Inject constructor(
     private val addArtworkToUserFavoriteArtworksUseCase: AddArtworkToUserFavoriteArtworksUseCase,
     private val deleteArtworkFromUserFavoriteArtworksUseCase: DeleteArtworkFromUserFavoriteArtworksUseCase,
     private val getUserFavoriteArtworksUseCase: GetUserFavoriteArtworksUseCase,
+    private val getSearchArtworksUseCase: GetSearchArtworksUseCase,
     private val logOutUserUseCase: LogOutUserUseCase
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
@@ -58,6 +60,18 @@ class HomeViewModel @Inject constructor(
 
     private val _showUserProfileModal = MutableLiveData<Boolean>()
     val showUserProfileModal: LiveData<Boolean> = _showUserProfileModal
+
+    private val _searchArtworks = MutableLiveData<List<ArtworkPreviewUiModel>>()
+    val searchArtworks: LiveData<List<ArtworkPreviewUiModel>> = _searchArtworks
+
+    private val _isSearching = MutableLiveData<Boolean>()
+    val isSearching: LiveData<Boolean> = _isSearching
+
+    private val _query = MutableLiveData<String>()
+    val query: LiveData<String> = _query
+
+    private val _hasSearchKeyBeenPressed = MutableLiveData<Boolean>()
+    val hasSearchKeyBeenPressed: LiveData<Boolean> = _hasSearchKeyBeenPressed
 
     fun onFirstDropdownMenuExpansion() {
         _isFirstDropdownMenuExpanded.value = true
@@ -103,6 +117,19 @@ class HomeViewModel @Inject constructor(
         _showUserProfileModal.value = false
     }
 
+    fun onSearchKeyPressedStateChange(hasSearchKeyBeenPressed: Boolean) {
+        _hasSearchKeyBeenPressed.value = hasSearchKeyBeenPressed
+    }
+
+    fun onSearchBarStateChange(isSearching: Boolean, hasSearchKeyBeenPressed: Boolean) {
+        if (isSearching && !hasSearchKeyBeenPressed) _query.value = ""
+        _isSearching.value = isSearching
+    }
+
+    fun onQueryChange(currentQuery: String) {
+        _query.value = currentQuery
+    }
+
     fun onHomeScreenArrival(
         artworkId: Long?,
         addArtworkToUserFavoriteArtworks: Boolean
@@ -113,6 +140,8 @@ class HomeViewModel @Inject constructor(
 
                 withContext(context = Dispatchers.IO) {
                     _userProfile.postValue(getUserProfileUseCase().getOrThrow())
+
+                    _searchArtworks.postValue(getSearchArtworksUseCase().getOrThrow())
 
                     if (artworkId != null) {
                         if (addArtworkToUserFavoriteArtworks) {
@@ -133,6 +162,8 @@ class HomeViewModel @Inject constructor(
                     is NetworkException.NoInternetConnectionException ->
                         _showNoInternetConnectionModal.value = true
                 }
+
+                Log.e("EJECUCIÓN", "Ocurrió un error -> $throwable")
             }
 
             _isLoading.value = false

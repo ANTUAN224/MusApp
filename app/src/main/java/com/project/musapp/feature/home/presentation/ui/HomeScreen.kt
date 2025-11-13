@@ -1,6 +1,8 @@
 package com.project.musapp.feature.home.presentation.ui
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DarkMode
@@ -26,24 +29,35 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarDefaults.InputField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import com.project.musapp.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil3.compose.AsyncImage
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
@@ -56,30 +70,63 @@ import com.project.musapp.ui.commoncomponents.UserProfileImage
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    onNavBarHiding: () -> Unit,
+    onNavBarShowing: () -> Unit,
     onArtworkPreviewClick: (Long) -> Unit,
-    onReturnToInitialMenu: () -> Unit
+    onReturnToInitialMenu: () -> Unit,
 ) {
     val userProfile by homeViewModel.userProfile.observeAsState()
+    val isSearching by homeViewModel.isSearching.observeAsState(initial = false)
+    val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState(initial = false)
 
-    Scaffold(
-        topBar = {
-            HomeScreenTopBar(homeViewModel = homeViewModel, userProfile = userProfile!!) {
-                onReturnToInitialMenu()
+    AnimatedContent(
+        targetState = isSearching
+    ) { isSearching ->
+
+        if (!isSearching) {
+            LaunchedEffect(Unit) {
+                onNavBarShowing()
             }
-        }) { innerPadding ->
-        HomeScreenBody(
-            modifier = Modifier.padding(paddingValues = innerPadding),
-            homeViewModel = homeViewModel,
-            userProfile = userProfile!!,
-            onArtworkPreviewClick = onArtworkPreviewClick
-        )
+
+            Scaffold(
+                topBar = {
+                    HomeScreenTopBar(
+                        homeViewModel = homeViewModel,
+                        userProfile = userProfile!!,
+                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                    ) {
+                        onReturnToInitialMenu()
+                    }
+                }) { innerPadding ->
+                HomeScreenBody(
+                    modifier = Modifier.padding(paddingValues = innerPadding),
+                    homeViewModel = homeViewModel,
+                    userProfile = userProfile!!,
+                    onArtworkPreviewClick = onArtworkPreviewClick
+                )
+            }
+        } else {
+            LaunchedEffect(Unit) {
+                onNavBarHiding()
+            }
+
+            HomeScreenSearchBar(
+                homeViewModel = homeViewModel,
+                isSearching = true,
+                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed,
+                onArtworkPreviewClick = onArtworkPreviewClick
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenTopBar(
-    homeViewModel: HomeViewModel, userProfile: UserProfileUiModel, onReturnToInitialMenu: () -> Unit
+    homeViewModel: HomeViewModel,
+    userProfile: UserProfileUiModel,
+    hasSearchKeyBeenPressed: Boolean,
+    onReturnToInitialMenu: () -> Unit
 ) {
     val isFirstDropdownMenuExpanded by homeViewModel.isFirstDropdownMenuExpanded.observeAsState(
         initial = false
@@ -94,7 +141,12 @@ fun HomeScreenTopBar(
 
     TopAppBar(
         title = { Text("MusApp", color = Color.White) }, actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                homeViewModel.onSearchBarStateChange(
+                    isSearching = true,
+                    hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                )
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Buscar cuadros por título, autor o época cultural",
@@ -130,7 +182,7 @@ fun HomeScreenTopBar(
 
                     DropdownMenuItem(leadingIcon = {
                         UserProfileImage(
-                            userProfileImageUri = userProfile.profileImageUrl, size = 30.dp
+                            userProfileImageUri = userProfile.profileImageUrl, size = 24.dp
                         )
                     }, text = { Text("Cuenta") }, trailingIcon = {
                         Icon(
@@ -198,6 +250,122 @@ fun HomeScreenTopBar(
             }
         }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenSearchBar(
+    homeViewModel: HomeViewModel,
+    isSearching: Boolean,
+    hasSearchKeyBeenPressed: Boolean,
+    onArtworkPreviewClick: (Long) -> Unit
+) {
+    val query by homeViewModel.query.observeAsState()
+    val searchArtworks by homeViewModel.searchArtworks.observeAsState()
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth(),
+        inputField = {
+            InputField(
+                modifier = Modifier.focusRequester(focusRequester = focusRequester),
+                leadingIcon = {
+                    IconButton(onClick = {
+                        homeViewModel.onSearchBarStateChange(
+                            isSearching = false,
+                            hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                        )
+
+                        focusManager.clearFocus(force = true)
+
+                        if (hasSearchKeyBeenPressed) {
+                            homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Vuelta a la pantalla principal"
+                        )
+                    }
+                },
+                query = query!!,
+                onQueryChange = { homeViewModel.onQueryChange(currentQuery = it) },
+                onSearch = {
+                    homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = true)
+
+                    focusManager.clearFocus(force = true)
+                },
+                placeholder = { Text(text = "Busca el cuadro por título o autor") },
+                expanded = isSearching,
+                onExpandedChange = {
+                    homeViewModel.onSearchBarStateChange(
+                        isSearching = it,
+                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                    )
+                    if (hasSearchKeyBeenPressed) {
+                        homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
+                    }
+                }
+            )
+        },
+        expanded = isSearching,
+        onExpandedChange = {
+            homeViewModel.onSearchBarStateChange(
+                isSearching = it,
+                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+            )
+
+            if (hasSearchKeyBeenPressed) {
+                homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
+            }
+        },
+        colors = SearchBarDefaults.colors(
+            containerColor = Color.White
+        )
+    ) {
+        LazyColumn {
+            items(searchArtworks!!) { searchArtwork ->
+                if (searchArtwork.title.contains(
+                        other = query!!.trim(),
+                        ignoreCase = true
+                    ) || searchArtwork.authorHistoricallyKnownName.contains(
+                        other = query!!.trim(),
+                        ignoreCase = true
+                    )
+                ) {
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            focusManager.clearFocus(force = true)
+
+                            onArtworkPreviewClick(searchArtwork.id)
+
+                            if (hasSearchKeyBeenPressed) {
+                                homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
+                            }
+                        },
+                        leadingContent = {
+                            AsyncImage(
+                                modifier = Modifier.size(size = 60.dp),
+                                model = searchArtwork.imageUrl,
+                                contentDescription = "Cuadro de ${searchArtwork.title}"
+                            )
+                        },
+                        headlineContent = { Text(text = searchArtwork.title) },
+                        supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
+                        colors = ListItemDefaults.colors(
+                            containerColor = Color.Transparent
+                        ),
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

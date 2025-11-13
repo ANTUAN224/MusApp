@@ -1,7 +1,6 @@
 package com.project.musapp.navigation.presentation.entrypoint
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -145,7 +144,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                 LaunchedEffect(navigateToHome) {
                     if (navigateToHome == true) {
-                        Log.d("EJECUCIÓN", "Navegando hacia home...")
                         navController.navigate(route = RouteHub.Home()) {
                             popUpTo<RouteHub.InitialMenu> { inclusive = true }
                         }
@@ -204,7 +202,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
             }
 
             composable<RouteHub.Home> { navBackStackEntry ->
-                Log.d("EJECUCIÓN", "He llegado a home")
                 val homeDestination: RouteHub.Home = navBackStackEntry.toRoute()
 
                 val homeViewModel: HomeViewModel =
@@ -232,14 +229,20 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         navigationViewModel.onNavBarShowing()
                     }
 
-                    HomeScreen(homeViewModel = homeViewModel, onArtworkPreviewClick = { artworkId ->
-                        Log.d("EJECUCIÓN", "Id del cuadro seleccionado -> $artworkId")
-                        Log.d("EJECUCIÓN", "Navegando hacia la pantalla del cuadro")
+                    HomeScreen(
+                        homeViewModel = homeViewModel,
+                        onNavBarHiding = {
+                            navigationViewModel.onNavBarHiding()
+                        },
+                        onNavBarShowing = {
+                            navigationViewModel.onNavBarShowing()
+                        },
+                        onArtworkPreviewClick = { artworkId ->
 
-                        navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
+                            navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
 
-                        navigationViewModel.onNavBarHiding()
-                    }) {
+                            navigationViewModel.onNavBarHiding()
+                        }) {
                         homeViewModel.logOutUser()
 
                         navigationViewModel.onNavBarHiding()
@@ -284,7 +287,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
                     ) {
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                            Log.d("EJECUCIÓN", "Llegando al lado incorrecto...")
                             navController.navigate(
                                 route =
                                     RouteHub.Home(
@@ -292,10 +294,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                         addArtworkToUserFavoriteArtworks = hasArtworkBeenMarkedAsFavorite
                                     )
                             ) {
-                                popUpTo<RouteHub.Artwork> { inclusive = true }
+                                popUpTo<RouteHub.Home> { inclusive = true }
                             }
                         } else {
-                            Log.d("EJECUCIÓN", "Llegando al popBackStack()...")
                             navController.popBackStack()
                         }
                     }
@@ -303,7 +304,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     BackHandler { //Este composable se ejecuta cuando el usuario pulsa al botón o
                         // realiza el gesto de retroceder en el dispositivo.
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                            Log.d("EJECUCIÓN", "Llegando al lado incorrecto...")
                             navController.navigate(
                                 route =
                                     RouteHub.Home(
@@ -311,10 +311,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                         addArtworkToUserFavoriteArtworks = hasArtworkBeenMarkedAsFavorite
                                     )
                             ) {
-                                popUpTo<RouteHub.Artwork> { inclusive = true }
+                                popUpTo<RouteHub.Home> { inclusive = true }
                             }
                         } else {
-                            Log.d("EJECUCIÓN", "Llegando al popBackStack()...")
                             navController.popBackStack()
                         }
                     }
