@@ -13,7 +13,7 @@ data class ArtworkDomainModel(
     val id: Long,
     val title: String,
     val description: String,
-    val imagePathText: String,
+    val imageUrl: Uri,
     val historicalContext: String,
     val technique: String,
     val support: String,
@@ -25,12 +25,12 @@ data class ArtworkDomainModel(
     val hasBeenMarkedAsFavorite: Boolean
 )
 
-suspend fun ArtworkDomainModel.toUiModel(onImagePathProvision: suspend (String) -> Uri) =
+fun ArtworkDomainModel.toUiModel() =
     ArtworkUiModel(
         id = this.id,
         title = this.title,
         description = this.description,
-        imageUrl = onImagePathProvision(this.imagePathText),
+        imageUrl = this.imageUrl,
         historicalContext = this.historicalContext,
         technique = this.technique,
         support = this.support,

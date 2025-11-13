@@ -1,5 +1,6 @@
 package com.project.musapp.feature.artwork.data.model.dto.artwork
 
+import androidx.core.net.toUri
 import com.project.musapp.feature.artwork.data.model.dto.ArtisticTrendDTO
 import com.project.musapp.feature.artwork.data.model.dto.AuthorDTO
 import com.project.musapp.feature.artwork.data.model.dto.LocationDTO
@@ -10,7 +11,7 @@ data class ArtworkDTO(
     val id: Long,
     val title: String,
     val description: String,
-    val imagePathText: String,
+    val imageUrlText: String,
     val historicalContext: String,
     val technique: String,
     val support: String,
@@ -27,7 +28,7 @@ fun ArtworkDTO.toDomainModel() =
         id = this.id,
         title = this.title,
         description = this.description,
-        imagePathText = this.imagePathText,
+        imageUrl = this.imageUrlText.toUri(),
         historicalContext = this.historicalContext,
         technique = this.technique,
         support = this.support,

@@ -1,10 +1,11 @@
 package com.project.musapp.feature.artwork.data.model.dto.artwork
 
+import androidx.core.net.toUri
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 
 data class ArtworkPreviewDTO(
     val id: Long,
-    val imagePathText: String,
+    val imageUrlText: String,
     val title: String,
     val authorHistoricallyKnownName: String
 )
@@ -12,7 +13,7 @@ data class ArtworkPreviewDTO(
 fun ArtworkPreviewDTO.toDomainModel() =
     ArtworkPreviewDomainModel(
         id = this.id,
-        imagePathText = this.imagePathText,
+        imageUrl = this.imageUrlText.toUri(),
         title = this.title,
         authorHistoricallyKnownName = this.authorHistoricallyKnownName
     )

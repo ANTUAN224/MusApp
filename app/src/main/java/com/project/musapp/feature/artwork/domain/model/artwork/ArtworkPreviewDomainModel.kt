@@ -5,15 +5,15 @@ import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPrev
 
 data class ArtworkPreviewDomainModel(
     val id: Long,
-    val imagePathText: String,
+    val imageUrl: Uri,
     val title: String,
     val authorHistoricallyKnownName: String
 )
 
-fun ArtworkPreviewDomainModel.toUiModel(imageUrl: Uri) =
+fun ArtworkPreviewDomainModel.toUiModel() =
     ArtworkPreviewUiModel(
         id = this.id,
-        imageUrl = imageUrl,
+        imageUrl = this.imageUrl,
         title = this.title,
         authorHistoricallyKnownName = this.authorHistoricallyKnownName
     )
