@@ -7,5 +7,5 @@ import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDom
 interface ArtworkRepository {
     suspend fun getArtwork(userToken: String, artworkId: Long): ArtworkDomainModel
 
-    suspend fun getArtworkImageUrl(artworkImagePathText: String): Uri
+    suspend fun getSearchArtworks(userToken: String): List<ArtworkPreviewDomainModel>
 }

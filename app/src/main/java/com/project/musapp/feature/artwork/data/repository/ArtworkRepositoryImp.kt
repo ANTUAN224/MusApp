@@ -1,19 +1,16 @@
 package com.project.musapp.feature.artwork.data.repository
 
-import android.net.Uri
-import com.google.firebase.storage.StorageException
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.feature.artwork.data.model.dto.artwork.toDomainModel
-import com.project.musapp.feature.artwork.data.source.remote.ArtworkImageUrlGettingFirebaseStorage
 import com.project.musapp.feature.artwork.data.source.remote.api.ArtworkGettingRetrofit
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkDomainModel
+import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 import com.project.musapp.feature.artwork.domain.repository.ArtworkRepository
 import java.io.IOException
 import javax.inject.Inject
 
 class ArtworkRepositoryImp @Inject constructor(
-    private val artworkImageUrlGettingFirebaseStorage: ArtworkImageUrlGettingFirebaseStorage,
-    private val artworkGettingRetrofit: ArtworkGettingRetrofit
+   private val artworkGettingRetrofit: ArtworkGettingRetrofit
 ) :
     ArtworkRepository {
     override suspend fun getArtwork(
@@ -28,10 +25,11 @@ class ArtworkRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getArtworkImageUrl(artworkImagePathText: String): Uri {
+    override suspend fun getSearchArtworks(userToken: String): List<ArtworkPreviewDomainModel> {
         try {
-            return artworkImageUrlGettingFirebaseStorage.getArtworkImageUrl(artworkImagePath = artworkImagePathText)
-        } catch (_: StorageException) {
+            return artworkGettingRetrofit.getSearchArtworks(userToken = userToken)
+                .map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
+        } catch (_: IOException) {
             throw NetworkException.NoInternetConnectionException
         }
     }
