@@ -8,17 +8,14 @@ import javax.inject.Inject
 
 class GetArtworkUseCase @Inject constructor(
     private val repository: ArtworkRepository,
-    private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val getArtworkImageUrlUseCase: GetArtworkImageUrlUseCase
+    private val getUserTokenUseCase: GetUserTokenUseCase
 ) {
     suspend operator fun invoke(artworkId: Long): Result<ArtworkUiModel> {
         return runCatching {
             repository.getArtwork(
                 userToken = getUserTokenUseCase().getOrThrow(),
                 artworkId = artworkId
-            ).toUiModel { imagePathText ->
-                getArtworkImageUrlUseCase(imagePathText).getOrThrow()
-            }
+            ).toUiModel()
         }
     }
 }
