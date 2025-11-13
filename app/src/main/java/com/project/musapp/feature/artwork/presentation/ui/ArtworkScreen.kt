@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -180,7 +178,10 @@ fun ArtworkScreenBody(modifier: Modifier, artwork: ArtworkUiModel) {
                     )
 
                     ArtworkInformationField(
-                        title = if (artwork.artisticTrend.type == ArtisticTrendType.ARTISTIC_MOVEMENT) "Movimiento artístico" else "Etapa artística",
+                        title =
+                            if (artwork.artisticTrend.type == ArtisticTrendType.ARTISTIC_MOVEMENT)
+                                "Movimiento artístico"
+                            else "Etapa artística",
                         firstContent = artwork.artisticTrend.name,
                         lastContent = artwork.artisticTrend.centuryRange
                     )
@@ -235,7 +236,10 @@ fun ArtworkInformationField(
         )
 
         if (lastContent != null) {
-            Text(text = "($lastContent)")
+            Text(
+                text = "($lastContent)",
+                textAlign = TextAlign.Center
+            )
         }
 
         CommonVerticalSpacer(height = 20.dp)
