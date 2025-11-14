@@ -25,16 +25,7 @@ sealed class RouteHub {
     @Serializable
     object Collection : RouteHub() {
         @Serializable
-        object Creation : RouteHub() {
-            @Serializable
-            object ArtworkContent : RouteHub() {
-                @Serializable
-                object Information : RouteHub()
-            }
-
-            @Serializable
-            object Empty : RouteHub()
-        }
+        object Artwork : RouteHub()
     }
 
     @Serializable
