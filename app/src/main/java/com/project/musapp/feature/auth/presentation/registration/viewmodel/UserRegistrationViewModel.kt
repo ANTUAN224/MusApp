@@ -249,8 +249,12 @@ class UserRegistrationViewModel @Inject constructor(
             }.onFailure { throwable ->
                 when (throwable) {
                     is NetworkException.NoInternetConnectionException -> {
-                        if (verifyUserSessionStateUseCase()) {
-                            logOutUserUseCase()
+                        viewModelScope.launch {
+                            verifyUserSessionStateUseCase().collect { user ->
+                                if (user != null) {
+                                    logOutUserUseCase()
+                                }
+                            }
                         }
 
                         _showNoInternetConnectionModal.value = true

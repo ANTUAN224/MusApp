@@ -1,5 +1,6 @@
 package com.project.musapp.navigation.presentation.splashscreen.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,8 +9,11 @@ import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.feature.auth.domain.usecase.VerifyUserSessionStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,12 +36,18 @@ class SplashScreenViewModel
                 verifyUserInternetConnectionUseCase().getOrThrow()
             }.onSuccess {
                 _hasInternetConnection.value = true
-                _hasActiveSession.value = verifyUserSessionStateUseCase()
+                viewModelScope.launch {
+                    verifyUserSessionStateUseCase().collect { user ->
+                        _hasActiveSession.value = user != null
+                    }
+                }
             }.onFailure { throwable ->
                 when (throwable) {
                     is NetworkException.NoInternetConnectionException ->
                         _hasInternetConnection.value = false
                 }
+
+                Log.d("EJECUCIÓN", "Error en el chequeo inicial -> $throwable")
             }
         }
     }
