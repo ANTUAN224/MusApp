@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
     // Coroutines
+    implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
