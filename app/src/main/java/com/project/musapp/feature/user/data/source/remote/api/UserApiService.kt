@@ -1,6 +1,7 @@
 package com.project.musapp.feature.user.data.source.remote.api
 
 import com.project.musapp.feature.artwork.data.model.dto.artwork.ArtworkPreviewDTO
+import com.project.musapp.feature.collection.data.model.dto.CollectionReadingDTO
 import com.project.musapp.feature.user.data.model.dto.UserProfileDTO
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -31,4 +32,9 @@ interface UserApiService {
     suspend fun getUserFavoriteArtworks(
         @Header("Authorization") headerCompanionValue: String
     ): Response<List<ArtworkPreviewDTO>>
+
+    @GET("users/collections")
+    suspend fun getUserCollections(
+        @Header("Authorization") headerCompanionValue: String
+    ): Response<List<CollectionReadingDTO>>
 }

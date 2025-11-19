@@ -35,4 +35,10 @@ class UserHttpRequestRetrofit @Inject constructor(
     ) = userApiService.getUserFavoriteArtworks(
         headerCompanionValue = "Bearer $userToken"
     ).body()!!
+
+    suspend fun getUserCollections(
+        userToken: String
+    ) = userApiService.getUserCollections(
+        headerCompanionValue = "Bearer $userToken"
+    ).body()!!
 }
