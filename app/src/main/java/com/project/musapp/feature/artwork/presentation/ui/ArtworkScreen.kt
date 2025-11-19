@@ -218,7 +218,7 @@ fun ArtworkScreenBody(modifier: Modifier, artwork: ArtworkUiModel) {
 }
 
 @Composable
-fun ArtworkInformationField(
+private fun ArtworkInformationField(
     title: String,
     firstContent: String,
     lastContent: String? = null,
