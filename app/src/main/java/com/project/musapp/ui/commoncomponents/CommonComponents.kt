@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -92,7 +94,42 @@ fun UserProfileImage(userProfileImageUri: Uri, size: Dp) {
 }
 
 @Composable
-fun ArtworkPreviewCard(
+fun ArtworkPreviewRow(
+    firstArtworkPreview: ArtworkPreviewUiModel,
+    secondArtworkPreview: ArtworkPreviewUiModel?,
+    onArtworkPreviewClick: (Long) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+    ) {
+        ArtworkPreviewCard(
+            modifier = Modifier
+                .weight(1f),
+            userFavoriteArtworkPreview = firstArtworkPreview
+        ) {
+            onArtworkPreviewClick(firstArtworkPreview.id)
+        }
+
+        CommonHorizontalSpacer()
+
+        if (secondArtworkPreview != null) {
+            ArtworkPreviewCard(
+                modifier = Modifier
+                    .weight(1f),
+                userFavoriteArtworkPreview = secondArtworkPreview
+            ) {
+                onArtworkPreviewClick(secondArtworkPreview.id)
+            }
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun ArtworkPreviewCard(
     modifier: Modifier,
     userFavoriteArtworkPreview: ArtworkPreviewUiModel,
     onArtworkPreviewCardClick: () -> Unit
