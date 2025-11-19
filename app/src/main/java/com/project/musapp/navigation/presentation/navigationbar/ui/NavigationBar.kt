@@ -2,7 +2,6 @@ package com.project.musapp.navigation.presentation.navigationbar.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -10,6 +9,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.project.musapp.R
@@ -17,7 +19,14 @@ import com.project.musapp.navigation.presentation.navigationbar.model.NavItem
 import com.project.musapp.navigation.presentation.navigationbar.viewmodel.NavigationViewModel
 
 @Composable
-fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, currentNavItemIndex: Int) {
+fun MusAppNavigationBar(
+    navigationViewModel: NavigationViewModel,
+    onNavItemClick: (Int) -> Unit
+) {
+    val currentNavItemIndex by
+    navigationViewModel.navItemIndex.observeAsState(initial = 0)
+
+
     val navItemList = listOf(
         NavItem(
             label = "Home",
@@ -36,6 +45,7 @@ fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, currentNavItem
                     "de los cuadros y artistas"
         )
     )
+
     NavigationBar(containerColor = Color(color = 0xFF12AA7A)) {
         navItemList.forEachIndexed { index, item ->
             MusAppNavigationItem(
@@ -43,6 +53,8 @@ fun MusAppNavigationBar(navigationViewModel: NavigationViewModel, currentNavItem
                 isSelected = index == currentNavItemIndex
             ) {
                 navigationViewModel.onNavItemClick(currentNavItemIndex = index)
+
+                onNavItemClick(currentNavItemIndex)
             }
         }
     }
