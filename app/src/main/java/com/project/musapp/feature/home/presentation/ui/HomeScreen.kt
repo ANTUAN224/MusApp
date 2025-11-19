@@ -354,13 +354,9 @@ fun HomeScreenSearchBar(
                             headlineContent = { Text(text = searchArtwork.title) },
                             supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
                             colors = ListItemDefaults.colors(
-                                containerColor = Color.Transparent
+                                containerColor = Color.White
                             ),
                         )
-                    }
-
-                    if (index < searchArtworks!!.size - 1) {
-                        HorizontalDivider(color = Color.Gray)
                     }
                 }
             }
