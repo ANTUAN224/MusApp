@@ -4,12 +4,12 @@ import com.project.musapp.feature.artwork.presentation.model.LocationUiModel
 
 data class LocationDomainModel(
     val name: String,
-    val city: String,
-    val country: String
+    val city: String?,
+    val country: String?
 )
 
-fun com.project.musapp.feature.artwork.domain.model.LocationDomainModel.toUiModel() =
-    _root_ide_package_.com.project.musapp.feature.artwork.presentation.model.LocationUiModel(
+fun LocationDomainModel.toUiModel() =
+    LocationUiModel(
         name = this.name,
         city = this.city,
         country = this.country
