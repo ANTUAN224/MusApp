@@ -145,11 +145,18 @@ fun ArtworkScreenBody(modifier: Modifier, artwork: ArtworkUiModel) {
 
                     Spacer(modifier = Modifier.weight(weight = 2f))
 
-                    ArtworkInformationField(
-                        title = "Ubicación actual",
-                        firstContent = artwork.location.name,
-                        lastContent = "${artwork.location.city}, ${artwork.location.country}"
-                    )
+                    if (artwork.location.city != null) {
+                        ArtworkInformationField(
+                            title = "Ubicación actual",
+                            firstContent = artwork.location.name,
+                            lastContent = "${artwork.location.city}, ${artwork.location.country}"
+                        )
+                    } else {
+                        ArtworkInformationField(
+                            title = "Ubicación actual",
+                            firstContent = artwork.location.name
+                        )
+                    }
 
                     Spacer(modifier = Modifier.weight(weight = 1f))
                 }
