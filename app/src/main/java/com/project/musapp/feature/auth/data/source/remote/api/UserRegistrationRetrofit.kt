@@ -1,4 +1,4 @@
-package com.project.musapp.feature.auth.data.source.remote.apiservice
+package com.project.musapp.feature.auth.data.source.remote.api
 
 import com.project.musapp.feature.auth.data.model.dto.UserRegistrationDTO
 import javax.inject.Inject
