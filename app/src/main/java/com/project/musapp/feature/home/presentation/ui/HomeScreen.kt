@@ -1,17 +1,11 @@
 package com.project.musapp.feature.home.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +21,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -63,8 +58,7 @@ import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
-import com.project.musapp.ui.commoncomponents.ArtworkPreviewCard
-import com.project.musapp.ui.commoncomponents.CommonHorizontalSpacer
+import com.project.musapp.ui.commoncomponents.ArtworkPreviewRow
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
 @Composable
@@ -270,8 +264,6 @@ fun HomeScreenSearchBar(
     }
 
     SearchBar(
-        modifier = Modifier
-            .fillMaxWidth(),
         inputField = {
             InputField(
                 modifier = Modifier.focusRequester(focusRequester = focusRequester),
@@ -330,38 +322,46 @@ fun HomeScreenSearchBar(
         )
     ) {
         LazyColumn {
-            items(searchArtworks!!) { searchArtwork ->
-                if (searchArtwork.title.contains(
-                        other = query!!.trim(),
-                        ignoreCase = true
-                    ) || searchArtwork.authorHistoricallyKnownName.contains(
-                        other = query!!.trim(),
-                        ignoreCase = true
-                    )
-                ) {
-                    ListItem(
-                        modifier = Modifier.clickable {
-                            focusManager.clearFocus(force = true)
+            searchArtworks!!.forEachIndexed { index, searchArtwork ->
+                item {
+                    if (searchArtwork.title.contains(
+                            other = query!!.trim(),
+                            ignoreCase = true
+                        ) || searchArtwork.authorHistoricallyKnownName.contains(
+                            other = query!!.trim(),
+                            ignoreCase = true
+                        )
+                    ) {
+                        ListItem(
+                            modifier = Modifier.clickable {
+                                focusManager.clearFocus(force = true)
 
-                            onArtworkPreviewClick(searchArtwork.id)
+                                onArtworkPreviewClick(searchArtwork.id)
 
-                            if (hasSearchKeyBeenPressed) {
-                                homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
-                            }
-                        },
-                        leadingContent = {
-                            AsyncImage(
-                                modifier = Modifier.size(size = 60.dp),
-                                model = searchArtwork.imageUrl,
-                                contentDescription = "Cuadro de ${searchArtwork.title}"
-                            )
-                        },
-                        headlineContent = { Text(text = searchArtwork.title) },
-                        supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
-                        colors = ListItemDefaults.colors(
-                            containerColor = Color.Transparent
-                        ),
-                    )
+                                if (hasSearchKeyBeenPressed) {
+                                    homeViewModel.onSearchKeyPressedStateChange(
+                                        hasSearchKeyBeenPressed = false
+                                    )
+                                }
+                            },
+                            leadingContent = {
+                                AsyncImage(
+                                    modifier = Modifier.size(size = 60.dp),
+                                    model = searchArtwork.imageUrl,
+                                    contentDescription = "Cuadro de ${searchArtwork.title}"
+                                )
+                            },
+                            headlineContent = { Text(text = searchArtwork.title) },
+                            supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
+                            colors = ListItemDefaults.colors(
+                                containerColor = Color.Transparent
+                            ),
+                        )
+                    }
+
+                    if (index < searchArtworks!!.size - 1) {
+                        HorizontalDivider(color = Color.Gray)
+                    }
                 }
             }
         }
@@ -382,8 +382,7 @@ fun HomeScreenBody(
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
-            .background(color = Color.White)
-            .padding(horizontal = 15.dp)
+            .padding(horizontal = 20.dp)
     ) {
         val (bodyTitle, bodyContent) = createRefs()
 
@@ -406,10 +405,10 @@ fun HomeScreenBody(
                         bottom.linkTo(anchor = parent.bottom)
                         start.linkTo(anchor = parent.start)
                         end.linkTo(anchor = parent.end)
-                        verticalBias = 0.35f
-                    }
-                    .padding(horizontal = 15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                        verticalBias = 0.3f
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Icon(
                     modifier = Modifier.size(size = 80.dp),
                     painter = painterResource(R.drawable.wall_art_24px),
@@ -440,32 +439,11 @@ fun HomeScreenBody(
                     .padding(bottom = 80.dp)) {
                 items(userFavoriteArtworkPreviews!!.chunkInPairs())
                 { (firstArtworkPreview, secondArtworkPreview) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Max)
-                    ) {
-                        ArtworkPreviewCard(
-                            modifier = Modifier
-                                .weight(1f),
-                            userFavoriteArtworkPreview = firstArtworkPreview
-                        ) {
-                            onArtworkPreviewClick(firstArtworkPreview.id)
-                        }
-
-                        CommonHorizontalSpacer()
-
-                        if (secondArtworkPreview != null) {
-                            ArtworkPreviewCard(
-                                modifier = Modifier
-                                    .weight(1f),
-                                userFavoriteArtworkPreview = secondArtworkPreview
-                            ) {
-                                onArtworkPreviewClick(secondArtworkPreview.id)
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
+                    ArtworkPreviewRow(
+                        firstArtworkPreview = firstArtworkPreview,
+                        secondArtworkPreview = secondArtworkPreview
+                    ) { artworkId ->
+                        onArtworkPreviewClick(artworkId)
                     }
 
                     CommonVerticalSpacer(height = 23.dp)
