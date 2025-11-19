@@ -2,7 +2,8 @@ package com.project.musapp.core.di.module
 
 import com.project.musapp.BuildConfig
 import com.project.musapp.feature.artwork.data.source.remote.api.ArtworkApiService
-import com.project.musapp.feature.auth.data.source.remote.apiservice.UserAuthApiService
+import com.project.musapp.feature.auth.data.source.remote.api.UserAuthApiService
+import com.project.musapp.feature.collection.data.source.remote.api.CollectionApiService
 import com.project.musapp.feature.user.data.source.remote.api.UserApiService
 import dagger.Module
 import dagger.Provides
@@ -37,4 +38,9 @@ object RetrofitModule {
     @Singleton
     fun provideArtworkApiService(retrofit: Retrofit): ArtworkApiService =
         retrofit.create(ArtworkApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCollectionApiService(retrofit: Retrofit): CollectionApiService =
+        retrofit.create(CollectionApiService::class.java)
 }
