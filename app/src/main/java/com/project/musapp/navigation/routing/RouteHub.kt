@@ -5,13 +5,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class RouteHub {
     @Serializable
-    object UserStateInitialChecking : RouteHub()
+    data object UserStateInitialChecking : RouteHub()
 
     @Serializable
-    object InitialMenu : RouteHub()
+    data object InitialMenu : RouteHub()
 
     @Serializable
-    object Registration : RouteHub()
+    data object Registration : RouteHub()
 
     @Serializable
     data class Home(
@@ -23,17 +23,20 @@ sealed class RouteHub {
     data class Artwork(val artworkId: Long) : RouteHub()
 
     @Serializable
-    object Collection : RouteHub() {
+    data object Collection : RouteHub() {
         @Serializable
-        object Artwork : RouteHub()
+        data object Previews: RouteHub()
+
+        @Serializable
+        data class Artworks(val collectionId: Long, val collectionTitle: String) : RouteHub()
     }
 
     @Serializable
-    object ArtisticCulture : RouteHub() {
+    data object ArtisticCulture : RouteHub() {
         @Serializable
-        object TechnicalGlossary : RouteHub()
+        data object TechnicalGlossary : RouteHub()
 
         @Serializable
-        object CuriositySection : RouteHub()
+        data object CuriositySection : RouteHub()
     }
 }
