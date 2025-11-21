@@ -17,17 +17,16 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     private val _showNavBar = MutableLiveData<Boolean>()
     val showNavBar: LiveData<Boolean> = _showNavBar
 
-    private val _isArrivingForFirstTimeToHome = MutableLiveData<Boolean>()
-    val isArrivingForFirstTimeToHome: LiveData<Boolean> = _isArrivingForFirstTimeToHome
-
     private val _isArrivingForFirstTimeToCollection = MutableLiveData<Boolean>()
     val isArrivingForFirstTimeToCollection: LiveData<Boolean> = _isArrivingForFirstTimeToCollection
 
     private val _isArrivingForFirstTimeToArtisticCulture = MutableLiveData<Boolean>()
-    val isArrivingForFirstTimeToArtisticCulture: LiveData<Boolean> = _isArrivingForFirstTimeToArtisticCulture
+    val isArrivingForFirstTimeToArtisticCulture: LiveData<Boolean> =
+        _isArrivingForFirstTimeToArtisticCulture
 
-    private val _hasArtworkBeenMarkedAsFavorite = MutableLiveData<Boolean?>()
-    val hasArtworkBeenMarkedAsFavorite: LiveData<Boolean?> = _hasArtworkBeenMarkedAsFavorite
+    private val _hasArtworkBeenNavigatedFromCollection = MutableLiveData<Boolean>()
+    val hasArtworkBeenNavigatedFromCollection: LiveData<Boolean> =
+        _hasArtworkBeenNavigatedFromCollection
 
     fun onNavBarShowing() {
         _showNavBar.value = true
@@ -39,14 +38,8 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
 
     fun onUserLogOut() {
         _showNavBar.value = false
-        _isArrivingForFirstTimeToHome.value = true
         _isArrivingForFirstTimeToCollection.value = true
-        _isArrivingForFirstTimeToCollection.value = true
-        _hasArtworkBeenMarkedAsFavorite.value = null
-    }
-
-    fun onHomeFirstTimeArrival() {
-        _isArrivingForFirstTimeToHome.value = false
+        _isArrivingForFirstTimeToArtisticCulture.value = true
     }
 
     fun onCollectionFirstTimeArrival() {
@@ -57,16 +50,24 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onArtworkArrivalFromCollection() {
+        _hasArtworkBeenNavigatedFromCollection.value = true
+    }
+
+    fun onCollectionArrival() {
+        viewModelScope.launch {
+            delay(3000)
+
+            _hasArtworkBeenNavigatedFromCollection.value = false
+        }
+    }
+
     fun onArtisticCultureFirstTimeArrival() {
         viewModelScope.launch {
             delay(3000)
 
             _isArrivingForFirstTimeToArtisticCulture.value = false
         }
-    }
-
-    fun onArtworkMarkedAsFavoriteStateChange(hasArtworkBeenMarkedAsFavorite: Boolean) {
-        _hasArtworkBeenMarkedAsFavorite.value = hasArtworkBeenMarkedAsFavorite
     }
 
     fun onNavItemClick(currentNavItemIndex: Int) {
