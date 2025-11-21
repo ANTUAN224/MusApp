@@ -21,12 +21,9 @@ import com.project.musapp.navigation.presentation.navigationbar.viewmodel.Naviga
 @Composable
 fun MusAppNavigationBar(
     navigationViewModel: NavigationViewModel,
+    currentNavItemIndex: Int,
     onNavItemClick: (Int) -> Unit
 ) {
-    val currentNavItemIndex by
-    navigationViewModel.navItemIndex.observeAsState(initial = 0)
-
-
     val navItemList = listOf(
         NavItem(
             label = "Home",
@@ -54,7 +51,7 @@ fun MusAppNavigationBar(
             ) {
                 navigationViewModel.onNavItemClick(currentNavItemIndex = index)
 
-                onNavItemClick(currentNavItemIndex)
+                onNavItemClick(index)
             }
         }
     }
