@@ -1,6 +1,7 @@
 package com.project.musapp.navigation.presentation.entrypoint
 
 import android.content.Context
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkScreen
 import com.project.musapp.feature.artwork.presentation.viewmodel.ArtworkViewModel
@@ -20,13 +22,14 @@ import com.project.musapp.feature.auth.presentation.login.viewmodel.UserLoginVie
 import com.project.musapp.feature.auth.presentation.registration.ui.EmailAlreadyInUseModal
 import com.project.musapp.feature.auth.presentation.registration.ui.UserRegistrationScreen
 import com.project.musapp.feature.auth.presentation.registration.viewmodel.UserRegistrationViewModel
-import com.project.musapp.feature.collection.presentation.ui.CollectionBatchDeletionModal
-import com.project.musapp.feature.collection.presentation.ui.CollectionCreationModal
-import com.project.musapp.feature.collection.presentation.ui.CollectionRenamingModal
-import com.project.musapp.feature.collection.presentation.ui.CollectionRenamingOptionModal
-import com.project.musapp.feature.collection.presentation.ui.CollectionScreen
-import com.project.musapp.feature.collection.presentation.ui.NotAnyCollectionsToDeleteModal
-import com.project.musapp.feature.collection.presentation.ui.NotAnyCollectionsToRenameModal
+import com.project.musapp.feature.collection.presentation.ui.artworkscreen.CollectionArtworkScreen
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionBatchDeletionModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionCreationModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionRenamingModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionRenamingOptionModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionPreviewScreen
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToDeleteModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToRenameModal
 import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
 import com.project.musapp.feature.home.presentation.ui.HomeScreen
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
@@ -43,13 +46,13 @@ import com.project.musapp.ui.commoncomponents.CommonNoInternetConnectionModal
 fun NavigationEntryPoint(applicationContext: Context) {
     val navigationViewModel: NavigationViewModel = hiltViewModel()
 
+    val navController = rememberNavController()
+
     val showNavBar by
     navigationViewModel.showNavBar.observeAsState(initial = false)
 
-    val navController = rememberNavController()
-
-    val isArrivingForFirstTimeToHome by
-    navigationViewModel.isArrivingForFirstTimeToHome.observeAsState(initial = true)
+    val currentNavItemIndex by
+    navigationViewModel.navItemIndex.observeAsState(initial = 0)
 
     val isArrivingForFirstTimeToCollection by
     navigationViewModel.isArrivingForFirstTimeToCollection.observeAsState(initial = true)
@@ -57,14 +60,14 @@ fun NavigationEntryPoint(applicationContext: Context) {
     val isArrivingForFirstTimeToArtisticCulture by
     navigationViewModel.isArrivingForFirstTimeToArtisticCulture.observeAsState(initial = true)
 
-    val hasArtworkBeenMarkedAsFavorite by
-    navigationViewModel.hasArtworkBeenMarkedAsFavorite.observeAsState(initial = null)
+    val hasArtworkBeenNavigatedFromCollection by
+    navigationViewModel.hasArtworkBeenNavigatedFromCollection.observeAsState(initial = false)
 
     Scaffold(bottomBar = {
         if (showNavBar) {
             MusAppNavigationBar(
                 navigationViewModel = navigationViewModel,
-
+                currentNavItemIndex = currentNavItemIndex,
                 onNavItemClick = { currentNavItemIndex ->
                     when (currentNavItemIndex) {
                         0 -> {
@@ -75,7 +78,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         }
 
                         1 -> {
-                            if (isArrivingForFirstTimeToCollection) {
+                            if (isArrivingForFirstTimeToCollection
+                                || hasArtworkBeenNavigatedFromCollection
+                            ) {
                                 navigationViewModel.onNavBarHiding()
                             }
 
@@ -267,12 +272,11 @@ fun NavigationEntryPoint(applicationContext: Context) {
                 )
 
                 LaunchedEffect(Unit) {
-                    if (isArrivingForFirstTimeToHome || hasArtworkBeenMarkedAsFavorite != null) {
-                        navigationViewModel.onHomeFirstTimeArrival()
-
+                    if (isLoading) {
                         homeViewModel.onHomeScreenArrival(
                             artworkId = homeDestination.artworkId,
-                            addArtworkToUserFavoriteArtworks = homeDestination.addArtworkToUserFavoriteArtworks
+                            addArtworkToUserFavoriteArtworks = homeDestination
+                                .addArtworkToUserFavoriteArtworks
                         )
                     }
                 }
@@ -347,10 +351,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
                     ) {
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                            navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
-                            )
-
+                            if (currentNavItemIndex != 0) {
+                                navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
+                            }
                             navController.navigate(
                                 route =
                                     RouteHub.Home(
@@ -368,9 +371,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     BackHandler { //Este composable se ejecuta cuando el usuario pulsa al botón o
                         // realiza el gesto de retroceder en el dispositivo.
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                            navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
-                            )
+                            if (currentNavItemIndex != 0) {
+                                navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
+                            }
 
                             navController.navigate(
                                 route =
@@ -388,99 +391,164 @@ fun NavigationEntryPoint(applicationContext: Context) {
                 }
             }
 
-            composable<RouteHub.Collection> { navBackStackEntry ->
-                val collectionViewModel: CollectionViewModel =
-                    hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+            navigation<RouteHub.Collection>(startDestination = RouteHub.Collection.Previews) {
+                composable<RouteHub.Collection.Previews> { navBackStackEntry ->
+                    val collectionViewModel: CollectionViewModel =
+                        hiltViewModel(viewModelStoreOwner = navBackStackEntry)
 
-                val isLoading by collectionViewModel.isLoading.observeAsState(initial = true)
+                    val isLoading by collectionViewModel
+                        .isLoading.observeAsState(initial = false)
 
-                val showNoInternetConnectionModal by collectionViewModel.showNoInternetConnectionModal
-                    .observeAsState(initial = false)
+                    val showNoInternetConnectionModal by collectionViewModel
+                        .showNoInternetConnectionModal.observeAsState(initial = false)
 
-                val showCollectionCreationModal by collectionViewModel.showCollectionCreationModal
-                    .observeAsState(initial = false)
+                    val showCollectionCreationModal by collectionViewModel
+                        .showCollectionCreationModal.observeAsState(initial = false)
 
-                val showNotAnyCollectionsCreatedModal by
-                collectionViewModel.showNotAnyCollectionsToDeleteModal
-                    .observeAsState(initial = false)
+                    val showNotAnyCollectionsCreatedModal by
+                    collectionViewModel.showNotAnyCollectionsToDeleteModal
+                        .observeAsState(initial = false)
 
-                val showCollectionBatchDeletionModal by collectionViewModel.showCollectionBatchDeletionModal
-                    .observeAsState(initial = false)
+                    val showCollectionBatchDeletionModal by collectionViewModel
+                        .showCollectionBatchDeletionModal.observeAsState(initial = false)
 
-                val showNotAnyCollectionsToRenameModal by
-                collectionViewModel.showNotAnyCollectionsToRenameModal
-                    .observeAsState(initial = false)
+                    val showNotAnyCollectionsToRenameModal by
+                    collectionViewModel
+                        .showNotAnyCollectionsToRenameModal.observeAsState(initial = false)
 
-                val showCollectionRenamingOptionModal by
-                collectionViewModel.showCollectionRenamingOptionModal
-                    .observeAsState(initial = false)
+                    val showCollectionRenamingOptionModal by
+                    collectionViewModel
+                        .showCollectionRenamingOptionModal.observeAsState(initial = false)
 
-                val showCollectionRenamingModal by
-                collectionViewModel.showCollectionRenamingModal
-                    .observeAsState(initial = false)
+                    val showCollectionRenamingModal by
+                    collectionViewModel.showCollectionRenamingModal
+                        .observeAsState(initial = false)
 
-                LaunchedEffect(Unit) {
-                    if (isArrivingForFirstTimeToCollection) {
-                        navigationViewModel.onCollectionFirstTimeArrival()
+                    LaunchedEffect(Unit) {
+                        if (isArrivingForFirstTimeToCollection) {
+                            navigationViewModel.onCollectionFirstTimeArrival()
 
-                        collectionViewModel.onCollectionScreenArrival()
-                    }
-                }
+                            collectionViewModel.onCollectionPreviewScreenArrival()
+                        } else if (hasArtworkBeenNavigatedFromCollection) {
+                            navigationViewModel.onCollectionArrival()
 
-                BackHandler {
-                    navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
-                    navigateBetweenNavItems(
-                        route = RouteHub.Home(),
-                        navController = navController
-                    )
-                }
-
-                if (isLoading || isArrivingForFirstTimeToCollection) {
-                    CommonLoadingScreen()
-                } else if (showNoInternetConnectionModal) {
-                    CommonNoInternetConnectionModal()
-                } else {
-                    val userCollections by collectionViewModel.userCollections.observeAsState()
-
-                    navigationViewModel.onNavBarShowing()
-
-                    CollectionScreen(
-                        collectionViewModel = collectionViewModel,
-                        userCollections = userCollections!!
-                    ) {
-                        navigationViewModel.onNavBarHiding()
-
-                        collectionViewModel.onCollectionBatchDeletion()
-                    }
-
-                    if (showNotAnyCollectionsCreatedModal) {
-                        NotAnyCollectionsToDeleteModal(collectionViewModel = collectionViewModel)
-                    } else if (showCollectionCreationModal) {
-                        CollectionCreationModal(collectionViewModel = collectionViewModel) {
-                            navigationViewModel.onNavBarHiding()
-
-                            collectionViewModel.onCollectionCreationModalConfirmButtonClick()
+                            collectionViewModel.onCollectionPreviewScreenArrival()
                         }
-                    } else if (showNotAnyCollectionsToRenameModal) {
-                        NotAnyCollectionsToRenameModal(collectionViewModel = collectionViewModel)
-                    } else if (showCollectionRenamingOptionModal) {
-                        CollectionRenamingOptionModal(
-                            collectionViewModel = collectionViewModel,
-                            userCollections = userCollections!!
+                    }
+
+                    BackHandler {
+                        navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
+
+                        navigateBetweenNavItems(
+                            route = RouteHub.Home(),
+                            navController = navController
                         )
-                    } else if (showCollectionRenamingModal) {
-                        CollectionRenamingModal(collectionViewModel = collectionViewModel) {
-                            navigationViewModel.onNavBarHiding()
+                    }
 
-                            collectionViewModel.onCollectionRenamingModalConfirmButtonClick()
+                    if (isArrivingForFirstTimeToCollection || isLoading
+                        || hasArtworkBeenNavigatedFromCollection
+                    ) {
+                        CommonLoadingScreen()
+                    } else if (showNoInternetConnectionModal) {
+                        CommonNoInternetConnectionModal()
+                    } else {
+                        val userCollections by collectionViewModel.userCollections.observeAsState()
+                        Log.d("EJECUCIÓN", "Valor de userCollections: $userCollections")
+
+                        LaunchedEffect(Unit) {
+                            navigationViewModel.onNavBarShowing()
                         }
-                    } else if (showCollectionBatchDeletionModal) {
-                        CollectionBatchDeletionModal(
+
+                        CollectionPreviewScreen(
                             collectionViewModel = collectionViewModel,
-                            userCollections = userCollections!!
-                        ) {
+                            userCollections = userCollections!!,
+                            onUniqueCollectionDeletion = {
+                                navigationViewModel.onNavBarHiding()
+
+                                collectionViewModel.onCollectionBatchDeletion()
+                            }
+                        ) { collectionId, collectionTitle ->
+                            navController.navigate(
+                                route = RouteHub.Collection.Artworks(
+                                    collectionId = collectionId,
+                                    collectionTitle = collectionTitle
+                                )
+                            )
+
                             navigationViewModel.onNavBarHiding()
-                            collectionViewModel.onCollectionBatchDeletion()
+                        }
+
+                        if (showNotAnyCollectionsCreatedModal) {
+                            NotAnyCollectionsToDeleteModal(collectionViewModel = collectionViewModel)
+                        } else if (showCollectionCreationModal) {
+                            CollectionCreationModal(collectionViewModel = collectionViewModel) {
+                                navigationViewModel.onNavBarHiding()
+
+                                collectionViewModel.onCollectionCreationModalConfirmButtonClick()
+                            }
+                        } else if (showNotAnyCollectionsToRenameModal) {
+                            NotAnyCollectionsToRenameModal(collectionViewModel = collectionViewModel)
+                        } else if (showCollectionRenamingOptionModal) {
+                            CollectionRenamingOptionModal(
+                                collectionViewModel = collectionViewModel,
+                                userCollections = userCollections!!
+                            )
+                        } else if (showCollectionRenamingModal) {
+                            CollectionRenamingModal(collectionViewModel = collectionViewModel) {
+                                navigationViewModel.onNavBarHiding()
+
+                                collectionViewModel.onCollectionRenamingModalConfirmButtonClick()
+                            }
+                        } else if (showCollectionBatchDeletionModal) {
+                            CollectionBatchDeletionModal(
+                                collectionViewModel = collectionViewModel,
+                                userCollections = userCollections!!
+                            ) {
+                                navigationViewModel.onNavBarHiding()
+
+                                collectionViewModel.onCollectionBatchDeletion()
+                            }
+                        }
+                    }
+                }
+
+                composable<RouteHub.Collection.Artworks> { navBackStackEntry ->
+                    val collectionArtworkDestination: RouteHub.Collection.Artworks =
+                        navBackStackEntry.toRoute()
+
+                    val collectionViewModel: CollectionViewModel =
+                        hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                    val isLoading by collectionViewModel
+                        .isLoading.observeAsState(initial = true)
+
+                    val showNoInternetConnectionModal by collectionViewModel
+                        .showNoInternetConnectionModal.observeAsState(initial = false)
+
+                    LaunchedEffect(Unit) {
+                        collectionViewModel.onCollectionArtworkScreenArrival(
+                            collectionId = collectionArtworkDestination.collectionId
+                        )
+                    }
+
+                    if (isLoading) {
+                        CommonLoadingScreen()
+                    } else if (showNoInternetConnectionModal) {
+                        CommonNoInternetConnectionModal()
+                    } else {
+                        val collectionArtworks by collectionViewModel
+                            .collectionArtworks.observeAsState()
+
+                        CollectionArtworkScreen(
+                            collectionTitle = collectionArtworkDestination.collectionTitle,
+                            collectionArtworks = collectionArtworks!!,
+                            onCollectionPreviewScreenReturn = {
+                                navController.popBackStack()
+                            }
+                        ) { artworkId ->
+                            navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
+
+                            navigationViewModel.onArtworkArrivalFromCollection()
                         }
                     }
                 }
