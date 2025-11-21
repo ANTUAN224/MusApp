@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -84,11 +83,6 @@ fun CommonVerticalSpacer(height: Dp) {
 }
 
 @Composable
-fun CommonHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(15.dp))
-}
-
-@Composable
 fun UserProfileImage(userProfileImageUri: Uri, size: Dp) {
     AsyncImage(
         modifier = Modifier
@@ -100,7 +94,7 @@ fun UserProfileImage(userProfileImageUri: Uri, size: Dp) {
 }
 
 @Composable
-fun ArtworkPreviewRow(
+fun ArtworkPreviewRowItem(
     firstArtworkPreview: ArtworkPreviewUiModel,
     secondArtworkPreview: ArtworkPreviewUiModel?,
     onArtworkPreviewClick: (Long) -> Unit
@@ -118,7 +112,7 @@ fun ArtworkPreviewRow(
             onArtworkPreviewClick(firstArtworkPreview.id)
         }
 
-        CommonHorizontalSpacer()
+        Spacer(modifier = Modifier.width(width = 15.dp))
 
         if (secondArtworkPreview != null) {
             ArtworkPreviewCard(
@@ -132,6 +126,8 @@ fun ArtworkPreviewRow(
             Spacer(modifier = Modifier.weight(1f))
         }
     }
+
+    CommonVerticalSpacer(height = 23.dp)
 }
 
 @Composable

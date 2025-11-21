@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -58,7 +57,7 @@ import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
-import com.project.musapp.ui.commoncomponents.ArtworkPreviewRow
+import com.project.musapp.ui.commoncomponents.ArtworkPreviewRowItem
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
 @Composable
@@ -435,14 +434,12 @@ fun HomeScreenBody(
                     .padding(bottom = 80.dp)) {
                 items(userFavoriteArtworkPreviews!!.chunkInPairs())
                 { (firstArtworkPreview, secondArtworkPreview) ->
-                    ArtworkPreviewRow(
+                    ArtworkPreviewRowItem(
                         firstArtworkPreview = firstArtworkPreview,
                         secondArtworkPreview = secondArtworkPreview
                     ) { artworkId ->
                         onArtworkPreviewClick(artworkId)
                     }
-
-                    CommonVerticalSpacer(height = 23.dp)
                 }
             }
         }

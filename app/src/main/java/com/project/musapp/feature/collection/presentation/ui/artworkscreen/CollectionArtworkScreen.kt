@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
-import com.project.musapp.ui.commoncomponents.ArtworkPreviewRow
+import com.project.musapp.ui.commoncomponents.ArtworkPreviewRowItem
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
@@ -147,14 +147,12 @@ private fun CollectionArtworkScreenBody(
             ) {
                 items(collectionArtworks.chunkInPairs())
                 { (firstArtworkPreview, secondArtworkPreview) ->
-                    ArtworkPreviewRow(
+                    ArtworkPreviewRowItem(
                         firstArtworkPreview = firstArtworkPreview,
                         secondArtworkPreview = secondArtworkPreview
                     ) { artworkId ->
                         onArtworkPreviewClick(artworkId)
                     }
-
-                    CommonVerticalSpacer(height = 23.dp)
                 }
             }
         }
