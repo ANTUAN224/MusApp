@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
+import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 import com.project.musapp.feature.collection.domain.usecase.CreateCollectionUseCase
 import com.project.musapp.feature.collection.domain.usecase.DeleteCollectionsUseCase
+import com.project.musapp.feature.collection.domain.usecase.GetCollectionArtworksUseCase
 import com.project.musapp.feature.collection.domain.usecase.RenameCollectionUseCase
 import com.project.musapp.feature.collection.presentation.model.CollectionBatchDeletionUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionCreationUiModel
@@ -28,16 +30,14 @@ class CollectionViewModel @Inject constructor(
     private val getUserCollectionsUseCase: GetUserCollectionsUseCase,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val renameCollectionUseCase: RenameCollectionUseCase,
-    private val deleteCollectionsUseCase: DeleteCollectionsUseCase
+    private val deleteCollectionsUseCase: DeleteCollectionsUseCase,
+    private val getCollectionArtworksUseCase: GetCollectionArtworksUseCase
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _showNoInternetConnectionModal = MutableLiveData<Boolean>()
     val showNoInternetConnectionModal: LiveData<Boolean> = _showNoInternetConnectionModal
-
-    private val _userCollections = MutableLiveData<List<CollectionReadingUiModel>>()
-    val userCollections: LiveData<List<CollectionReadingUiModel>> = _userCollections
 
     private val _showCollectionCreationModal = MutableLiveData<Boolean>()
     val showCollectionCreationModal: LiveData<Boolean> = _showCollectionCreationModal
@@ -57,10 +57,16 @@ class CollectionViewModel @Inject constructor(
     private val _showNotAnyCollectionsToRenameModal = MutableLiveData<Boolean>()
     val showNotAnyCollectionsToRenameModal: LiveData<Boolean> = _showNotAnyCollectionsToRenameModal
 
+    private val _userCollections = MutableLiveData<List<CollectionReadingUiModel>>()
+    val userCollections: LiveData<List<CollectionReadingUiModel>> = _userCollections
+
     private val _collectionDeletionOptionCheckedIndexes =
         MutableLiveData<MutableList<Int>>(mutableListOf())
     val collectionDeletionOptionCheckedIndexes: LiveData<MutableList<Int>> =
         _collectionDeletionOptionCheckedIndexes
+
+    private val _collectionArtworks = MutableLiveData<List<ArtworkPreviewUiModel>>()
+    val collectionArtworks: LiveData<List<ArtworkPreviewUiModel>> = _collectionArtworks
 
     private val _collectionRenamingOptionSelectedIndex = MutableLiveData(0)
     val collectionRenamingOptionSelectedIndex: LiveData<Int> =
@@ -200,17 +206,19 @@ class CollectionViewModel @Inject constructor(
     }
 
     fun onCollectionRenamingModalOpening() {
-        if (userCollections.value!!.size == 1) {
-            _originalCollectionTitle.value = userCollections.value!!.get(index = 0).title
-            _modifiedCollectionTitle.value = userCollections.value!!.get(index = 0).title
-        } else {
-            _originalCollectionTitle.value =
-                userCollections.value!!.get(index = collectionRenamingOptionSelectedIndex.value!!).title
-            _modifiedCollectionTitle.value =
-                userCollections.value!!.get(index = collectionRenamingOptionSelectedIndex.value!!).title
+        _originalCollectionTitle.value =
+            userCollections.value!!.get(
+                index = collectionRenamingOptionSelectedIndex.value!!
+            ).title
+        _modifiedCollectionTitle.value =
+            userCollections.value!!.get(
+                index = collectionRenamingOptionSelectedIndex.value!!
+            ).title
+
+        if (showCollectionRenamingOptionModal.value ?: false) {
+            _showCollectionRenamingOptionModal.value = false
         }
 
-        _showCollectionRenamingOptionModal.value = false
         _showCollectionRenamingModal.value = true
     }
 
@@ -324,7 +332,7 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
-    fun onCollectionScreenArrival() {
+    fun onCollectionPreviewScreenArrival() {
         viewModelScope.launch {
             delay(2000)
 
@@ -333,6 +341,34 @@ class CollectionViewModel @Inject constructor(
 
                 withContext(context = Dispatchers.IO) {
                     _userCollections.postValue(getUserCollectionsUseCase().getOrThrow())
+                }
+            }.onFailure { throwable ->
+                when (throwable) {
+                    is NetworkException.NoInternetConnectionException ->
+                        _showNoInternetConnectionModal.value = true
+                }
+
+                Log.d("EJECUCIÓN", "Pasaron cosas -> $throwable")
+            }
+
+            _isLoading.value = false
+        }
+    }
+
+    fun onCollectionArtworkScreenArrival(collectionId: Long) {
+        viewModelScope.launch {
+            delay(2000)
+
+            runCatching {
+                verifyUserInternetConnectionUseCase().getOrThrow()
+
+                withContext(context = Dispatchers.IO) {
+                    _collectionArtworks.postValue(
+                        getCollectionArtworksUseCase(
+                            collectionId =
+                                collectionId
+                        ).getOrThrow()
+                    )
                 }
             }.onFailure { throwable ->
                 when (throwable) {
