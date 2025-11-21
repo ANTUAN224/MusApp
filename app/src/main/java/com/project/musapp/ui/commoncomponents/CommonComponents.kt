@@ -18,6 +18,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,12 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 
 @Composable
@@ -94,7 +97,12 @@ fun UserProfileImage(userProfileImageUri: Uri, size: Dp) {
 }
 
 @Composable
-fun ArtworkPreviewRowItem(
+fun CommonHorizontalSpacer() {
+    Spacer(modifier = Modifier.width(width = 15.dp))
+}
+
+@Composable
+fun CommonArtworkPreviewRowItem(
     firstArtworkPreview: ArtworkPreviewUiModel,
     secondArtworkPreview: ArtworkPreviewUiModel?,
     onArtworkPreviewClick: (Long) -> Unit
@@ -112,7 +120,7 @@ fun ArtworkPreviewRowItem(
             onArtworkPreviewClick(firstArtworkPreview.id)
         }
 
-        Spacer(modifier = Modifier.width(width = 15.dp))
+        CommonHorizontalSpacer()
 
         if (secondArtworkPreview != null) {
             ArtworkPreviewCard(
@@ -166,4 +174,13 @@ private fun ArtworkPreviewCard(
             text = userFavoriteArtworkPreview.authorHistoricallyKnownName
         )
     }
+}
+
+@Composable
+fun CommonWallArtIcon() {
+    Icon(
+        modifier = Modifier.size(size = 80.dp),
+        painter = painterResource(R.drawable.wall_art_24px),
+        contentDescription = "Cuadro pegado en la pared"
+    )
 }

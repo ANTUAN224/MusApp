@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,16 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
-import com.project.musapp.ui.commoncomponents.ArtworkPreviewRowItem
+import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewRowItem
 import com.project.musapp.ui.commoncomponents.BoldText
-import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
+import com.project.musapp.ui.commoncomponents.CommonWallArtIcon
 
 @Composable
 fun CollectionArtworkScreen(
@@ -119,11 +117,7 @@ private fun CollectionArtworkScreenBody(
                 verticalArrangement = Arrangement.spacedBy(space = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    modifier = Modifier.size(size = 80.dp),
-                    painter = painterResource(R.drawable.wall_art_24px),
-                    contentDescription = "Cuadro pegado en la pared"
-                )
+                CommonWallArtIcon()
 
                 BoldText(
                     text = "No hay ningún cuadro en esta colección.",
@@ -147,7 +141,7 @@ private fun CollectionArtworkScreenBody(
             ) {
                 items(collectionArtworks.chunkInPairs())
                 { (firstArtworkPreview, secondArtworkPreview) ->
-                    ArtworkPreviewRowItem(
+                    CommonArtworkPreviewRowItem(
                         firstArtworkPreview = firstArtworkPreview,
                         secondArtworkPreview = secondArtworkPreview
                     ) { artworkId ->
