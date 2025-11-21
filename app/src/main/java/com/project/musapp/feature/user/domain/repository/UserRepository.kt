@@ -18,6 +18,4 @@ interface UserRepository {
     ): List<ArtworkPreviewDomainModel>
 
     suspend fun getUserFavoriteArtworks(userToken: String): List<ArtworkPreviewDomainModel>
-
-    suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel>
 }

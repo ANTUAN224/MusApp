@@ -16,7 +16,7 @@ import com.project.musapp.feature.collection.presentation.model.CollectionBatchD
 import com.project.musapp.feature.collection.presentation.model.CollectionCreationUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionRenamingUiModel
-import com.project.musapp.feature.user.domain.usecase.GetUserCollectionsUseCase
+import com.project.musapp.feature.collection.domain.usecase.GetUserCollectionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

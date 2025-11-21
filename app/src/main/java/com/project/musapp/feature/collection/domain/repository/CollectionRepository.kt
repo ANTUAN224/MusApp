@@ -23,6 +23,8 @@ interface CollectionRepository {
         collectionBatchDeletionDomainModel: CollectionBatchDeletionDomainModel
     ): List<CollectionReadingDomainModel>
 
+    suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel>
+
     suspend fun getCollectionArtworks(
         userToken: String,
         collectionId: Long

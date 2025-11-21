@@ -26,6 +26,11 @@ interface CollectionApiService {
         @Body collectionBatchDeletionDTO: CollectionBatchDeletionDTO
     ): Response<List<CollectionReadingDTO>>
 
+    @GET("collections/user")
+    suspend fun getUserCollections(
+        @Header("Authorization") headerCompanionValue: String
+    ): Response<List<CollectionReadingDTO>>
+
     @PUT("collections/{id}")
     suspend fun renameCollection(
         @Header("Authorization") headerCompanionValue: String,

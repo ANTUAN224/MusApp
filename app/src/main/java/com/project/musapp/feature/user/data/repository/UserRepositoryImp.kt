@@ -61,13 +61,4 @@ class UserRepositoryImp @Inject constructor(
             throw NetworkException.NoInternetConnectionException
         }
     }
-
-    override suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel> {
-        try {
-            return userHttpRequestRetrofit.getUserCollections(userToken = userToken)
-                .map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
-        } catch (_: IOException) {
-            throw NetworkException.NoInternetConnectionException
-        }
-    }
 }
