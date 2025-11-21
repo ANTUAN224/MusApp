@@ -52,13 +52,4 @@ class UserRepositoryImp @Inject constructor(
             throw NetworkException.NoInternetConnectionException
         }
     }
-
-    override suspend fun getUserFavoriteArtworks(userToken: String): List<ArtworkPreviewDomainModel> {
-        try {
-            return userHttpRequestRetrofit.getUserFavoriteArtworks(userToken = userToken)
-                .map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
-        } catch (_: IOException) {
-            throw NetworkException.NoInternetConnectionException
-        }
-    }
 }

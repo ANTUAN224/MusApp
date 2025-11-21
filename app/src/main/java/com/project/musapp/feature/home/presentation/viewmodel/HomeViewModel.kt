@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
 import com.project.musapp.feature.artwork.domain.usecase.GetSearchArtworksUseCase
-import com.project.musapp.feature.user.domain.usecase.GetUserFavoriteArtworksUseCase
+import com.project.musapp.feature.artwork.domain.usecase.GetUserFavoriteArtworksUseCase
 import com.project.musapp.feature.auth.domain.usecase.LogOutUserUseCase
 import com.project.musapp.feature.user.domain.usecase.GetUserProfileUseCase
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel

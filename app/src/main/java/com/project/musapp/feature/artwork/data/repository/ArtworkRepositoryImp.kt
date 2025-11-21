@@ -10,9 +10,18 @@ import java.io.IOException
 import javax.inject.Inject
 
 class ArtworkRepositoryImp @Inject constructor(
-   private val artworkGettingRetrofit: ArtworkGettingRetrofit
+    private val artworkGettingRetrofit: ArtworkGettingRetrofit
 ) :
     ArtworkRepository {
+    override suspend fun getUserFavoriteArtworks(userToken: String): List<ArtworkPreviewDomainModel> {
+        try {
+            return artworkGettingRetrofit.getUserFavoriteArtworks(userToken = userToken)
+                .map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
+    }
+
     override suspend fun getArtwork(
         userToken: String,
         artworkId: Long

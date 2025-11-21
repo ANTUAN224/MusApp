@@ -5,6 +5,11 @@ import javax.inject.Inject
 class ArtworkGettingRetrofit @Inject constructor(
     private val artworkApiService: ArtworkApiService
 ) {
+    suspend fun getUserFavoriteArtworks(userToken: String) =
+        artworkApiService.getUserFavoriteArtworks(
+            headerCompanionValue = "Bearer $userToken"
+        ).body()!!
+
     suspend fun getArtwork(userToken: String, artworkId: Long) =
         artworkApiService.getArtwork(
             headerCompanionValue = "Bearer $userToken",

@@ -28,11 +28,6 @@ interface UserApiService {
         @Path("id") artworkId: Long
     ): Response<List<ArtworkPreviewDTO>>
 
-    @GET("users/user-favorite-artworks")
-    suspend fun getUserFavoriteArtworks(
-        @Header("Authorization") headerCompanionValue: String
-    ): Response<List<ArtworkPreviewDTO>>
-
     @GET("users/collections")
     suspend fun getUserCollections(
         @Header("Authorization") headerCompanionValue: String

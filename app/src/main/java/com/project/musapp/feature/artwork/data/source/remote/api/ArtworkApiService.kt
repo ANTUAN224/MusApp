@@ -8,6 +8,11 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 
 interface ArtworkApiService {
+    @GET("artworks/user")
+    suspend fun getUserFavoriteArtworks(
+        @Header("Authorization") headerCompanionValue: String
+    ): Response<List<ArtworkPreviewDTO>>
+
     @GET("artworks/{id}")
     suspend fun getArtwork(
         @Header("Authorization") headerCompanionValue: String,
