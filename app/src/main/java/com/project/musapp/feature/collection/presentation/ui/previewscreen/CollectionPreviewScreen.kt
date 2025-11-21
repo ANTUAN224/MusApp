@@ -1,4 +1,4 @@
-package com.project.musapp.feature.collection.presentation.ui
+package com.project.musapp.feature.collection.presentation.ui.previewscreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,13 +38,14 @@ import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 
 @Composable
-fun CollectionScreen(
+fun CollectionPreviewScreen(
     collectionViewModel: CollectionViewModel,
     userCollections: List<CollectionReadingUiModel>,
-    onUniqueCollectionDeletion: () -> Unit
+    onUniqueCollectionDeletion: () -> Unit,
+    onCollectionPreviewClick: (Long, String) -> Unit
 ) {
     Scaffold(topBar = {
-        CollectionScreenTopBar(
+        CollectionPreviewScreenTopBar(
             collectionViewModel = collectionViewModel,
             userCollections = userCollections
         ) {
@@ -52,16 +53,18 @@ fun CollectionScreen(
         }
     }
     ) { innerPadding ->
-        CollectionScreenBody(
+        CollectionPreviewScreenBody(
             modifier = Modifier.padding(paddingValues = innerPadding),
             userCollections = userCollections
-        )
+        ) { collectionId, collectionTitle ->
+            onCollectionPreviewClick(collectionId, collectionTitle)
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollectionScreenTopBar(
+fun CollectionPreviewScreenTopBar(
     collectionViewModel: CollectionViewModel,
     userCollections: List<CollectionReadingUiModel>,
     onUniqueCollectionDeletion: () -> Unit
@@ -124,9 +127,10 @@ fun CollectionScreenTopBar(
 }
 
 @Composable
-fun CollectionScreenBody(
+fun CollectionPreviewScreenBody(
     modifier: Modifier,
-    userCollections: List<CollectionReadingUiModel>
+    userCollections: List<CollectionReadingUiModel>,
+    onCollectionPreviewClick: (Long, String) -> Unit
 ) {
     if (userCollections.isEmpty()) {
         Box(
@@ -169,7 +173,9 @@ fun CollectionScreenBody(
                     Icon(
                         modifier = Modifier
                             .size(size = 250.dp)
-                            .clickable {},
+                            .clickable {
+                                onCollectionPreviewClick(userCollection.id, userCollection.title)
+                            },
                         imageVector = Icons.Outlined.Folder,
                         contentDescription = "Colección creada por el usuario",
                         tint = Color.Black
