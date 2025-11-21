@@ -350,8 +350,6 @@ class CollectionViewModel @Inject constructor(
 
                 Log.d("EJECUCIÓN", "Pasaron cosas -> $throwable")
             }
-
-            _isLoading.value = false
         }
     }
 
