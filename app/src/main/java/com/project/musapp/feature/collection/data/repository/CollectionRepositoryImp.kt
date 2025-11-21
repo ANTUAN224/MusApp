@@ -1,6 +1,7 @@
 package com.project.musapp.feature.collection.data.repository
 
 import com.project.musapp.core.network.domain.exception.NetworkException
+import com.project.musapp.feature.artwork.data.model.dto.artwork.toDomainModel
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 import com.project.musapp.feature.collection.data.model.dto.toDomainModel
 import com.project.musapp.feature.collection.data.source.remote.api.CollectionHttpRequestRetrofit
@@ -64,7 +65,14 @@ class CollectionRepositoryImp @Inject constructor(
         userToken: String,
         collectionId: Long
     ): List<ArtworkPreviewDomainModel> {
-        TODO("Not yet implemented")
+        try {
+            return collectionHttpRequestRetrofit.getCollectionArtworks(
+                userToken = userToken,
+                collectionId = collectionId
+            ).map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
     }
 
     override suspend fun addArtworkToCollections(
