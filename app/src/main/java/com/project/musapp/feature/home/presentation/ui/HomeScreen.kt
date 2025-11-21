@@ -2,10 +2,13 @@ package com.project.musapp.feature.home.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,25 +53,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
-import com.project.musapp.ui.commoncomponents.BoldText
-import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
-import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
+import com.project.musapp.ui.commoncomponents.BoldText
+import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
-import com.project.musapp.ui.commoncomponents.ArtworkPreviewRowItem
+import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewRowItem
+import com.project.musapp.ui.commoncomponents.CommonWallArtIcon
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    userProfile: UserProfileUiModel,
     onNavBarHiding: () -> Unit,
     onNavBarShowing: () -> Unit,
     onArtworkPreviewClick: (Long) -> Unit,
     onReturnToInitialMenu: () -> Unit,
 ) {
-    val userProfile by homeViewModel.userProfile.observeAsState()
     val isSearching by homeViewModel.isSearching.observeAsState(initial = false)
     val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState(initial = false)
 
@@ -85,7 +87,7 @@ fun HomeScreen(
                 topBar = {
                     HomeScreenTopBar(
                         homeViewModel = homeViewModel,
-                        userProfile = userProfile!!,
+                        userProfile = userProfile,
                         hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
                     ) {
                         onReturnToInitialMenu()
@@ -94,7 +96,6 @@ fun HomeScreen(
                 HomeScreenBody(
                     modifier = Modifier.padding(paddingValues = innerPadding),
                     homeViewModel = homeViewModel,
-                    userProfile = userProfile!!,
                     onArtworkPreviewClick = onArtworkPreviewClick
                 )
             }
@@ -105,7 +106,6 @@ fun HomeScreen(
 
             HomeScreenSearchBar(
                 homeViewModel = homeViewModel,
-                isSearching = true,
                 hasSearchKeyBeenPressed = hasSearchKeyBeenPressed,
                 onArtworkPreviewClick = onArtworkPreviewClick
             )
@@ -115,7 +115,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenTopBar(
+private fun HomeScreenTopBar(
     homeViewModel: HomeViewModel,
     userProfile: UserProfileUiModel,
     hasSearchKeyBeenPressed: Boolean,
@@ -247,9 +247,8 @@ fun HomeScreenTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenSearchBar(
+private fun HomeScreenSearchBar(
     homeViewModel: HomeViewModel,
-    isSearching: Boolean,
     hasSearchKeyBeenPressed: Boolean,
     onArtworkPreviewClick: (Long) -> Unit
 ) {
@@ -293,7 +292,7 @@ fun HomeScreenSearchBar(
                     focusManager.clearFocus(force = true)
                 },
                 placeholder = { Text(text = "Busca el cuadro por título o autor") },
-                expanded = isSearching,
+                expanded = true,
                 onExpandedChange = {
                     homeViewModel.onSearchBarStateChange(
                         isSearching = it,
@@ -305,7 +304,7 @@ fun HomeScreenSearchBar(
                 }
             )
         },
-        expanded = isSearching,
+        expanded = true,
         onExpandedChange = {
             homeViewModel.onSearchBarStateChange(
                 isSearching = it,
@@ -364,77 +363,62 @@ fun HomeScreenSearchBar(
 }
 
 @Composable
-fun HomeScreenBody(
+private fun HomeScreenBody(
     modifier: Modifier,
     homeViewModel: HomeViewModel,
-    userProfile: UserProfileUiModel,
     onArtworkPreviewClick: (Long) -> Unit
 ) {
-    val showSupportContactModal by homeViewModel.showContactWithSupportModal.observeAsState(initial = false)
-    val showUserProfileModal by homeViewModel.showUserProfileModal.observeAsState(initial = false)
-    val userFavoriteArtworkPreviews by homeViewModel.userFavoriteArtworks.observeAsState()
+    val userFavoriteArtworks by homeViewModel.userFavoriteArtworks.observeAsState()
 
-    ConstraintLayout(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        val (bodyTitle, bodyContent) = createRefs()
-
-        BoldText(
+        Box(
             modifier = Modifier
-                .constrainAs(ref = bodyTitle) {
-                    top.linkTo(anchor = parent.top)
-                    bottom.linkTo(anchor = parent.bottom)
-                    verticalBias = 0.01f
-                }
-                .padding(vertical = 30.dp),
-            text = "Tus cuadros favoritos", fontSize = 20.sp
-        )
+                .fillMaxWidth()
+                .height(height = 65.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            BoldText(
+                text = "Tus cuadros favoritos",
+                fontSize = 20.sp
+            )
+        }
 
-        if (userFavoriteArtworkPreviews!!.isEmpty()) {
+        if (userFavoriteArtworks!!.isEmpty()) {
+            Spacer(modifier = Modifier.weight(weight = 0.5f))
+
             Column(
-                modifier = Modifier
-                    .constrainAs(ref = bodyContent) {
-                        top.linkTo(anchor = bodyTitle.bottom)
-                        bottom.linkTo(anchor = parent.bottom)
-                        start.linkTo(anchor = parent.start)
-                        end.linkTo(anchor = parent.end)
-                        verticalBias = 0.3f
-                    },
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(space = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    modifier = Modifier.size(size = 80.dp),
-                    painter = painterResource(R.drawable.wall_art_24px),
-                    contentDescription = "Cuadro pegado en la pared",
-                    tint = Color.Black
+                CommonWallArtIcon()
+
+                BoldText(
+                    text = "Todavía no tienes ningún cuadro favorito.",
+                    textAlign = TextAlign.Center
                 )
-
-                CommonVerticalSpacer(height = 23.dp)
-
-                BoldText(text = "Todavía no tienes ningún cuadro favorito.")
-
-                CommonVerticalSpacer(height = 23.dp)
 
                 BoldText(
                     text = "¡Comienza a explorar obras de arte y descubre aquí tus favoritas!",
                     textAlign = TextAlign.Center
                 )
             }
+
+            Spacer(modifier = Modifier.weight(weight = 1f))
         } else {
             LazyColumn(
-                modifier = modifier
-                    .constrainAs(ref = bodyContent) {
-                        top.linkTo(anchor = parent.top)
-                        bottom.linkTo(anchor = parent.bottom)
-                        verticalBias = 0f
-                    }
-                    .fillMaxHeight()
-                    .padding(bottom = 80.dp)) {
-                items(userFavoriteArtworkPreviews!!.chunkInPairs())
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1f)
+                    .padding(bottom = 80.dp)
+            ) {
+                items(userFavoriteArtworks!!.chunkInPairs())
                 { (firstArtworkPreview, secondArtworkPreview) ->
-                    ArtworkPreviewRowItem(
+                    CommonArtworkPreviewRowItem(
                         firstArtworkPreview = firstArtworkPreview,
                         secondArtworkPreview = secondArtworkPreview
                     ) { artworkId ->
@@ -443,13 +427,5 @@ fun HomeScreenBody(
                 }
             }
         }
-    }
-
-    if (showSupportContactModal) {
-        ContactWithSupportModal(homeViewModel = homeViewModel)
-    }
-
-    if (showUserProfileModal) {
-        UserProfileModal(userProfile = userProfile, homeViewModel = homeViewModel)
     }
 }

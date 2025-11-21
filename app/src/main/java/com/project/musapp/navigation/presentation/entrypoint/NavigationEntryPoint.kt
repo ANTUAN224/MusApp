@@ -31,7 +31,9 @@ import com.project.musapp.feature.collection.presentation.ui.previewscreen.Colle
 import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToDeleteModal
 import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToRenameModal
 import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
+import com.project.musapp.feature.home.presentation.ui.ContactWithSupportModal
 import com.project.musapp.feature.home.presentation.ui.HomeScreen
+import com.project.musapp.feature.home.presentation.ui.UserProfileModal
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
 import com.project.musapp.navigation.presentation.initialmenu.ui.InitialMenuScreen
 import com.project.musapp.navigation.presentation.navigationbar.ui.MusAppNavigationBar
@@ -267,9 +269,15 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                 val isLoading by homeViewModel.isLoading.observeAsState(initial = true)
 
-                val showNoInternetConnectionModal by homeViewModel.showNoInternetConnectionModal.observeAsState(
-                    initial = false
-                )
+                val showNoInternetConnectionModal by
+                homeViewModel.showNoInternetConnectionModal.observeAsState(initial = false)
+
+
+                val showSupportContactModal by
+                homeViewModel.showContactWithSupportModal.observeAsState(initial = false)
+
+                val showUserProfileModal by
+                homeViewModel.showUserProfileModal.observeAsState(initial = false)
 
                 LaunchedEffect(Unit) {
                     if (isLoading) {
@@ -286,12 +294,15 @@ fun NavigationEntryPoint(applicationContext: Context) {
                 } else if (showNoInternetConnectionModal) {
                     CommonNoInternetConnectionModal()
                 } else {
+                    val userProfile by homeViewModel.userProfile.observeAsState()
+
                     LaunchedEffect(Unit) {
                         navigationViewModel.onNavBarShowing()
                     }
 
                     HomeScreen(
                         homeViewModel = homeViewModel,
+                        userProfile = userProfile!!,
                         onNavBarHiding = {
                             navigationViewModel.onNavBarHiding()
                         },
@@ -313,6 +324,14 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         navController.navigate(route = RouteHub.UserStateInitialChecking) {
                             popUpTo<RouteHub.Home> { inclusive = true }
                         }
+                    }
+
+                    if (showSupportContactModal) {
+                        ContactWithSupportModal(homeViewModel = homeViewModel)
+                    }
+
+                    if (showUserProfileModal) {
+                        UserProfileModal(userProfile = userProfile!!, homeViewModel = homeViewModel)
                     }
                 }
             }
