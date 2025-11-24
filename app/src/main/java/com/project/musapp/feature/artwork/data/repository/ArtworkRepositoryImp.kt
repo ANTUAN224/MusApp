@@ -22,13 +22,29 @@ class ArtworkRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun getCollectionArtworks(
+        userToken: String,
+        collectionId: Long
+    ): List<ArtworkPreviewDomainModel> {
+        try {
+            return artworkGettingRetrofit.getCollectionArtworks(
+                userToken = userToken,
+                collectionId = collectionId
+            ).map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
+    }
+
     override suspend fun getArtwork(
         userToken: String,
         artworkId: Long
     ): ArtworkDomainModel {
         try {
-            return artworkGettingRetrofit.getArtwork(userToken = userToken, artworkId = artworkId)
-                .toDomainModel()
+            return artworkGettingRetrofit.getArtwork(
+                userToken = userToken,
+                artworkId = artworkId
+            ).toDomainModel()
         } catch (_: IOException) {
             throw NetworkException.NoInternetConnectionException
         }
