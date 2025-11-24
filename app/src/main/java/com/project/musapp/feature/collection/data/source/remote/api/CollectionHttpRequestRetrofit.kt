@@ -36,4 +36,11 @@ class CollectionHttpRequestRetrofit @Inject constructor(
             headerCompanionValue = "Bearer $userToken",
             collectionBatchDTO = collectionBatchDTO
         ).body()!!
+
+    suspend fun getUserCollections(
+        userToken: String
+    ) =
+        collectionApiService.getUserCollections(
+            headerCompanionValue = "Bearer $userToken"
+        ).body()!!
 }

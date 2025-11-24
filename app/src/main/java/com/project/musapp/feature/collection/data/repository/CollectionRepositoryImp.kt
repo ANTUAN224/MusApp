@@ -1,7 +1,6 @@
 package com.project.musapp.feature.collection.data.repository
 
 import com.project.musapp.core.network.domain.exception.NetworkException
-import com.project.musapp.feature.artwork.data.model.dto.artwork.toDomainModel
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 import com.project.musapp.feature.collection.data.model.dto.toDomainModel
 import com.project.musapp.feature.collection.data.source.remote.api.CollectionHttpRequestRetrofit
@@ -55,6 +54,16 @@ class CollectionRepositoryImp @Inject constructor(
             return collectionHttpRequestRetrofit.deleteCollections(
                 userToken = userToken,
                 collectionBatchDTO = collectionBatchDomainModel.toDTO()
+            ).map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
+    }
+
+    override suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel> {
+        try {
+            return collectionHttpRequestRetrofit.getUserCollections(
+                userToken = userToken
             ).map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
         } catch (_: IOException) {
             throw NetworkException.NoInternetConnectionException
