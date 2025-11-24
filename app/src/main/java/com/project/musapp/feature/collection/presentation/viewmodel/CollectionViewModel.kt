@@ -182,7 +182,6 @@ class CollectionViewModel @Inject constructor(
     }
 
     fun onCollectionBatchDeletionModalClosing() {
-        collectionDeletionOptionCheckedIndexes.value!!.clear()
         _collectionDeletionOptionCheckedIndexes.value!!.clear()
 
         _showCollectionBatchDeletionModal.value = false
@@ -210,6 +209,7 @@ class CollectionViewModel @Inject constructor(
             userCollections.value!!.get(
                 index = collectionRenamingOptionSelectedIndex.value!!
             ).title
+
         _modifiedCollectionTitle.value =
             userCollections.value!!.get(
                 index = collectionRenamingOptionSelectedIndex.value!!
@@ -267,7 +267,9 @@ class CollectionViewModel @Inject constructor(
                 withContext(context = Dispatchers.IO) {
                     _userCollections.postValue(
                         renameCollectionUseCase(
-                            collectionId = userCollections.value!!.get(index = collectionRenamingOptionSelectedIndex.value!!).id,
+                            collectionId = userCollections.value!!.get(
+                                index = collectionRenamingOptionSelectedIndex.value!!
+                            ).id,
                             collectionRenamingUiModel = CollectionRenamingUiModel(
                                 modifiedTitle = modifiedCollectionTitle.value!!
                             )

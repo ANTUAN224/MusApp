@@ -23,13 +23,6 @@ interface CollectionRepository {
         collectionBatchDomainModel: CollectionBatchDomainModel
     ): List<CollectionReadingDomainModel>
 
-    suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel>
-
-    suspend fun getCollectionArtworks(
-        userToken: String,
-        collectionId: Long
-    ): List<ArtworkPreviewDomainModel>
-
     suspend fun addArtworkToCollections(
         userToken: String,
         artworkId: Long,
