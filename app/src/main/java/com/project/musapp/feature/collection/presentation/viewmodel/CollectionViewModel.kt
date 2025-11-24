@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.musapp.core.network.domain.exception.NetworkException
 import com.project.musapp.core.network.domain.usecase.VerifyUserInternetConnectionUseCase
+import com.project.musapp.feature.artwork.domain.usecase.GetCollectionArtworksUseCase
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 import com.project.musapp.feature.collection.domain.usecase.CreateCollectionUseCase
 import com.project.musapp.feature.collection.domain.usecase.DeleteCollectionsUseCase
-import com.project.musapp.feature.collection.domain.usecase.GetCollectionArtworksUseCase
 import com.project.musapp.feature.collection.domain.usecase.RenameCollectionUseCase
 import com.project.musapp.feature.collection.presentation.model.CollectionBatchUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionCreationUiModel
