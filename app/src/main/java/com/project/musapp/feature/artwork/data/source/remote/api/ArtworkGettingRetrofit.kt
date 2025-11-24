@@ -10,6 +10,12 @@ class ArtworkGettingRetrofit @Inject constructor(
             headerCompanionValue = "Bearer $userToken"
         ).body()!!
 
+    suspend fun getCollectionArtworks(userToken: String, collectionId: Long) =
+        artworkApiService.getCollectionArtworks(
+            headerCompanionValue = "Bearer $userToken",
+            collectionId = collectionId
+        ).body()!!
+
     suspend fun getArtwork(userToken: String, artworkId: Long) =
         artworkApiService.getArtwork(
             headerCompanionValue = "Bearer $userToken",
