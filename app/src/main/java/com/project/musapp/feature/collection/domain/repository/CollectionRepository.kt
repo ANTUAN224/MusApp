@@ -1,7 +1,7 @@
 package com.project.musapp.feature.collection.domain.repository
 
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
-import com.project.musapp.feature.collection.domain.model.CollectionBatchDeletionDomainModel
+import com.project.musapp.feature.collection.domain.model.CollectionBatchDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionCreationDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionReadingDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionRenamingDomainModel
@@ -20,7 +20,7 @@ interface CollectionRepository {
 
     suspend fun deleteCollections(
         userToken: String,
-        collectionBatchDeletionDomainModel: CollectionBatchDeletionDomainModel
+        collectionBatchDomainModel: CollectionBatchDomainModel
     ): List<CollectionReadingDomainModel>
 
     suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel>
