@@ -1,7 +1,7 @@
 package com.project.musapp.feature.collection.data.source.remote.api
 
 import com.project.musapp.feature.artwork.data.model.dto.artwork.ArtworkPreviewDTO
-import com.project.musapp.feature.collection.data.model.dto.CollectionBatchDeletionDTO
+import com.project.musapp.feature.collection.data.model.dto.CollectionBatchDTO
 import com.project.musapp.feature.collection.data.model.dto.CollectionCreationDTO
 import com.project.musapp.feature.collection.data.model.dto.CollectionReadingDTO
 import com.project.musapp.feature.collection.data.model.dto.CollectionRenamingDTO
@@ -23,7 +23,7 @@ interface CollectionApiService {
     @POST("collections/batch-delete")
     suspend fun deleteCollections(
         @Header("Authorization") headerCompanionValue: String,
-        @Body collectionBatchDeletionDTO: CollectionBatchDeletionDTO
+        @Body collectionBatchDTO: CollectionBatchDTO
     ): Response<List<CollectionReadingDTO>>
 
     @PUT("collections/{id}")

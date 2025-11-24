@@ -5,7 +5,7 @@ import com.project.musapp.feature.artwork.data.model.dto.artwork.toDomainModel
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 import com.project.musapp.feature.collection.data.model.dto.toDomainModel
 import com.project.musapp.feature.collection.data.source.remote.api.CollectionHttpRequestRetrofit
-import com.project.musapp.feature.collection.domain.model.CollectionBatchDeletionDomainModel
+import com.project.musapp.feature.collection.domain.model.CollectionBatchDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionCreationDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionReadingDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionRenamingDomainModel
@@ -49,12 +49,12 @@ class CollectionRepositoryImp @Inject constructor(
 
     override suspend fun deleteCollections(
         userToken: String,
-        collectionBatchDeletionDomainModel: CollectionBatchDeletionDomainModel
+        collectionBatchDomainModel: CollectionBatchDomainModel
     ): List<CollectionReadingDomainModel> {
         try {
             return collectionHttpRequestRetrofit.deleteCollections(
                 userToken = userToken,
-                collectionBatchDeletionDTO = collectionBatchDeletionDomainModel.toDTO()
+                collectionBatchDTO = collectionBatchDomainModel.toDTO()
             ).map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
         } catch (_: IOException) {
             throw NetworkException.NoInternetConnectionException

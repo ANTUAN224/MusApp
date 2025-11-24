@@ -12,7 +12,7 @@ import com.project.musapp.feature.collection.domain.usecase.CreateCollectionUseC
 import com.project.musapp.feature.collection.domain.usecase.DeleteCollectionsUseCase
 import com.project.musapp.feature.collection.domain.usecase.GetCollectionArtworksUseCase
 import com.project.musapp.feature.collection.domain.usecase.RenameCollectionUseCase
-import com.project.musapp.feature.collection.presentation.model.CollectionBatchDeletionUiModel
+import com.project.musapp.feature.collection.presentation.model.CollectionBatchUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionCreationUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionRenamingUiModel
@@ -313,7 +313,7 @@ class CollectionViewModel @Inject constructor(
                 withContext(context = Dispatchers.IO) {
                     _userCollections.postValue(
                         deleteCollectionsUseCase(
-                            collectionBatchDeletionUiModel = CollectionBatchDeletionUiModel(
+                            collectionBatchUiModel = CollectionBatchUiModel(
                                 collectionIds = collectionIds
                             )
                         ).getOrThrow()
