@@ -13,6 +13,12 @@ interface ArtworkApiService {
         @Header("Authorization") headerCompanionValue: String
     ): Response<List<ArtworkPreviewDTO>>
 
+    @GET("artworks/collection/{id}")
+    suspend fun getCollectionArtworks(
+        @Header("Authorization") headerCompanionValue: String,
+        @Path("id") collectionId: Long
+    ): Response<List<ArtworkPreviewDTO>>
+
     @GET("artworks/{id}")
     suspend fun getArtwork(
         @Header("Authorization") headerCompanionValue: String,
