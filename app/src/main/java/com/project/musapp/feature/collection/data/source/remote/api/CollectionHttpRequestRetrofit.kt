@@ -1,6 +1,6 @@
 package com.project.musapp.feature.collection.data.source.remote.api
 
-import com.project.musapp.feature.collection.data.model.dto.CollectionBatchDeletionDTO
+import com.project.musapp.feature.collection.data.model.dto.CollectionBatchDTO
 import com.project.musapp.feature.collection.data.model.dto.CollectionCreationDTO
 import com.project.musapp.feature.collection.data.model.dto.CollectionRenamingDTO
 import javax.inject.Inject
@@ -30,11 +30,11 @@ class CollectionHttpRequestRetrofit @Inject constructor(
 
     suspend fun deleteCollections(
         userToken: String,
-        collectionBatchDeletionDTO: CollectionBatchDeletionDTO
+        collectionBatchDTO: CollectionBatchDTO
     ) =
         collectionApiService.deleteCollections(
             headerCompanionValue = "Bearer $userToken",
-            collectionBatchDeletionDTO = collectionBatchDeletionDTO
+            collectionBatchDTO = collectionBatchDTO
         ).body()!!
 
     suspend fun getUserCollections(
