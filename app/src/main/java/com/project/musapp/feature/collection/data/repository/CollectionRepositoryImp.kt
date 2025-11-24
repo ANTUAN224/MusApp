@@ -61,20 +61,6 @@ class CollectionRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getCollectionArtworks(
-        userToken: String,
-        collectionId: Long
-    ): List<ArtworkPreviewDomainModel> {
-        try {
-            return collectionHttpRequestRetrofit.getCollectionArtworks(
-                userToken = userToken,
-                collectionId = collectionId
-            ).map { artworkPreviewDTO -> artworkPreviewDTO.toDomainModel() }
-        } catch (_: IOException) {
-            throw NetworkException.NoInternetConnectionException
-        }
-    }
-
     override suspend fun addArtworkToCollections(
         userToken: String,
         artworkId: Long,

@@ -36,13 +36,4 @@ class CollectionHttpRequestRetrofit @Inject constructor(
             headerCompanionValue = "Bearer $userToken",
             collectionBatchDTO = collectionBatchDTO
         ).body()!!
-
-    suspend fun getCollectionArtworks(
-        userToken: String,
-        collectionId: Long
-    ) =
-        collectionApiService.getCollectionArtworks(
-            headerCompanionValue = "Bearer $userToken",
-            collectionId = collectionId
-        ).body()!!
 }

@@ -32,10 +32,4 @@ interface CollectionApiService {
         @Path("id") collectionId: Long,
         @Body collectionRenamingDTO: CollectionRenamingDTO
     ): Response<List<CollectionReadingDTO>>
-
-    @GET("collections/{id}/artworks")
-    suspend fun getCollectionArtworks(
-        @Header("Authorization") headerCompanionValue: String,
-        @Path("id") collectionId: Long
-    ): Response<List<ArtworkPreviewDTO>>
 }
