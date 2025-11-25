@@ -37,4 +37,30 @@ interface CollectionApiService {
         @Path("id") collectionId: Long,
         @Body collectionRenamingDTO: CollectionRenamingDTO
     ): Response<List<CollectionReadingDTO>>
+
+    @GET("collections/artwork-deletion/{id}")
+    suspend fun getCollectionsWithThatArtwork(
+        @Header("Authorization") headerCompanionValue: String,
+        @Path("id") artworkId: Long
+    ): Response<List<CollectionReadingDTO>>
+
+    @GET("collections/artwork-addition/{id}")
+    suspend fun getCollectionsWithoutThatArtwork(
+        @Header("Authorization") headerCompanionValue: String,
+        @Path("id") artworkId: Long
+    ): Response<List<CollectionReadingDTO>>
+
+    @POST("collections/artwork-deletion/{id}")
+    suspend fun deleteArtworkFromCollections(
+        @Header("Authorization") headerCompanionValue: String,
+        @Path("id") artworkId: Long,
+        @Body collectionBatchDTO: CollectionBatchDTO
+    )
+
+    @POST("collections/artwork-addition/{id}")
+    suspend fun addArtworkToCollections(
+        @Header("Authorization") headerCompanionValue: String,
+        @Path("id") artworkId: Long,
+        @Body collectionBatchDTO: CollectionBatchDTO
+    )
 }
