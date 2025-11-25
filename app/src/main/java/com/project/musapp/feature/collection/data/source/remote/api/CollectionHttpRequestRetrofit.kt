@@ -43,4 +43,44 @@ class CollectionHttpRequestRetrofit @Inject constructor(
         collectionApiService.getUserCollections(
             headerCompanionValue = "Bearer $userToken"
         ).body()!!
+
+    suspend fun getCollectionsWithThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ) =
+        collectionApiService.getCollectionsWithThatArtwork(
+            headerCompanionValue = "Bearer $userToken",
+            artworkId = artworkId
+        ).body()!!
+
+    suspend fun getCollectionsWithoutThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ) =
+        collectionApiService.getCollectionsWithoutThatArtwork(
+            headerCompanionValue = "Bearer $userToken",
+            artworkId = artworkId
+        ).body()!!
+
+    suspend fun deleteArtworkFromCollections(
+        userToken: String,
+        artworkId: Long,
+        collectionBatchDTO: CollectionBatchDTO
+    ) =
+        collectionApiService.deleteArtworkFromCollections(
+            headerCompanionValue = "Bearer $userToken",
+            artworkId = artworkId,
+            collectionBatchDTO = collectionBatchDTO
+        )
+
+    suspend fun addArtworkToCollections(
+        userToken: String,
+        artworkId: Long,
+        collectionBatchDTO: CollectionBatchDTO
+    ) =
+        collectionApiService.addArtworkToCollections(
+            headerCompanionValue = "Bearer $userToken",
+            artworkId = artworkId,
+            collectionBatchDTO = collectionBatchDTO
+        )
 }
