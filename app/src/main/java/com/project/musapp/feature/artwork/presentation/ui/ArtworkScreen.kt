@@ -37,6 +37,7 @@ import com.project.musapp.feature.artwork.domain.model.artistictrend.ArtisticTre
 import com.project.musapp.feature.artwork.domain.model.author.Sex
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkUiModel
 import com.project.musapp.feature.artwork.presentation.viewmodel.ArtworkViewModel
+import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.ui.commoncomponents.CommonHorizontalSpacer
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
@@ -46,14 +47,26 @@ import java.util.Locale
 fun ArtworkScreen(
     artworkViewModel: ArtworkViewModel,
     hasArtworkBeenMarkedAsFavorite: Boolean,
+    collectionsWithThatArtwork: List<CollectionReadingUiModel>,
+    collectionsWithoutThatArtwork: List<CollectionReadingUiModel>,
     artwork: ArtworkUiModel,
+    onArtworkAdditionToRemainingCollection: () -> Unit,
+    onArtworkDeletionFromRemainingCollection: () -> Unit,
     onReturnToHome: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             ArtworkScreenTopBar(
                 artworkViewModel = artworkViewModel,
-                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite,
+                collectionsWithThatArtwork = collectionsWithThatArtwork,
+                collectionsWithoutThatArtwork = collectionsWithoutThatArtwork,
+                onArtworkAdditionToRemainingCollection = {
+                    onArtworkAdditionToRemainingCollection()
+                },
+                onArtworkDeletionFromRemainingCollection = {
+                    onArtworkDeletionFromRemainingCollection()
+                }
             ) { onReturnToHome() }
         }
     ) { innerPadding ->
@@ -69,10 +82,20 @@ fun ArtworkScreen(
 fun ArtworkScreenTopBar(
     artworkViewModel: ArtworkViewModel,
     hasArtworkBeenMarkedAsFavorite: Boolean,
+    collectionsWithThatArtwork: List<CollectionReadingUiModel>,
+    collectionsWithoutThatArtwork: List<CollectionReadingUiModel>,
+    onArtworkAdditionToRemainingCollection: () -> Unit,
+    onArtworkDeletionFromRemainingCollection: () -> Unit,
     onReturnToHome: () -> Unit
 ) {
     TopAppBar(
-        title = { Text(text = "Información", color = Color.White) },
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Información",
+                color = Color.White,
+                textAlign = TextAlign.Center
+            ) },
         navigationIcon = {
             IconButton(onClick = { onReturnToHome() }) {
                 Icon(
@@ -96,7 +119,17 @@ fun ArtworkScreenTopBar(
                 )
             }
 
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                if (collectionsWithThatArtwork.isEmpty() && collectionsWithoutThatArtwork.isEmpty()) {
+                    artworkViewModel.onNotAnyCollectionsCreatedModalInAdditionOptionOpening()
+                } else if (collectionsWithoutThatArtwork.isEmpty()) {
+                    artworkViewModel.onArtworkInAllCollectionsModalOpening()
+                } else if (collectionsWithoutThatArtwork.size == 1) {
+                    onArtworkAdditionToRemainingCollection()
+                } else {
+                    artworkViewModel.onArtworkAdditionToCollectionsModalOpening()
+                }
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Adición del cuadro a una o varias colecciones del usuario",
@@ -104,7 +137,17 @@ fun ArtworkScreenTopBar(
                 )
             }
 
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                if (collectionsWithThatArtwork.isEmpty() && collectionsWithoutThatArtwork.isEmpty()) {
+                    artworkViewModel.onNotAnyCollectionsCreatedModalInDeletionOptionOpening()
+                } else if (collectionsWithThatArtwork.isEmpty()) {
+                    artworkViewModel.onNotAnyArtworksInCollectionsModalOpening()
+                } else if (collectionsWithThatArtwork.size == 1) {
+                    onArtworkDeletionFromRemainingCollection()
+                } else {
+                    artworkViewModel.onArtworkDeletionFromCollectionsModalOpening()
+                }
+            }) {
                 Icon(
                     painter = painterResource(R.drawable.delete_24px),
                     contentDescription = "Eliminación del cuadro de una o varias colecciones del usuario",
