@@ -1,7 +1,7 @@
 package com.project.musapp.navigation.presentation.entrypoint
 
 import android.content.Context
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,7 +14,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkAdditionToCollectionsModal
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkDeletionFromCollectionsModal
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkInAllCollectionsModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkScreen
+import com.project.musapp.feature.artwork.presentation.ui.NotAnyArtworksInCollectionsModal
+import com.project.musapp.feature.artwork.presentation.ui.NotAnyCollectionsCreatedModalInArtworkAdditionOption
+import com.project.musapp.feature.artwork.presentation.ui.NotAnyCollectionsCreatedModalInArtworkDeletionOption
 import com.project.musapp.feature.artwork.presentation.viewmodel.ArtworkViewModel
 import com.project.musapp.feature.auth.presentation.login.ui.LoginModal
 import com.project.musapp.feature.auth.presentation.login.ui.UserNotFoundModal
@@ -64,6 +70,15 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
     val hasArtworkBeenNavigatedFromCollection by
     navigationViewModel.hasArtworkBeenNavigatedFromCollection.observeAsState(initial = false)
+
+    val hasArtworkBeenAddedToCollections by
+    navigationViewModel.hasArtworkBeenAddedToCollections.observeAsState(initial = false)
+
+    val hasArtworkBeenDeletedFromCollections by
+    navigationViewModel.hasArtworkBeenDeletedFromCollections.observeAsState(initial = false)
+
+    val hasArtworkBeenMarkedAsFavorite by
+    navigationViewModel.hasArtworkBeenMarkedAsFavorite.observeAsState(initial = null)
 
     Scaffold(bottomBar = {
         if (showNavBar) {
@@ -297,6 +312,58 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     val userProfile by homeViewModel.userProfile.observeAsState()
 
                     LaunchedEffect(Unit) {
+                        if (hasArtworkBeenAddedToCollections) {
+                            if (hasArtworkBeenMarkedAsFavorite != null) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡Los cambios se han realizado con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡El cuadro se ha añadido a tus colecciones con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            navigationViewModel.onHomeArrival()
+                        } else if (hasArtworkBeenDeletedFromCollections) {
+                            if (hasArtworkBeenMarkedAsFavorite != null) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡Los cambios se han realizado con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡El cuadro se ha eliminado de tus colecciones con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            navigationViewModel.onHomeArrival()
+                        } else if (homeDestination.artworkId != null
+                            && hasArtworkBeenMarkedAsFavorite != null
+                        ) {
+                            if (hasArtworkBeenMarkedAsFavorite!!) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡El cuadro se ha añadido a tu lista de favoritos con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "¡El cuadro se ha eliminado de tu lista de favoritos con éxito!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            navigationViewModel.onHomeArrival()
+                        }
+
                         navigationViewModel.onNavBarShowing()
                     }
 
@@ -344,20 +411,81 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                 val isLoading by artworkViewModel.isLoading.observeAsState(initial = true)
 
-                val showNoInternetConnectionModal by artworkViewModel.showNoInternetConnectionModal.observeAsState(
-                    initial = false
-                )
+                val showNoInternetConnectionModal
+                        by artworkViewModel.showNoInternetConnectionModal.observeAsState(
+                            initial = false
+                        )
+
+                val showNotAnyCollectionsCreatedModalInDeletionOption
+                        by artworkViewModel.showNotAnyCollectionsCreatedModalInDeletionOption
+                            .observeAsState(initial = false)
+
+                val showNotAnyCollectionsCreatedModalInAdditionOption
+                        by artworkViewModel.showNotAnyCollectionsCreatedModalInAdditionOption
+                            .observeAsState(initial = false)
+
+                val showNotAnyArtworksInCollectionsModal by artworkViewModel
+                    .showNotAnyArtworksInCollectionsModal.observeAsState(
+                        initial = false
+                    )
+
+                val showArtworkInAllCollectionsModal by artworkViewModel
+                    .showArtworkInAllCollectionsModal.observeAsState(
+                        initial = false
+                    )
+
+                val showArtworkAdditionToCollectionsModal by artworkViewModel
+                    .showArtworkAdditionToCollectionsModal.observeAsState(
+                        initial = false
+                    )
+
+                val showArtworkDeletionToCollectionsModal by artworkViewModel
+                    .showArtworkDeletionFromCollectionsModal.observeAsState(
+                        initial = false
+                    )
+
+                val navigateToHome by
+                artworkViewModel.navigateToHome.observeAsState()
+
+                val artwork by artworkViewModel.artwork.observeAsState()
 
                 LaunchedEffect(Unit) {
-                    artworkViewModel.onArtworkInformationScreenArrival(artworkId = artworkDestination.artworkId)
+                    artworkViewModel.onArtworkInformationScreenArrival(
+                        artworkId = artworkDestination.artworkId
+                    )
                 }
 
-                if (isLoading) {
-                    CommonLoadingScreen()
-                } else if (showNoInternetConnectionModal) {
-                    CommonNoInternetConnectionModal()
-                } else {
-                    val artwork by artworkViewModel.artwork.observeAsState()
+                LaunchedEffect(navigateToHome) {
+                    if (navigateToHome == true) {
+                        if (currentNavItemIndex != 0) {
+                            navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
+                        }
+
+                        if (hasArtworkBeenMarkedAsFavorite != null) {
+                            navController.navigate(
+                                route =
+                                    RouteHub.Home(
+                                        artworkId = artwork!!.id,
+                                        addArtworkToUserFavoriteArtworks =
+                                            hasArtworkBeenMarkedAsFavorite!!
+                                    )
+                            ) {
+                                popUpTo<RouteHub.Home> { inclusive = true }
+                            }
+                        } else {
+                            navController.navigate(route = RouteHub.Home()) {
+                                popUpTo<RouteHub.Home> { inclusive = true }
+                            }
+                        }
+                    }
+                }
+
+                if (!isLoading && navigateToHome == null) {
+                    val collectionsWithThatArtwork by
+                    artworkViewModel.collectionsWithThatArtwork.observeAsState()
+
+                    val collectionsWithoutThatArtwork by
+                    artworkViewModel.collectionsWithoutThatArtwork.observeAsState()
 
                     val hasArtworkBeenMarkedAsFavorite by
                     artworkViewModel.hasArtworkBeenMarkedAsFavorite.observeAsState(
@@ -367,12 +495,45 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     ArtworkScreen(
                         artworkViewModel = artworkViewModel,
                         artwork = artwork!!,
-                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite,
+                        collectionsWithThatArtwork = collectionsWithThatArtwork!!,
+                        collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!,
+                        onArtworkAdditionToRemainingCollection = {
+                            navigationViewModel.onArtworkAdditionToCollections()
+
+                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                )
+                            }
+
+                            artworkViewModel.onArtworkAdditionToCollections(
+                                artworkId = artworkDestination.artworkId
+                            )
+                        },
+                        onArtworkDeletionFromRemainingCollection = {
+                            navigationViewModel.onArtworkDeletionFromCollections()
+
+                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                )
+                            }
+
+                            artworkViewModel.onArtworkDeletionFromCollections(
+                                artworkId = artworkDestination.artworkId
+                            )
+                        }
                     ) {
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
                             if (currentNavItemIndex != 0) {
                                 navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
                             }
+
+                            navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                            )
+
                             navController.navigate(
                                 route =
                                     RouteHub.Home(
@@ -394,6 +555,10 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                 navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
                             }
 
+                            navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                            )
+
                             navController.navigate(
                                 route =
                                     RouteHub.Home(
@@ -407,9 +572,60 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             navController.popBackStack()
                         }
                     }
+
+                    if (showArtworkInAllCollectionsModal) {
+                        ArtworkInAllCollectionsModal(artworkViewModel = artworkViewModel)
+                    } else if (showNotAnyCollectionsCreatedModalInAdditionOption) {
+                        NotAnyCollectionsCreatedModalInArtworkAdditionOption(
+                            artworkViewModel = artworkViewModel
+                        )
+                    } else if (showNotAnyCollectionsCreatedModalInDeletionOption) {
+                        NotAnyCollectionsCreatedModalInArtworkDeletionOption(
+                            artworkViewModel = artworkViewModel
+                        )
+                    } else if (showNotAnyArtworksInCollectionsModal) {
+                        NotAnyArtworksInCollectionsModal(artworkViewModel = artworkViewModel)
+                    } else if (showArtworkAdditionToCollectionsModal) {
+                        ArtworkAdditionToCollectionsModal(
+                            artworkViewModel = artworkViewModel,
+                            collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!
+                        ) {
+                            navigationViewModel.onArtworkAdditionToCollections()
+
+                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                )
+                            }
+
+                            artworkViewModel.onArtworkAdditionToCollections(
+                                artworkId = artworkDestination.artworkId
+                            )
+                        }
+                    } else if (showArtworkDeletionToCollectionsModal) {
+                        ArtworkDeletionFromCollectionsModal(
+                            artworkViewModel = artworkViewModel,
+                            collectionsWithThatArtwork = collectionsWithThatArtwork!!
+                        ) {
+                            navigationViewModel.onArtworkDeletionFromCollections()
+
+                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                )
+                            }
+
+                            artworkViewModel.onArtworkDeletionFromCollections(
+                                artworkId = artworkDestination.artworkId
+                            )
+                        }
+                    }
+                } else if (showNoInternetConnectionModal) {
+                    CommonNoInternetConnectionModal()
+                } else {
+                    CommonLoadingScreen()
                 }
             }
-
             navigation<RouteHub.Collection>(startDestination = RouteHub.Collection.Previews) {
                 composable<RouteHub.Collection.Previews> { navBackStackEntry ->
                     val collectionViewModel: CollectionViewModel =
@@ -472,7 +688,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         CommonNoInternetConnectionModal()
                     } else {
                         val userCollections by collectionViewModel.userCollections.observeAsState()
-                        Log.d("EJECUCIÓN", "Valor de userCollections: $userCollections")
 
                         LaunchedEffect(Unit) {
                             navigationViewModel.onNavBarShowing()
@@ -550,6 +765,12 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         )
                     }
 
+                    BackHandler {
+                        navigationViewModel.onReturnToCollectionPreviews()
+
+                        navController.popBackStack()
+                    }
+
                     if (isLoading) {
                         CommonLoadingScreen()
                     } else if (showNoInternetConnectionModal) {
@@ -562,6 +783,8 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             collectionTitle = collectionArtworkDestination.collectionTitle,
                             collectionArtworks = collectionArtworks!!,
                             onCollectionPreviewScreenReturn = {
+                                navigationViewModel.onReturnToCollectionPreviews()
+
                                 navController.popBackStack()
                             }
                         ) { artworkId ->
