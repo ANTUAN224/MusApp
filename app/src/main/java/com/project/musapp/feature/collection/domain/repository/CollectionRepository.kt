@@ -1,6 +1,7 @@
 package com.project.musapp.feature.collection.domain.repository
 
 import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
+import com.project.musapp.feature.collection.data.model.dto.CollectionBatchDTO
 import com.project.musapp.feature.collection.domain.model.CollectionBatchDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionCreationDomainModel
 import com.project.musapp.feature.collection.domain.model.CollectionReadingDomainModel
@@ -25,15 +26,25 @@ interface CollectionRepository {
 
     suspend fun getUserCollections(userToken: String): List<CollectionReadingDomainModel>
 
+    suspend fun getCollectionsWithThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ): List<CollectionReadingDomainModel>
+
+    suspend fun getCollectionsWithoutThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ): List<CollectionReadingDomainModel>
+
     suspend fun addArtworkToCollections(
         userToken: String,
         artworkId: Long,
-        collectionIds: List<Long>
-    ): List<ArtworkPreviewDomainModel>
+        collectionBatchDomainModel: CollectionBatchDomainModel
+    )
 
     suspend fun deleteArtworkFromCollections(
         userToken: String,
         artworkId: Long,
-        collectionIds: List<Long>
-    ): List<ArtworkPreviewDomainModel>
+        collectionBatchDomainModel: CollectionBatchDomainModel
+    )
 }

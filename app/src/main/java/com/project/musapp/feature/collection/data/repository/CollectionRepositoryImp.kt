@@ -1,7 +1,6 @@
 package com.project.musapp.feature.collection.data.repository
 
 import com.project.musapp.core.network.domain.exception.NetworkException
-import com.project.musapp.feature.artwork.domain.model.artwork.ArtworkPreviewDomainModel
 import com.project.musapp.feature.collection.data.model.dto.toDomainModel
 import com.project.musapp.feature.collection.data.source.remote.api.CollectionHttpRequestRetrofit
 import com.project.musapp.feature.collection.domain.model.CollectionBatchDomainModel
@@ -70,19 +69,63 @@ class CollectionRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun getCollectionsWithThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ): List<CollectionReadingDomainModel> {
+        try {
+            return collectionHttpRequestRetrofit.getCollectionsWithThatArtwork(
+                userToken = userToken,
+                artworkId = artworkId
+            ).map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
+    }
+
+    override suspend fun getCollectionsWithoutThatArtwork(
+        userToken: String,
+        artworkId: Long
+    ): List<CollectionReadingDomainModel> {
+        try {
+            return collectionHttpRequestRetrofit.getCollectionsWithoutThatArtwork(
+                userToken = userToken,
+                artworkId = artworkId
+            ).map { collectionReadingDTO -> collectionReadingDTO.toDomainModel() }
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
+    }
+
     override suspend fun addArtworkToCollections(
         userToken: String,
         artworkId: Long,
-        collectionIds: List<Long>
-    ): List<ArtworkPreviewDomainModel> {
-        TODO("Not yet implemented")
+        collectionBatchDomainModel: CollectionBatchDomainModel
+    ) {
+        try {
+            collectionHttpRequestRetrofit.addArtworkToCollections(
+                userToken = userToken,
+                artworkId = artworkId,
+                collectionBatchDTO = collectionBatchDomainModel.toDTO()
+            )
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
     }
 
     override suspend fun deleteArtworkFromCollections(
         userToken: String,
         artworkId: Long,
-        collectionIds: List<Long>
-    ): List<ArtworkPreviewDomainModel> {
-        TODO("Not yet implemented")
+        collectionBatchDomainModel: CollectionBatchDomainModel
+    ) {
+        try {
+            collectionHttpRequestRetrofit.deleteArtworkFromCollections(
+                userToken = userToken,
+                artworkId = artworkId,
+                collectionBatchDTO = collectionBatchDomainModel.toDTO()
+            )
+        } catch (_: IOException) {
+            throw NetworkException.NoInternetConnectionException
+        }
     }
 }
