@@ -3,7 +3,11 @@ package com.project.musapp.ui.commoncomponents
 import android.net.Uri
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +17,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
+import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
+import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
 
 @Composable
 fun CommonLoadingScreen() {
@@ -182,5 +196,112 @@ fun CommonWallArtIcon() {
         modifier = Modifier.size(size = 80.dp),
         painter = painterResource(R.drawable.wall_art_24px),
         contentDescription = "Cuadro pegado en la pared"
+    )
+}
+
+@Composable
+fun CommonCollectionOptionMultiSelectionModal(
+    title: String,
+    text: String,
+    collectionList: List<CollectionReadingUiModel>,
+    checkedCollectionOptionIndexes: List<Int>,
+    onCollectionOptionCheckedChange: (Int, Boolean) -> Unit,
+    onModalCancelButtonClick: () -> Unit,
+    onModalAcceptButtonClick: () -> Unit
+) {
+    AlertDialog(
+        modifier = Modifier.height(height = 400.dp),
+        onDismissRequest = { onModalCancelButtonClick() },
+        title = { Text(text = title) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Center
+                )
+
+                LazyColumn(modifier = Modifier.weight(weight = 1f)) {
+                    collectionList.forEachIndexed { index, collectionOption ->
+                        item {
+                            ListItem(
+                                modifier = Modifier.clickable {
+                                    onCollectionOptionCheckedChange(
+                                        index,
+                                        !checkedCollectionOptionIndexes.contains(
+                                            index
+                                        )
+                                    )
+                                },
+                                leadingContent = {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .background(
+                                                color = Color.LightGray,
+                                                shape = CircleShape
+                                            ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(text = "${index + 1}")
+                                    }
+                                },
+                                headlineContent = {
+                                    Text(text = collectionOption.title)
+                                },
+
+                                trailingContent = {
+                                    Checkbox(
+                                        checked = checkedCollectionOptionIndexes.contains(
+                                            index
+                                        ),
+                                        onCheckedChange = {
+                                            onCollectionOptionCheckedChange(
+                                                index,
+                                                it
+                                            )
+                                        },
+                                        colors = CheckboxDefaults.colors(
+                                            checkedColor = Color.Black
+                                        )
+                                    )
+                                },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            )
+
+                            if (index < collectionList.size - 1) {
+                                HorizontalDivider(color = Color.LightGray)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onModalAcceptButtonClick() },
+                enabled = checkedCollectionOptionIndexes.isNotEmpty(),
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = Color.LightGray,
+                    disabledContentColor = Color.Black,
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onModalCancelButtonClick() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Cancelar")
+            }
+        }
     )
 }
