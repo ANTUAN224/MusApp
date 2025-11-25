@@ -60,10 +60,10 @@ class CollectionViewModel @Inject constructor(
     private val _userCollections = MutableLiveData<List<CollectionReadingUiModel>>()
     val userCollections: LiveData<List<CollectionReadingUiModel>> = _userCollections
 
-    private val _collectionDeletionOptionCheckedIndexes =
+    private val _checkedCollectionDeletionOptionIndexes =
         MutableLiveData<MutableList<Int>>(mutableListOf())
-    val collectionDeletionOptionCheckedIndexes: LiveData<MutableList<Int>> =
-        _collectionDeletionOptionCheckedIndexes
+    val checkedCollectionDeletionOptionIndexes: LiveData<MutableList<Int>> =
+        _checkedCollectionDeletionOptionIndexes
 
     private val _collectionArtworks = MutableLiveData<List<ArtworkPreviewUiModel>>()
     val collectionArtworks: LiveData<List<ArtworkPreviewUiModel>> = _collectionArtworks
@@ -182,7 +182,7 @@ class CollectionViewModel @Inject constructor(
     }
 
     fun onCollectionBatchDeletionModalClosing() {
-        _collectionDeletionOptionCheckedIndexes.value!!.clear()
+        _checkedCollectionDeletionOptionIndexes.value!!.clear()
 
         _showCollectionBatchDeletionModal.value = false
     }
@@ -240,7 +240,7 @@ class CollectionViewModel @Inject constructor(
 
     fun onCollectionDeletionOptionCheckedStateChange(index: Int, hasBeenSelected: Boolean) {
         val newCollectionDeletionOptionCheckedIndexes =
-            collectionDeletionOptionCheckedIndexes.value!!.toMutableList()
+            checkedCollectionDeletionOptionIndexes.value!!.toMutableList()
 
         if (hasBeenSelected) {
             newCollectionDeletionOptionCheckedIndexes.add(element = index)
@@ -248,7 +248,7 @@ class CollectionViewModel @Inject constructor(
             newCollectionDeletionOptionCheckedIndexes.remove(element = index)
         }
 
-        _collectionDeletionOptionCheckedIndexes.value = newCollectionDeletionOptionCheckedIndexes
+        _checkedCollectionDeletionOptionIndexes.value = newCollectionDeletionOptionCheckedIndexes
     }
 
     fun onCollectionRenamingOptionSelect(index: Int) {
@@ -301,7 +301,7 @@ class CollectionViewModel @Inject constructor(
                 val collectionIds = mutableListOf<Long>()
 
                 if (userCollections.value!!.size > 1) {
-                    collectionDeletionOptionCheckedIndexes.value!!.forEach { index ->
+                    checkedCollectionDeletionOptionIndexes.value!!.forEach { index ->
                         collectionIds.add(
                             userCollections.value!!.get(index = index).id
                         )
