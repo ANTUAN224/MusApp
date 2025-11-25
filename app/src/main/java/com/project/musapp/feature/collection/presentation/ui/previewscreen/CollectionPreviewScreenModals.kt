@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
+import com.project.musapp.ui.commoncomponents.CommonCollectionOptionMultiSelectionModal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -314,106 +315,23 @@ fun NotAnyCollectionsToDeleteModal(collectionViewModel: CollectionViewModel) {
 fun CollectionBatchDeletionModal(
     collectionViewModel: CollectionViewModel,
     userCollections: List<CollectionReadingUiModel>,
-    onModalButtonClick: () -> Unit
+    onModalAcceptButtonClick: () -> Unit
 ) {
     val collectionDeletionOptionCheckedIndexes by
-    collectionViewModel.collectionDeletionOptionCheckedIndexes.observeAsState()
+    collectionViewModel.checkedCollectionDeletionOptionIndexes.observeAsState()
 
-    AlertDialog(
-        modifier = Modifier.height(height = 400.dp),
-        onDismissRequest = { collectionViewModel.onCollectionBatchDeletionModalClosing() },
-        title = { Text(text = "Eliminar colecciones") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
-                Text(
-                    text = "Elige qué colección o colecciones quieres eliminar:",
-                    textAlign = TextAlign.Center
+    CommonCollectionOptionMultiSelectionModal(
+        title = "Eliminar colecciones",
+        text = "Elige qué colección o colecciones quieres eliminar:",
+        collectionList = userCollections,
+        checkedCollectionOptionIndexes = collectionDeletionOptionCheckedIndexes!!,
+        onModalCancelButtonClick = { collectionViewModel.onCollectionBatchDeletionModalClosing() },
+        onCollectionOptionCheckedChange = { index, hasBeenSelected ->
+            collectionViewModel
+                .onCollectionDeletionOptionCheckedStateChange(
+                    index = index,
+                    hasBeenSelected = hasBeenSelected
                 )
-
-                LazyColumn(modifier = Modifier.weight(weight = 1f)) {
-                    userCollections.forEachIndexed { index, collectionDeletionOption ->
-                        item {
-                            ListItem(
-                                modifier = Modifier.clickable {
-                                    collectionViewModel
-                                        .onCollectionDeletionOptionCheckedStateChange(
-                                            index = index,
-                                            hasBeenSelected = !collectionDeletionOptionCheckedIndexes!!.contains(
-                                                index
-                                            )
-                                        )
-                                },
-                                leadingContent = {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .background(
-                                                color = Color.LightGray,
-                                                shape = CircleShape
-                                            ),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Text(text = "${index + 1}")
-                                    }
-                                },
-                                headlineContent = {
-                                    Text(text = collectionDeletionOption.title)
-                                },
-
-                                trailingContent = {
-                                    Checkbox(
-                                        checked = collectionDeletionOptionCheckedIndexes!!.contains(
-                                            index
-                                        ),
-                                        onCheckedChange = {
-                                            collectionViewModel
-                                                .onCollectionDeletionOptionCheckedStateChange(
-                                                    index = index,
-                                                    hasBeenSelected = it
-                                                )
-                                        },
-                                        colors = CheckboxDefaults.colors(
-                                            checkedColor = Color.Black
-                                        )
-                                    )
-                                },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            )
-
-                            if (index < userCollections.size - 1) {
-                                HorizontalDivider(color = Color.LightGray)
-                            }
-                        }
-                    }
-                }
-            }
         },
-        confirmButton = {
-            TextButton(
-                onClick = { onModalButtonClick() },
-                enabled = collectionDeletionOptionCheckedIndexes!!.isNotEmpty(),
-                colors = ButtonDefaults.buttonColors(
-                    disabledContainerColor = Color.LightGray,
-                    disabledContentColor = Color.Black,
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Aceptar")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { collectionViewModel.onCollectionBatchDeletionModalClosing() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Cancelar")
-            }
-        }
-    )
+    ) { onModalAcceptButtonClick() }
 }
