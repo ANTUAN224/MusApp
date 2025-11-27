@@ -1,4 +1,4 @@
-package com.project.musapp.navigation.presentation.navigationbar.viewmodel
+package com.project.musapp.navigation.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,10 +19,6 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
 
     private val _isArrivingForFirstTimeToCollection = MutableLiveData<Boolean>()
     val isArrivingForFirstTimeToCollection: LiveData<Boolean> = _isArrivingForFirstTimeToCollection
-
-    private val _isArrivingForFirstTimeToArtisticCulture = MutableLiveData<Boolean>()
-    val isArrivingForFirstTimeToArtisticCulture: LiveData<Boolean> =
-        _isArrivingForFirstTimeToArtisticCulture
 
     private val _hasArtworkBeenNavigatedFromCollection = MutableLiveData<Boolean>()
     val hasArtworkBeenNavigatedFromCollection: LiveData<Boolean> =
@@ -49,7 +45,6 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     fun onUserLogOut() {
         _showNavBar.value = false
         _isArrivingForFirstTimeToCollection.value = true
-        _isArrivingForFirstTimeToArtisticCulture.value = true
     }
 
     fun onCollectionFirstTimeArrival() {
@@ -98,14 +93,6 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
 
     fun onArtworkDeletionFromCollections() {
         _hasArtworkBeenDeletedFromCollections.value = true
-    }
-
-    fun onArtisticCultureFirstTimeArrival() {
-        viewModelScope.launch {
-            delay(3000)
-
-            _isArrivingForFirstTimeToArtisticCulture.value = false
-        }
     }
 
     fun onNavItemClick(currentNavItemIndex: Int) {
