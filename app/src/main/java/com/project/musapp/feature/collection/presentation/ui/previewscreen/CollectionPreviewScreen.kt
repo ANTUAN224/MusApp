@@ -41,16 +41,13 @@ import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 fun CollectionPreviewScreen(
     collectionViewModel: CollectionViewModel,
     userCollections: List<CollectionReadingUiModel>,
-    onUniqueCollectionDeletion: () -> Unit,
     onCollectionPreviewClick: (Long, String) -> Unit
 ) {
     Scaffold(topBar = {
         CollectionPreviewScreenTopBar(
             collectionViewModel = collectionViewModel,
             userCollections = userCollections
-        ) {
-            onUniqueCollectionDeletion()
-        }
+        )
     }
     ) { innerPadding ->
         CollectionPreviewScreenBody(
@@ -64,10 +61,9 @@ fun CollectionPreviewScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollectionPreviewScreenTopBar(
+private fun CollectionPreviewScreenTopBar(
     collectionViewModel: CollectionViewModel,
-    userCollections: List<CollectionReadingUiModel>,
-    onUniqueCollectionDeletion: () -> Unit
+    userCollections: List<CollectionReadingUiModel>
 ) {
     TopAppBar(
         title = {
@@ -107,7 +103,7 @@ fun CollectionPreviewScreenTopBar(
             IconButton(onClick = {
                 if (userCollections.isNotEmpty()) {
                     if (userCollections.size == 1) {
-                        onUniqueCollectionDeletion()
+                        collectionViewModel.onUniqueCollectionToDeleteModalOpening()
                     } else {
                         collectionViewModel.onCollectionBatchDeletionModalOpening()
                     }
@@ -127,7 +123,7 @@ fun CollectionPreviewScreenTopBar(
 }
 
 @Composable
-fun CollectionPreviewScreenBody(
+private fun CollectionPreviewScreenBody(
     modifier: Modifier,
     userCollections: List<CollectionReadingUiModel>,
     onCollectionPreviewClick: (Long, String) -> Unit
