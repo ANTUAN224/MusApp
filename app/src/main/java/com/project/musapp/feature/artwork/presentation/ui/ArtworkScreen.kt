@@ -261,7 +261,7 @@ fun ArtworkScreenBody(modifier: Modifier, artwork: ArtworkUiModel) {
         ) { (title, firstContent) ->
             ArtworkInformationField(
                 title = title,
-                firstContent = firstContent
+                firstContent = firstContent.replace(oldChar = '\n', newChar = ' ')
             )
         }
     }
