@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -38,19 +39,19 @@ fun InitialMenuScreen(onGoToRegisterButtonPress: () -> Unit, onGoToLoginButtonPr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InitialMenuTopBar() {
+private fun InitialMenuTopBar() {
     TopAppBar(title = {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Text(
-                text = "MusApp",
-                color = Color.White
-            )
-        }
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "MusApp",
+            color = Color.White,
+            textAlign = TextAlign.Center
+        )
     }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A)))
 }
 
 @Composable
-fun InitialMenuBody(
+private fun InitialMenuBody(
     onGoToRegisterButtonPress: () -> Unit,
     onGoToLoginButtonPress: () -> Unit,
     onExitButtonPress: () -> Unit
@@ -121,7 +122,7 @@ fun InitialMenuBody(
 }
 
 @Composable
-fun InitialMenuOptionButton(content: String, onButtonPress: () -> Unit) {
+private fun InitialMenuOptionButton(content: String, onButtonPress: () -> Unit) {
     Button(
         modifier = Modifier
             .width(200.dp)
