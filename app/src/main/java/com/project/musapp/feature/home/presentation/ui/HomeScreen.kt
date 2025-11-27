@@ -58,7 +58,7 @@ import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPair
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
-import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewRowItem
+import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewList
 import com.project.musapp.ui.commoncomponents.CommonWallArtIcon
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 
@@ -410,21 +410,14 @@ private fun HomeScreenBody(
 
             Spacer(modifier = Modifier.weight(weight = 1f))
         } else {
-            LazyColumn(
+            CommonArtworkPreviewList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(weight = 1f)
-                    .padding(bottom = 80.dp)
-            ) {
-                items(userFavoriteArtworks!!.chunkInPairs())
-                { (firstArtworkPreview, secondArtworkPreview) ->
-                    CommonArtworkPreviewRowItem(
-                        firstArtworkPreview = firstArtworkPreview,
-                        secondArtworkPreview = secondArtworkPreview
-                    ) { artworkId ->
-                        onArtworkPreviewClick(artworkId)
-                    }
-                }
+                    .padding(bottom = 80.dp),
+                artworkPreviewList = userFavoriteArtworks!!,
+            ) { artworkId ->
+                onArtworkPreviewClick(artworkId)
             }
         }
     }

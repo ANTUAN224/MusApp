@@ -25,10 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
-import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewRowItem
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
+import com.project.musapp.ui.commoncomponents.CommonArtworkPreviewList
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.ui.commoncomponents.CommonWallArtIcon
 
@@ -134,20 +133,13 @@ private fun CollectionArtworkScreenBody(
         } else {
             Spacer(modifier = Modifier.weight(weight = 0.05f))
 
-            LazyColumn(
+            CommonArtworkPreviewList(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(weight = 0.95f)
-            ) {
-                items(collectionArtworks.chunkInPairs())
-                { (firstArtworkPreview, secondArtworkPreview) ->
-                    CommonArtworkPreviewRowItem(
-                        firstArtworkPreview = firstArtworkPreview,
-                        secondArtworkPreview = secondArtworkPreview
-                    ) { artworkId ->
-                        onArtworkPreviewClick(artworkId)
-                    }
-                }
+                    .weight(weight = 0.95f),
+                artworkPreviewList = collectionArtworks
+            ) { artworkId ->
+                onArtworkPreviewClick(artworkId)
             }
         }
     }

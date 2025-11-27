@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
+import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 
 @Composable
@@ -123,7 +125,28 @@ fun CommonHorizontalSpacer() {
 }
 
 @Composable
-fun CommonArtworkPreviewRowItem(
+fun CommonArtworkPreviewList(
+    modifier: Modifier,
+    artworkPreviewList: List<ArtworkPreviewUiModel>,
+    onArtworkPreviewClick: (Long) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        items(artworkPreviewList.chunkInPairs())
+        { (firstArtworkPreview, secondArtworkPreview) ->
+            ArtworkPreviewRowItem(
+                firstArtworkPreview = firstArtworkPreview,
+                secondArtworkPreview = secondArtworkPreview
+            ) { artworkId ->
+                onArtworkPreviewClick(artworkId)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArtworkPreviewRowItem(
     firstArtworkPreview: ArtworkPreviewUiModel,
     secondArtworkPreview: ArtworkPreviewUiModel?,
     onArtworkPreviewClick: (Long) -> Unit
