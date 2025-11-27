@@ -14,6 +14,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.project.musapp.feature.artisticculture.presentation.ui.curiosityscreen.ArtisticCultureCuriosityScreen
+import com.project.musapp.feature.artisticculture.presentation.ui.curiosityscreen.CuriosityDescriptionModal
+import com.project.musapp.feature.artisticculture.presentation.ui.optionscreen.ArtisticCultureOptionScreen
+import com.project.musapp.feature.artisticculture.presentation.ui.technicalglossaryscreen.ArtisticCultureTechnicalGlossaryScreen
+import com.project.musapp.feature.artisticculture.presentation.ui.technicalglossaryscreen.TermDefinitionModal
+import com.project.musapp.feature.artisticculture.presentation.viewmodel.ArtisticCultureViewModel
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkAdditionToCollectionsModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkDeletionFromCollectionsModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkInAllCollectionsModal
@@ -44,7 +50,7 @@ import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
 import com.project.musapp.navigation.presentation.initialmenu.ui.InitialMenuScreen
 import com.project.musapp.navigation.presentation.navigationbar.ui.MusAppNavigationBar
 import com.project.musapp.navigation.presentation.navigationbar.utils.navigateBetweenNavItems
-import com.project.musapp.navigation.presentation.navigationbar.viewmodel.NavigationViewModel
+import com.project.musapp.navigation.presentation.viewmodel.NavigationViewModel
 import com.project.musapp.navigation.presentation.splashscreen.viewModel.SplashScreenViewModel
 import com.project.musapp.navigation.routing.RouteHub
 import com.project.musapp.ui.commoncomponents.CommonLoadingScreen
@@ -64,9 +70,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
     val isArrivingForFirstTimeToCollection by
     navigationViewModel.isArrivingForFirstTimeToCollection.observeAsState(initial = true)
-
-    val isArrivingForFirstTimeToArtisticCulture by
-    navigationViewModel.isArrivingForFirstTimeToArtisticCulture.observeAsState(initial = true)
 
     val hasArtworkBeenNavigatedFromCollection by
     navigationViewModel.hasArtworkBeenNavigatedFromCollection.observeAsState(initial = false)
@@ -108,10 +111,6 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         }
 
                         2 -> {
-                            if (isArrivingForFirstTimeToArtisticCulture) {
-                                navigationViewModel.onNavBarHiding()
-                            }
-
                             navigateBetweenNavItems(
                                 route = RouteHub.ArtisticCulture,
                                 navController = navController
@@ -364,7 +363,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             navigationViewModel.onHomeArrival()
                         }
 
-                        navigationViewModel.onNavBarShowing()
+                        if (!showNavBar) {
+                            navigationViewModel.onNavBarShowing()
+                        }
                     }
 
                     HomeScreen(
@@ -690,7 +691,9 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         val userCollections by collectionViewModel.userCollections.observeAsState()
 
                         LaunchedEffect(Unit) {
-                            navigationViewModel.onNavBarShowing()
+                            if (!showNavBar) {
+                                navigationViewModel.onNavBarShowing()
+                            }
                         }
 
                         CollectionPreviewScreen(
@@ -791,6 +794,104 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
 
                             navigationViewModel.onArtworkArrivalFromCollection()
+                        }
+                    }
+                }
+            }
+
+            navigation<RouteHub.ArtisticCulture>(startDestination = RouteHub.ArtisticCulture.Options) {
+                composable<RouteHub.ArtisticCulture.Options> {
+                    LaunchedEffect(Unit) {
+                        if (!showNavBar) {
+                            navigationViewModel.onNavBarShowing()
+                        }
+                    }
+
+                    ArtisticCultureOptionScreen(
+                        onArtisticCultureTechnicalGlossaryOptionClick = {
+                            navigationViewModel.onNavBarHiding()
+
+                            navController.navigate(route = RouteHub.ArtisticCulture.TechnicalGlossary)
+                        }
+                    ) {
+                        navigationViewModel.onNavBarHiding()
+
+                        navController.navigate(route = RouteHub.ArtisticCulture.Curiosities)
+                    }
+
+                    BackHandler {
+                        navigationViewModel.onNavItemClick(currentNavItemIndex = 0)
+
+                        navigateBetweenNavItems(
+                            route = RouteHub.Home(),
+                            navController = navController
+                        )
+                    }
+                }
+
+                composable<RouteHub.ArtisticCulture.TechnicalGlossary> { navBackStackEntry ->
+                    val artisticCultureViewModel: ArtisticCultureViewModel =
+                        hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                    val isLoading by artisticCultureViewModel
+                        .isLoading.observeAsState(initial = true)
+
+                    val showNoInternetConnectionModal by artisticCultureViewModel
+                        .showNoInternetConnectionModal.observeAsState(initial = false)
+
+                    val showTermDefinitionModal by artisticCultureViewModel
+                        .showTermDefinitionModal.observeAsState(initial = false)
+
+                    LaunchedEffect(Unit) {
+                        artisticCultureViewModel.onArtisticCultureTechnicalGlossaryScreenArrival()
+                    }
+
+                    if (isLoading) {
+                        CommonLoadingScreen()
+                    } else if (showNoInternetConnectionModal) {
+                        CommonNoInternetConnectionModal()
+                    } else {
+                        ArtisticCultureTechnicalGlossaryScreen(
+                            artisticCultureViewModel = artisticCultureViewModel
+                        )
+                        { navController.popBackStack() }
+
+                        if (showTermDefinitionModal) {
+                            TermDefinitionModal(artisticCultureViewModel = artisticCultureViewModel)
+                        }
+                    }
+                }
+
+                composable<RouteHub.ArtisticCulture.Curiosities> { navBackStackEntry ->
+                    val artisticCultureViewModel: ArtisticCultureViewModel =
+                        hiltViewModel(viewModelStoreOwner = navBackStackEntry)
+
+                    val isLoading by artisticCultureViewModel
+                        .isLoading.observeAsState(initial = true)
+
+                    val showNoInternetConnectionModal by artisticCultureViewModel
+                        .showNoInternetConnectionModal.observeAsState(initial = false)
+
+                    val showCuriosityDescriptionModal by artisticCultureViewModel
+                        .showCuriosityDescriptionModal.observeAsState(initial = false)
+
+                    LaunchedEffect(Unit) {
+                        artisticCultureViewModel.onArtisticCultureCuriosityScreenArrival()
+                    }
+
+                    if (isLoading) {
+                        CommonLoadingScreen()
+                    } else if (showNoInternetConnectionModal) {
+                        CommonNoInternetConnectionModal()
+                    } else {
+                        ArtisticCultureCuriosityScreen(
+                            artisticCultureViewModel = artisticCultureViewModel
+                        ) { navController.popBackStack() }
+
+                        if (showCuriosityDescriptionModal) {
+                            CuriosityDescriptionModal(
+                                artisticCultureViewModel = artisticCultureViewModel
+                            )
                         }
                     }
                 }
