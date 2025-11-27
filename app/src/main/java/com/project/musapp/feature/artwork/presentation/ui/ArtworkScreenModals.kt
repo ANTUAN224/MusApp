@@ -1,11 +1,15 @@
 package com.project.musapp.feature.artwork.presentation.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.project.musapp.feature.artwork.presentation.viewmodel.ArtworkViewModel
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
@@ -78,6 +82,7 @@ fun NotAnyCollectionsCreatedModalInArtworkDeletionOption(artworkViewModel: Artwo
         },
         title = {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Ninguna colección creada",
                 textAlign = TextAlign.Center
             )
@@ -107,6 +112,7 @@ fun NotAnyCollectionsCreatedModalInArtworkAdditionOption(artworkViewModel: Artwo
         },
         title = {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Ninguna colección creada",
                 textAlign = TextAlign.Center
             )
@@ -132,6 +138,7 @@ fun ArtworkInAllCollectionsModal(artworkViewModel: ArtworkViewModel) {
         },
         title = {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Ninguna colección libre",
                 textAlign = TextAlign.Center
             )
@@ -157,6 +164,7 @@ fun NotAnyArtworksInCollectionsModal(artworkViewModel: ArtworkViewModel) {
         },
         title = {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Cuadro no almacenado",
                 textAlign = TextAlign.Center
             )
@@ -165,6 +173,84 @@ fun NotAnyArtworksInCollectionsModal(artworkViewModel: ArtworkViewModel) {
             Text(
                 text = "Asegúrate de que el cuadro está almacenado en al menos una colección antes de " +
                         "querer eliminarlo.",
+                textAlign = TextAlign.Center
+            )
+        }
+    )
+}
+
+@Composable
+fun ArtworkAdditionToRemainingCollectionModal(
+    artworkViewModel: ArtworkViewModel,
+    remainingCollectionTitle: String,
+    onModalAcceptButtonClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { artworkViewModel.onArtworkAdditionToRemainingCollectionClosing() },
+        confirmButton = {
+            TextButton(
+                onClick = { onModalAcceptButtonClick() },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+            ) {
+                Text(text = "Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { artworkViewModel.onArtworkAdditionToRemainingCollectionClosing() },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+            ) {
+                Text(text = "Cerrar")
+            }
+        },
+        title = {
+            Text(
+                text = "Añadir cuadro"
+            )
+        },
+        text = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "¿Quieres añadir el cuadro a la colección '$remainingCollectionTitle?'",
+                textAlign = TextAlign.Center
+            )
+        }
+    )
+}
+
+@Composable
+fun ArtworkDeletionFromRemainingCollectionModal(
+    artworkViewModel: ArtworkViewModel,
+    remainingCollectionTitle: String,
+    onModalAcceptButtonClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { artworkViewModel.onArtworkDeletionFromRemainingCollectionClosing() },
+        confirmButton = {
+            TextButton(
+                onClick = { onModalAcceptButtonClick() },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+            ) {
+                Text(text = "Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { artworkViewModel.onArtworkDeletionFromRemainingCollectionClosing() },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+            ) {
+                Text(text = "Cerrar")
+            }
+        },
+        title = {
+            Text(
+                text = "Eliminar cuadro"
+            )
+        },
+        text = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "¿Quieres eliminar el cuadro de la colección '$remainingCollectionTitle'?",
                 textAlign = TextAlign.Center
             )
         }
