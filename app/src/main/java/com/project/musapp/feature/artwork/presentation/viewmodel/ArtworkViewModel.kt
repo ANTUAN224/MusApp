@@ -1,6 +1,5 @@
 package com.project.musapp.feature.artwork.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -186,8 +185,6 @@ class ArtworkViewModel @Inject constructor(
                 }
 
                 _navigateToHome.value = false
-
-                Log.d("EJECUCIÓN", "Error durante la ejecución -> $throwable")
             }
 
             _isLoading.value = false
@@ -209,10 +206,8 @@ class ArtworkViewModel @Inject constructor(
 
         if (hasBeenSelected) {
             newCheckedArtworkAdditionCollectionOptionIndexes.add(element = index)
-            Log.d("EJECUCIÓN", "Colección seleccionada")
         } else {
             newCheckedArtworkAdditionCollectionOptionIndexes.remove(element = index)
-            Log.d("EJECUCIÓN", "Colección deseleccionada")
         }
 
         _checkedArtworkAdditionCollectionOptionIndexes.value =
@@ -259,8 +254,6 @@ class ArtworkViewModel @Inject constructor(
                 }
 
                 _navigateToHome.value = false
-
-                Log.d("EJECUCIÓN", "Error durante la ejecución -> $throwable")
             }
 
             _isLoading.value = false
@@ -273,11 +266,9 @@ class ArtworkViewModel @Inject constructor(
             delay(2000)
 
             runCatching {
-                Log.d("EJECUCIÓN", "Verificación la conexión a Internet...")
                 verifyUserInternetConnectionUseCase().getOrThrow()
 
                 withContext(context = Dispatchers.IO) {
-                    Log.d("EJECUCIÓN", "Obteniendo la información del cuadro...")
                     _artwork.postValue(getArtworkUseCase(artworkId = artworkId).getOrThrow())
 
                     _collectionsWithThatArtwork.postValue(
@@ -293,8 +284,6 @@ class ArtworkViewModel @Inject constructor(
                     is NetworkException.NoInternetConnectionException ->
                         _showNoInternetConnectionModal.value = true
                 }
-
-                Log.d("EJECUCIÓN", "Error durante la ejecución -> $throwable")
             }
 
             _isLoading.value = false
