@@ -1,6 +1,7 @@
 package com.project.musapp.core.di.module
 
 import com.project.musapp.BuildConfig
+import com.project.musapp.feature.artisticculture.data.source.remote.api.ArtisticCultureApiService
 import com.project.musapp.feature.artwork.data.source.remote.api.ArtworkApiService
 import com.project.musapp.feature.auth.data.source.remote.api.UserAuthApiService
 import com.project.musapp.feature.collection.data.source.remote.api.CollectionApiService
@@ -43,4 +44,9 @@ object RetrofitModule {
     @Singleton
     fun provideCollectionApiService(retrofit: Retrofit): CollectionApiService =
         retrofit.create(CollectionApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideArtisticCulture(retrofit: Retrofit): ArtisticCultureApiService =
+        retrofit.create(ArtisticCultureApiService::class.java)
 }
