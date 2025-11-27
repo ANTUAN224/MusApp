@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,13 +28,17 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +54,6 @@ import coil3.compose.AsyncImage
 import com.project.musapp.R
 import com.project.musapp.feature.artwork.presentation.model.artwork.ArtworkPreviewUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
-import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
 
 @Composable
 fun CommonLoadingScreen() {
@@ -83,14 +88,16 @@ fun BoldText(
     modifier: Modifier = Modifier,
     text: String,
     fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign? = null
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified
 ) {
     Text(
         modifier = modifier,
         text = text,
         fontSize = fontSize,
         textAlign = textAlign,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        lineHeight = lineHeight
     )
 }
 
@@ -303,5 +310,30 @@ fun CommonCollectionOptionMultiSelectionModal(
                 Text(text = "Cancelar")
             }
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommonTopBar(title: String, onReturnToLastScreen: () -> Unit) {
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = { onReturnToLastScreen() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Regreso a la pantalla anterior.",
+                    tint = Color.White
+                )
+            }
+        },
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = title,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
     )
 }
