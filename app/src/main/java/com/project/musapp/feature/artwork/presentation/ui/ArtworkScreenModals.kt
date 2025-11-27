@@ -3,6 +3,7 @@ package com.project.musapp.feature.artwork.presentation.ui
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -74,9 +75,15 @@ fun NotAnyCollectionsCreatedModalInArtworkDeletionOption(artworkViewModel: Artwo
             artworkViewModel.onNotAnyCollectionsCreatedModalInDeletionOptionClosing()
         },
         confirmButton = {
-            TextButton(onClick = {
-                artworkViewModel.onNotAnyCollectionsCreatedModalInDeletionOptionClosing()
-            }) {
+            TextButton(
+                onClick = {
+                    artworkViewModel.onNotAnyCollectionsCreatedModalInDeletionOptionClosing()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -104,9 +111,15 @@ fun NotAnyCollectionsCreatedModalInArtworkAdditionOption(artworkViewModel: Artwo
             artworkViewModel.onNotAnyCollectionsCreatedModalInAdditionOptionClosing()
         },
         confirmButton = {
-            TextButton(onClick = {
-                artworkViewModel.onNotAnyCollectionsCreatedModalInAdditionOptionClosing()
-            }) {
+            TextButton(
+                onClick = {
+                    artworkViewModel.onNotAnyCollectionsCreatedModalInAdditionOptionClosing()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -132,7 +145,13 @@ fun ArtworkInAllCollectionsModal(artworkViewModel: ArtworkViewModel) {
     AlertDialog(
         onDismissRequest = { artworkViewModel.onArtworkInAllCollectionsModalClosing() },
         confirmButton = {
-            TextButton(onClick = { artworkViewModel.onArtworkInAllCollectionsModalClosing() }) {
+            TextButton(
+                onClick = { artworkViewModel.onArtworkInAllCollectionsModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -158,7 +177,13 @@ fun NotAnyArtworksInCollectionsModal(artworkViewModel: ArtworkViewModel) {
     AlertDialog(
         onDismissRequest = { artworkViewModel.onNotAnyArtworksInCollectionsModalClosing() },
         confirmButton = {
-            TextButton(onClick = { artworkViewModel.onNotAnyArtworksInCollectionsModalClosing() }) {
+            TextButton(
+                onClick = { artworkViewModel.onNotAnyArtworksInCollectionsModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -190,7 +215,10 @@ fun ArtworkAdditionToRemainingCollectionModal(
         confirmButton = {
             TextButton(
                 onClick = { onModalAcceptButtonClick() },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
             ) {
                 Text(text = "Aceptar")
             }
@@ -198,7 +226,10 @@ fun ArtworkAdditionToRemainingCollectionModal(
         dismissButton = {
             TextButton(
                 onClick = { artworkViewModel.onArtworkAdditionToRemainingCollectionClosing() },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
             ) {
                 Text(text = "Cerrar")
             }
@@ -229,7 +260,10 @@ fun ArtworkDeletionFromRemainingCollectionModal(
         confirmButton = {
             TextButton(
                 onClick = { onModalAcceptButtonClick() },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
             ) {
                 Text(text = "Aceptar")
             }
@@ -237,7 +271,10 @@ fun ArtworkDeletionFromRemainingCollectionModal(
         dismissButton = {
             TextButton(
                 onClick = { artworkViewModel.onArtworkDeletionFromRemainingCollectionClosing() },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black)
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
             ) {
                 Text(text = "Cerrar")
             }
