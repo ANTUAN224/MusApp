@@ -57,6 +57,9 @@ class CollectionViewModel @Inject constructor(
     private val _showNotAnyCollectionsToRenameModal = MutableLiveData<Boolean>()
     val showNotAnyCollectionsToRenameModal: LiveData<Boolean> = _showNotAnyCollectionsToRenameModal
 
+    private val _showUniqueCollectionToDeleteModal = MutableLiveData<Boolean>()
+    val showUniqueCollectionToDeleteModal: LiveData<Boolean> = _showUniqueCollectionToDeleteModal
+
     private val _userCollections = MutableLiveData<List<CollectionReadingUiModel>>()
     val userCollections: LiveData<List<CollectionReadingUiModel>> = _userCollections
 
@@ -101,12 +104,6 @@ class CollectionViewModel @Inject constructor(
         checkCollectionTitleError()
     }
 
-    fun onModifiedCollectionTitleChange(title: String) {
-        _modifiedCollectionTitle.value = title
-        setModifiedCollectionTitleError(title = title)
-        checkModifiedCollectionTitleError()
-    }
-
     private fun setCollectionTitleError(title: String) {
         _collectionTitleError.value =
             when {
@@ -116,27 +113,18 @@ class CollectionViewModel @Inject constructor(
             }
     }
 
-    private fun setModifiedCollectionTitleError(title: String) {
-        _modifiedCollectionTitleError.value =
-            when {
-                title.isBlank() -> "El título no puede estar en blanco"
-                title.length > 40 -> "El título no puede tener más de 40 caracteres."
-                originalCollectionTitle.value!!.isNotEmpty()
-                        && originalCollectionTitle.value == title.trim()
-                    -> "El título debe ser distinto al original."
-
-                else -> ""
-            }
-    }
-
     private fun checkCollectionTitleError() {
         _isCollectionCreationModalButtonEnabled.value =
             _collectionTitleError.value?.isEmpty() ?: false
     }
 
-    private fun checkModifiedCollectionTitleError() {
-        _isCollectionRenamingModalButtonEnabled.value =
-            _modifiedCollectionTitleError.value?.isEmpty() ?: false
+    fun onCollectionCreationModalOpening() {
+        _showCollectionCreationModal.value = true
+    }
+
+    fun onCollectionCreationModalClosing() {
+        _collectionTitle.value = ""
+        _showCollectionCreationModal.value = false
     }
 
     fun onCollectionCreationModalConfirmButtonClick() {
@@ -168,31 +156,28 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
-    fun onCollectionCreationModalOpening() {
-        _showCollectionCreationModal.value = true
+    fun onModifiedCollectionTitleChange(title: String) {
+        _modifiedCollectionTitle.value = title
+        setModifiedCollectionTitleError(title = title)
+        checkModifiedCollectionTitleError()
     }
 
-    fun onCollectionCreationModalClosing() {
-        _collectionTitle.value = ""
-        _showCollectionCreationModal.value = false
+    private fun setModifiedCollectionTitleError(title: String) {
+        _modifiedCollectionTitleError.value =
+            when {
+                title.isBlank() -> "El título no puede estar en blanco"
+                title.length > 40 -> "El título no puede tener más de 40 caracteres."
+                originalCollectionTitle.value!!.isNotEmpty()
+                        && originalCollectionTitle.value == title.trim()
+                    -> "El título debe ser distinto al original."
+
+                else -> ""
+            }
     }
 
-    fun onCollectionBatchDeletionModalOpening() {
-        _showCollectionBatchDeletionModal.value = true
-    }
-
-    fun onCollectionBatchDeletionModalClosing() {
-        _checkedCollectionDeletionOptionIndexes.value!!.clear()
-
-        _showCollectionBatchDeletionModal.value = false
-    }
-
-    fun onNotAnyCollectionsToDeleteModalOpening() {
-        _showNotAnyCollectionsToDeleteModal.value = true
-    }
-
-    fun onNotAnyCollectionsToDeleteModalClosing() {
-        _showNotAnyCollectionsToDeleteModal.value = false
+    private fun checkModifiedCollectionTitleError() {
+        _isCollectionRenamingModalButtonEnabled.value =
+            _modifiedCollectionTitleError.value?.isEmpty() ?: false
     }
 
     fun onCollectionRenamingOptionModalOpening() {
@@ -238,19 +223,6 @@ class CollectionViewModel @Inject constructor(
         _showNotAnyCollectionsToRenameModal.value = false
     }
 
-    fun onCollectionDeletionOptionCheckedStateChange(index: Int, hasBeenSelected: Boolean) {
-        val newCollectionDeletionOptionCheckedIndexes =
-            checkedCollectionDeletionOptionIndexes.value!!.toMutableList()
-
-        if (hasBeenSelected) {
-            newCollectionDeletionOptionCheckedIndexes.add(element = index)
-        } else {
-            newCollectionDeletionOptionCheckedIndexes.remove(element = index)
-        }
-
-        _checkedCollectionDeletionOptionIndexes.value = newCollectionDeletionOptionCheckedIndexes
-    }
-
     fun onCollectionRenamingOptionSelect(index: Int) {
         _collectionRenamingOptionSelectedIndex.value = index
     }
@@ -287,6 +259,45 @@ class CollectionViewModel @Inject constructor(
 
             onCollectionRenamingModalClosing()
         }
+    }
+
+    fun onNotAnyCollectionsToDeleteModalOpening() {
+        _showNotAnyCollectionsToDeleteModal.value = true
+    }
+
+    fun onNotAnyCollectionsToDeleteModalClosing() {
+        _showNotAnyCollectionsToDeleteModal.value = false
+    }
+
+    fun onUniqueCollectionToDeleteModalOpening() {
+        _showUniqueCollectionToDeleteModal.value = true
+    }
+
+    fun onUniqueCollectionToDeleteModalClosing() {
+        _showUniqueCollectionToDeleteModal.value = false
+    }
+
+    fun onCollectionBatchDeletionModalOpening() {
+        _showCollectionBatchDeletionModal.value = true
+    }
+
+    fun onCollectionBatchDeletionModalClosing() {
+        _checkedCollectionDeletionOptionIndexes.value!!.clear()
+
+        _showCollectionBatchDeletionModal.value = false
+    }
+
+    fun onCollectionDeletionOptionCheckedStateChange(index: Int, hasBeenSelected: Boolean) {
+        val newCollectionDeletionOptionCheckedIndexes =
+            checkedCollectionDeletionOptionIndexes.value!!.toMutableList()
+
+        if (hasBeenSelected) {
+            newCollectionDeletionOptionCheckedIndexes.add(element = index)
+        } else {
+            newCollectionDeletionOptionCheckedIndexes.remove(element = index)
+        }
+
+        _checkedCollectionDeletionOptionIndexes.value = newCollectionDeletionOptionCheckedIndexes
     }
 
     fun onCollectionBatchDeletion() {
@@ -330,7 +341,11 @@ class CollectionViewModel @Inject constructor(
 
             _isLoading.value = false
 
-            onCollectionBatchDeletionModalClosing()
+            if (showUniqueCollectionToDeleteModal.value ?: false) {
+                onUniqueCollectionToDeleteModalClosing()
+            } else {
+                onCollectionBatchDeletionModalClosing()
+            }
         }
     }
 

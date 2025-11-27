@@ -5,14 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
@@ -40,7 +39,7 @@ import com.project.musapp.ui.commoncomponents.CommonCollectionOptionMultiSelecti
 @Composable
 fun CollectionCreationModal(
     collectionViewModel: CollectionViewModel,
-    onModalButtonClick: () -> Unit
+    onModalAcceptButtonClick: () -> Unit
 ) {
     val isCollectionCreationModalButtonEnabled by
     collectionViewModel.isCollectionCreationModalButtonEnabled.observeAsState(initial = false)
@@ -54,7 +53,7 @@ fun CollectionCreationModal(
         },
         confirmButton = {
             TextButton(
-                onClick = { onModalButtonClick() },
+                onClick = { onModalAcceptButtonClick() },
                 enabled = isCollectionCreationModalButtonEnabled,
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = Color.LightGray,
@@ -228,7 +227,7 @@ fun CollectionRenamingOptionModal(
 @Composable
 fun CollectionRenamingModal(
     collectionViewModel: CollectionViewModel,
-    onModalButtonClick: () -> Unit
+    onModalAcceptButtonClick: () -> Unit
 ) {
     val isCollectionRenamingModalButtonEnabled by
     collectionViewModel.isCollectionRenamingModalButtonEnabled.observeAsState(initial = false)
@@ -241,7 +240,7 @@ fun CollectionRenamingModal(
         },
         confirmButton = {
             TextButton(
-                onClick = { onModalButtonClick() },
+                onClick = { onModalAcceptButtonClick() },
                 enabled = isCollectionRenamingModalButtonEnabled,
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = Color.LightGray,
@@ -307,6 +306,47 @@ fun NotAnyCollectionsToDeleteModal(collectionViewModel: CollectionViewModel) {
                 text = "Asegúrate de que tienes al menos una colección creada antes de querer eliminar alguna.",
                 textAlign = TextAlign.Center
             )
+        }
+    )
+}
+
+@Composable
+fun UniqueCollectionToDeleteModal(
+    collectionViewModel: CollectionViewModel,
+    uniqueCollectionToDeleteTitle: String,
+    onModalAcceptButtonClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { collectionViewModel.onUniqueCollectionToDeleteModalClosing() },
+        title = { Text(text = "Eliminar colección") },
+        text = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "¿Quieres eliminar la colección '$uniqueCollectionToDeleteTitle'?",
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onModalAcceptButtonClick() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { collectionViewModel.onUniqueCollectionToDeleteModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Cancelar")
+            }
         }
     )
 }

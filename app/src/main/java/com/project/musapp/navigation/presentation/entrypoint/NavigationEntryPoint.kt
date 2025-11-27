@@ -42,6 +42,7 @@ import com.project.musapp.feature.collection.presentation.ui.previewscreen.Colle
 import com.project.musapp.feature.collection.presentation.ui.previewscreen.CollectionPreviewScreen
 import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToDeleteModal
 import com.project.musapp.feature.collection.presentation.ui.previewscreen.NotAnyCollectionsToRenameModal
+import com.project.musapp.feature.collection.presentation.ui.previewscreen.UniqueCollectionToDeleteModal
 import com.project.musapp.feature.collection.presentation.viewmodel.CollectionViewModel
 import com.project.musapp.feature.home.presentation.ui.ContactWithSupportModal
 import com.project.musapp.feature.home.presentation.ui.HomeScreen
@@ -642,7 +643,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     val showCollectionCreationModal by collectionViewModel
                         .showCollectionCreationModal.observeAsState(initial = false)
 
-                    val showNotAnyCollectionsCreatedModal by
+                    val showNotAnyCollectionsToDeleteModal by
                     collectionViewModel.showNotAnyCollectionsToDeleteModal
                         .observeAsState(initial = false)
 
@@ -658,8 +659,11 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         .showCollectionRenamingOptionModal.observeAsState(initial = false)
 
                     val showCollectionRenamingModal by
-                    collectionViewModel.showCollectionRenamingModal
-                        .observeAsState(initial = false)
+                    collectionViewModel.showCollectionRenamingModal.observeAsState(initial = false)
+
+                    val showUniqueCollectionToDeleteModal by
+                    collectionViewModel.showUniqueCollectionToDeleteModal.observeAsState(initial = false)
+
 
                     LaunchedEffect(Unit) {
                         if (isArrivingForFirstTimeToCollection) {
@@ -699,12 +703,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                         CollectionPreviewScreen(
                             collectionViewModel = collectionViewModel,
-                            userCollections = userCollections!!,
-                            onUniqueCollectionDeletion = {
-                                navigationViewModel.onNavBarHiding()
-
-                                collectionViewModel.onCollectionBatchDeletion()
-                            }
+                            userCollections = userCollections!!
                         ) { collectionId, collectionTitle ->
                             navController.navigate(
                                 route = RouteHub.Collection.Artworks(
@@ -716,35 +715,58 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             navigationViewModel.onNavBarHiding()
                         }
 
-                        if (showNotAnyCollectionsCreatedModal) {
-                            NotAnyCollectionsToDeleteModal(collectionViewModel = collectionViewModel)
-                        } else if (showCollectionCreationModal) {
-                            CollectionCreationModal(collectionViewModel = collectionViewModel) {
-                                navigationViewModel.onNavBarHiding()
+                        when {
+                            showCollectionCreationModal -> {
+                                CollectionCreationModal(collectionViewModel = collectionViewModel) {
+                                    navigationViewModel.onNavBarHiding()
 
-                                collectionViewModel.onCollectionCreationModalConfirmButtonClick()
+                                    collectionViewModel.onCollectionCreationModalConfirmButtonClick()
+                                }
                             }
-                        } else if (showNotAnyCollectionsToRenameModal) {
-                            NotAnyCollectionsToRenameModal(collectionViewModel = collectionViewModel)
-                        } else if (showCollectionRenamingOptionModal) {
-                            CollectionRenamingOptionModal(
-                                collectionViewModel = collectionViewModel,
-                                userCollections = userCollections!!
-                            )
-                        } else if (showCollectionRenamingModal) {
-                            CollectionRenamingModal(collectionViewModel = collectionViewModel) {
-                                navigationViewModel.onNavBarHiding()
 
-                                collectionViewModel.onCollectionRenamingModalConfirmButtonClick()
+                            showNotAnyCollectionsToRenameModal -> {
+                                NotAnyCollectionsToRenameModal(collectionViewModel = collectionViewModel)
                             }
-                        } else if (showCollectionBatchDeletionModal) {
-                            CollectionBatchDeletionModal(
-                                collectionViewModel = collectionViewModel,
-                                userCollections = userCollections!!
-                            ) {
-                                navigationViewModel.onNavBarHiding()
 
-                                collectionViewModel.onCollectionBatchDeletion()
+                            showCollectionRenamingOptionModal -> {
+                                CollectionRenamingOptionModal(
+                                    collectionViewModel = collectionViewModel,
+                                    userCollections = userCollections!!
+                                )
+                            }
+
+                            showCollectionRenamingModal -> {
+                                CollectionRenamingModal(collectionViewModel = collectionViewModel) {
+                                    navigationViewModel.onNavBarHiding()
+
+                                    collectionViewModel.onCollectionRenamingModalConfirmButtonClick()
+                                }
+                            }
+
+                            showNotAnyCollectionsToDeleteModal -> {
+                                NotAnyCollectionsToDeleteModal(collectionViewModel = collectionViewModel)
+                            }
+
+                            showUniqueCollectionToDeleteModal -> {
+                                UniqueCollectionToDeleteModal(
+                                    collectionViewModel = collectionViewModel,
+                                    uniqueCollectionToDeleteTitle = userCollections!!.get(index = 0).title
+                                ) {
+                                    navigationViewModel.onNavBarHiding()
+
+                                    collectionViewModel.onCollectionBatchDeletion()
+                                }
+                            }
+
+                            showCollectionBatchDeletionModal -> {
+                                CollectionBatchDeletionModal(
+                                    collectionViewModel = collectionViewModel,
+                                    userCollections = userCollections!!
+                                ) {
+                                    navigationViewModel.onNavBarHiding()
+
+                                    collectionViewModel.onCollectionBatchDeletion()
+                                }
                             }
                         }
                     }
