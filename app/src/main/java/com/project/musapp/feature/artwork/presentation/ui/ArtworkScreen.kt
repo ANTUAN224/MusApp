@@ -50,8 +50,6 @@ fun ArtworkScreen(
     collectionsWithThatArtwork: List<CollectionReadingUiModel>,
     collectionsWithoutThatArtwork: List<CollectionReadingUiModel>,
     artwork: ArtworkUiModel,
-    onArtworkAdditionToRemainingCollection: () -> Unit,
-    onArtworkDeletionFromRemainingCollection: () -> Unit,
     onReturnToHome: () -> Unit,
 ) {
     Scaffold(
@@ -61,12 +59,6 @@ fun ArtworkScreen(
                 hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite,
                 collectionsWithThatArtwork = collectionsWithThatArtwork,
                 collectionsWithoutThatArtwork = collectionsWithoutThatArtwork,
-                onArtworkAdditionToRemainingCollection = {
-                    onArtworkAdditionToRemainingCollection()
-                },
-                onArtworkDeletionFromRemainingCollection = {
-                    onArtworkDeletionFromRemainingCollection()
-                }
             ) { onReturnToHome() }
         }
     ) { innerPadding ->
@@ -84,8 +76,6 @@ fun ArtworkScreenTopBar(
     hasArtworkBeenMarkedAsFavorite: Boolean,
     collectionsWithThatArtwork: List<CollectionReadingUiModel>,
     collectionsWithoutThatArtwork: List<CollectionReadingUiModel>,
-    onArtworkAdditionToRemainingCollection: () -> Unit,
-    onArtworkDeletionFromRemainingCollection: () -> Unit,
     onReturnToHome: () -> Unit
 ) {
     TopAppBar(
@@ -125,7 +115,7 @@ fun ArtworkScreenTopBar(
                 } else if (collectionsWithoutThatArtwork.isEmpty()) {
                     artworkViewModel.onArtworkInAllCollectionsModalOpening()
                 } else if (collectionsWithoutThatArtwork.size == 1) {
-                    onArtworkAdditionToRemainingCollection()
+                    artworkViewModel.onArtworkAdditionToRemainingCollectionOpening()
                 } else {
                     artworkViewModel.onArtworkAdditionToCollectionsModalOpening()
                 }
@@ -143,7 +133,7 @@ fun ArtworkScreenTopBar(
                 } else if (collectionsWithThatArtwork.isEmpty()) {
                     artworkViewModel.onNotAnyArtworksInCollectionsModalOpening()
                 } else if (collectionsWithThatArtwork.size == 1) {
-                    onArtworkDeletionFromRemainingCollection()
+                    artworkViewModel.onArtworkDeletionFromRemainingCollectionOpening()
                 } else {
                     artworkViewModel.onArtworkDeletionFromCollectionsModalOpening()
                 }
