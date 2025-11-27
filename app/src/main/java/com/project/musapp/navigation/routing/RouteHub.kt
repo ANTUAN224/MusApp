@@ -34,9 +34,12 @@ sealed class RouteHub {
     @Serializable
     data object ArtisticCulture : RouteHub() {
         @Serializable
+        data object Options: RouteHub()
+
+        @Serializable
         data object TechnicalGlossary : RouteHub()
 
         @Serializable
-        data object CuriositySection : RouteHub()
+        data object Curiosities : RouteHub()
     }
 }
