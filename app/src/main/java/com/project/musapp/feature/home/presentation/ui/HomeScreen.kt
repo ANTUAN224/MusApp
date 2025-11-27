@@ -266,7 +266,7 @@ private fun HomeScreenSearchBar(
 ) {
     val query by homeViewModel.query.observeAsState()
     val searchArtworks by homeViewModel.searchArtworks.observeAsState()
-    val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState()
+    val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState(initial = false)
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -282,7 +282,7 @@ private fun HomeScreenSearchBar(
                     IconButton(onClick = {
                         homeViewModel.onSearchBarStateChange(
                             isSearching = false,
-                            hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
+                            hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
                         )
 
                         focusManager.clearFocus(force = true)
@@ -305,9 +305,9 @@ private fun HomeScreenSearchBar(
                 onExpandedChange = {
                     homeViewModel.onSearchBarStateChange(
                         isSearching = it,
-                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
+                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
                     )
-                    if (hasSearchKeyBeenPressed!!) {
+                    if (hasSearchKeyBeenPressed) {
                         homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
                     }
                 }
@@ -317,10 +317,10 @@ private fun HomeScreenSearchBar(
         onExpandedChange = {
             homeViewModel.onSearchBarStateChange(
                 isSearching = it,
-                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
+                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
             )
 
-            if (hasSearchKeyBeenPressed!!) {
+            if (hasSearchKeyBeenPressed) {
                 homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
             }
         },
@@ -344,7 +344,7 @@ private fun HomeScreenSearchBar(
 
                             onArtworkPreviewClick(searchArtwork.id)
 
-                            if (hasSearchKeyBeenPressed!!) {
+                            if (hasSearchKeyBeenPressed) {
                                 homeViewModel.onSearchKeyPressedStateChange(
                                     hasSearchKeyBeenPressed = false
                                 )
