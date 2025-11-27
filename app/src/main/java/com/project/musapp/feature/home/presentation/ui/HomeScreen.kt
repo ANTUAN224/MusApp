@@ -1,5 +1,7 @@
 package com.project.musapp.feature.home.presentation.ui
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +56,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.project.musapp.feature.artwork.presentation.model.artwork.chunkInPairs
 import com.project.musapp.ui.commoncomponents.BoldText
 import com.project.musapp.feature.user.presentation.model.UserProfileUiModel
 import com.project.musapp.feature.home.presentation.viewmodel.HomeViewModel
@@ -66,13 +67,13 @@ import com.project.musapp.ui.commoncomponents.UserProfileImage
 fun HomeScreen(
     homeViewModel: HomeViewModel,
     userProfile: UserProfileUiModel,
+    applicationContext: Context,
     onNavBarHiding: () -> Unit,
     onNavBarShowing: () -> Unit,
     onArtworkPreviewClick: (Long) -> Unit,
     onReturnToInitialMenu: () -> Unit,
 ) {
     val isSearching by homeViewModel.isSearching.observeAsState(initial = false)
-    val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState(initial = false)
 
     AnimatedContent(
         targetState = isSearching
@@ -88,7 +89,7 @@ fun HomeScreen(
                     HomeScreenTopBar(
                         homeViewModel = homeViewModel,
                         userProfile = userProfile,
-                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                        applicationContext = applicationContext
                     ) {
                         onReturnToInitialMenu()
                     }
@@ -106,7 +107,6 @@ fun HomeScreen(
 
             HomeScreenSearchBar(
                 homeViewModel = homeViewModel,
-                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed,
                 onArtworkPreviewClick = onArtworkPreviewClick
             )
         }
@@ -118,7 +118,7 @@ fun HomeScreen(
 private fun HomeScreenTopBar(
     homeViewModel: HomeViewModel,
     userProfile: UserProfileUiModel,
-    hasSearchKeyBeenPressed: Boolean,
+    applicationContext: Context,
     onReturnToInitialMenu: () -> Unit
 ) {
     val isFirstDropdownMenuExpanded by homeViewModel.isFirstDropdownMenuExpanded.observeAsState(
@@ -137,7 +137,7 @@ private fun HomeScreenTopBar(
             IconButton(onClick = {
                 homeViewModel.onSearchBarStateChange(
                     isSearching = true,
-                    hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                    hasSearchKeyBeenPressed = false
                 )
             }) {
                 Icon(
@@ -189,28 +189,41 @@ private fun HomeScreenTopBar(
                 DropdownMenu(
                     expanded = isSettingDropdownMenuExpanded,
                     onDismissRequest = { homeViewModel.onSettingDropdownMenuCollapse() }) {
-                    DropdownMenuItem(text = { Text("Tema") }, trailingIcon = {
-                        Switch(
-                            checked = isDarkModeActivated,
-                            onCheckedChange = { homeViewModel.onSwitchClick(it) },
-                            thumbContent = {
-                                Icon(
-                                    imageVector = if (isDarkModeActivated) Icons.Filled.DarkMode else Icons.Filled.LightMode,
-                                    contentDescription = "Tema de la app"
+                    DropdownMenuItem(
+                        text = { Text("Tema") },
+                        trailingIcon = {
+                            Switch(
+                                enabled = false,
+                                checked = isDarkModeActivated,
+                                onCheckedChange = { homeViewModel.onSwitchClick(it) },
+                                thumbContent = {
+                                    Icon(
+                                        imageVector =
+                                            if (isDarkModeActivated) Icons.Filled.DarkMode
+                                            else Icons.Filled.LightMode,
+                                        contentDescription = "Tema de la app"
+                                    )
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedBorderColor = Color.Black,
+                                    uncheckedBorderColor = Color.Black,
+                                    checkedTrackColor = Color.Black,
+                                    uncheckedTrackColor = Color.Black,
+                                    checkedThumbColor = Color.White,
+                                    uncheckedThumbColor = Color.White,
+                                    checkedIconColor = Color.Black,
+                                    uncheckedIconColor = Color.Black
                                 )
-                            },
-                            colors = SwitchDefaults.colors(
-                                checkedBorderColor = Color.Black,
-                                uncheckedBorderColor = Color.Black,
-                                checkedTrackColor = Color.Black,
-                                uncheckedTrackColor = Color.Black,
-                                checkedThumbColor = Color.White,
-                                uncheckedThumbColor = Color.White,
-                                checkedIconColor = Color.Black,
-                                uncheckedIconColor = Color.Black
                             )
-                        )
-                    }, onClick = { homeViewModel.onSwitchClick(!isDarkModeActivated) })
+                        },
+                        onClick = {
+                            Toast.makeText(
+                                applicationContext,
+                                "¡Próximamente podrás cambiar el tema de la app!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    )
 
                     DropdownMenuItem(text = { Text("Ayuda") }, trailingIcon = {
                         Icon(
@@ -249,11 +262,11 @@ private fun HomeScreenTopBar(
 @Composable
 private fun HomeScreenSearchBar(
     homeViewModel: HomeViewModel,
-    hasSearchKeyBeenPressed: Boolean,
     onArtworkPreviewClick: (Long) -> Unit
 ) {
     val query by homeViewModel.query.observeAsState()
     val searchArtworks by homeViewModel.searchArtworks.observeAsState()
+    val hasSearchKeyBeenPressed by homeViewModel.hasSearchKeyBeenPressed.observeAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -269,14 +282,10 @@ private fun HomeScreenSearchBar(
                     IconButton(onClick = {
                         homeViewModel.onSearchBarStateChange(
                             isSearching = false,
-                            hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                            hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
                         )
 
                         focusManager.clearFocus(force = true)
-
-                        if (hasSearchKeyBeenPressed) {
-                            homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
-                        }
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -296,9 +305,9 @@ private fun HomeScreenSearchBar(
                 onExpandedChange = {
                     homeViewModel.onSearchBarStateChange(
                         isSearching = it,
-                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                        hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
                     )
-                    if (hasSearchKeyBeenPressed) {
+                    if (hasSearchKeyBeenPressed!!) {
                         homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
                     }
                 }
@@ -308,10 +317,10 @@ private fun HomeScreenSearchBar(
         onExpandedChange = {
             homeViewModel.onSearchBarStateChange(
                 isSearching = it,
-                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed
+                hasSearchKeyBeenPressed = hasSearchKeyBeenPressed!!
             )
 
-            if (hasSearchKeyBeenPressed) {
+            if (hasSearchKeyBeenPressed!!) {
                 homeViewModel.onSearchKeyPressedStateChange(hasSearchKeyBeenPressed = false)
             }
         },
@@ -320,42 +329,40 @@ private fun HomeScreenSearchBar(
         )
     ) {
         LazyColumn {
-            searchArtworks!!.forEachIndexed { index, searchArtwork ->
-                item {
-                    if (searchArtwork.title.contains(
-                            other = query!!.trim(),
-                            ignoreCase = true
-                        ) || searchArtwork.authorHistoricallyKnownName.contains(
-                            other = query!!.trim(),
-                            ignoreCase = true
-                        )
-                    ) {
-                        ListItem(
-                            modifier = Modifier.clickable {
-                                focusManager.clearFocus(force = true)
+            items(searchArtworks!!) { searchArtwork ->
+                if (searchArtwork.title.contains(
+                        other = query!!.trim(),
+                        ignoreCase = true
+                    ) || searchArtwork.authorHistoricallyKnownName.contains(
+                        other = query!!.trim(),
+                        ignoreCase = true
+                    )
+                ) {
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            focusManager.clearFocus(force = true)
 
-                                onArtworkPreviewClick(searchArtwork.id)
+                            onArtworkPreviewClick(searchArtwork.id)
 
-                                if (hasSearchKeyBeenPressed) {
-                                    homeViewModel.onSearchKeyPressedStateChange(
-                                        hasSearchKeyBeenPressed = false
-                                    )
-                                }
-                            },
-                            leadingContent = {
-                                AsyncImage(
-                                    modifier = Modifier.size(size = 60.dp),
-                                    model = searchArtwork.imageUrl,
-                                    contentDescription = "Cuadro de ${searchArtwork.title}"
+                            if (hasSearchKeyBeenPressed!!) {
+                                homeViewModel.onSearchKeyPressedStateChange(
+                                    hasSearchKeyBeenPressed = false
                                 )
-                            },
-                            headlineContent = { Text(text = searchArtwork.title) },
-                            supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
-                            colors = ListItemDefaults.colors(
-                                containerColor = Color.White
-                            ),
-                        )
-                    }
+                            }
+                        },
+                        leadingContent = {
+                            AsyncImage(
+                                modifier = Modifier.size(size = 60.dp),
+                                model = searchArtwork.imageUrl,
+                                contentDescription = "Cuadro de ${searchArtwork.title}"
+                            )
+                        },
+                        headlineContent = { Text(text = searchArtwork.title) },
+                        supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
+                        colors = ListItemDefaults.colors(
+                            containerColor = Color.White
+                        ),
+                    )
                 }
             }
         }

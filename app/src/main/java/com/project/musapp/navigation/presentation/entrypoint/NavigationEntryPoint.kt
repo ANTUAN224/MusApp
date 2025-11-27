@@ -377,6 +377,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         onNavBarShowing = {
                             navigationViewModel.onNavBarShowing()
                         },
+                        applicationContext = applicationContext,
                         onArtworkPreviewClick = { artworkId ->
 
                             navController.navigate(route = RouteHub.Artwork(artworkId = artworkId))
