@@ -44,6 +44,14 @@ class ArtworkViewModel @Inject constructor(
     val collectionsWithoutThatArtwork: LiveData<List<CollectionReadingUiModel>> =
         _collectionsWithoutThatArtwork
 
+    private val _showArtworkDeletionFromRemainingCollectionModal = MutableLiveData<Boolean>()
+    val showArtworkDeletionFromRemainingCollectionModal: LiveData<Boolean> =
+        _showArtworkDeletionFromRemainingCollectionModal
+
+    private val _showArtworkAdditionToRemainingCollectionModal = MutableLiveData<Boolean>()
+    val showArtworkAdditionToRemainingCollectionModal: LiveData<Boolean> =
+        _showArtworkAdditionToRemainingCollectionModal
+
     private val _showArtworkDeletionFromCollectionsModal = MutableLiveData<Boolean>()
     val showArtworkDeletionFromCollectionsModal: LiveData<Boolean> =
         _showArtworkDeletionFromCollectionsModal
@@ -98,8 +106,24 @@ class ArtworkViewModel @Inject constructor(
         _showNotAnyCollectionsCreatedModalInDeletionOption.value = false
     }
 
+    fun onArtworkDeletionFromRemainingCollectionOpening() {
+        _showArtworkDeletionFromRemainingCollectionModal.value = true
+    }
+
+    fun onArtworkDeletionFromRemainingCollectionClosing() {
+        _showArtworkDeletionFromRemainingCollectionModal.value = false
+    }
+
     fun onNotAnyCollectionsCreatedModalInAdditionOptionOpening() {
         _showNotAnyCollectionsCreatedModalInAdditionOption.value = true
+    }
+
+    fun onArtworkAdditionToRemainingCollectionOpening() {
+        _showArtworkAdditionToRemainingCollectionModal.value = true
+    }
+
+    fun onArtworkAdditionToRemainingCollectionClosing() {
+        _showArtworkAdditionToRemainingCollectionModal.value = false
     }
 
     fun onNotAnyCollectionsCreatedModalInAdditionOptionClosing() {
