@@ -21,7 +21,9 @@ import com.project.musapp.feature.artisticculture.presentation.ui.technicalgloss
 import com.project.musapp.feature.artisticculture.presentation.ui.technicalglossaryscreen.TermDefinitionModal
 import com.project.musapp.feature.artisticculture.presentation.viewmodel.ArtisticCultureViewModel
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkAdditionToCollectionsModal
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkAdditionToRemainingCollectionModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkDeletionFromCollectionsModal
+import com.project.musapp.feature.artwork.presentation.ui.ArtworkDeletionFromRemainingCollectionModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkInAllCollectionsModal
 import com.project.musapp.feature.artwork.presentation.ui.ArtworkScreen
 import com.project.musapp.feature.artwork.presentation.ui.NotAnyArtworksInCollectionsModal
@@ -428,24 +430,22 @@ fun NavigationEntryPoint(applicationContext: Context) {
                             .observeAsState(initial = false)
 
                 val showNotAnyArtworksInCollectionsModal by artworkViewModel
-                    .showNotAnyArtworksInCollectionsModal.observeAsState(
-                        initial = false
-                    )
+                    .showNotAnyArtworksInCollectionsModal.observeAsState(initial = false)
 
                 val showArtworkInAllCollectionsModal by artworkViewModel
-                    .showArtworkInAllCollectionsModal.observeAsState(
-                        initial = false
-                    )
+                    .showArtworkInAllCollectionsModal.observeAsState(initial = false)
 
                 val showArtworkAdditionToCollectionsModal by artworkViewModel
-                    .showArtworkAdditionToCollectionsModal.observeAsState(
-                        initial = false
-                    )
+                    .showArtworkAdditionToCollectionsModal.observeAsState(initial = false)
 
                 val showArtworkDeletionToCollectionsModal by artworkViewModel
-                    .showArtworkDeletionFromCollectionsModal.observeAsState(
-                        initial = false
-                    )
+                    .showArtworkDeletionFromCollectionsModal.observeAsState(initial = false)
+
+                val showArtworkAdditionToRemainingCollectionModal by artworkViewModel
+                    .showArtworkAdditionToRemainingCollectionModal.observeAsState(initial = false)
+
+                val showArtworkDeletionFromRemainingCollectionModal by artworkViewModel
+                    .showArtworkDeletionFromRemainingCollectionModal.observeAsState(initial = false)
 
                 val navigateToHome by
                 artworkViewModel.navigateToHome.observeAsState()
@@ -500,33 +500,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         artwork = artwork!!,
                         hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite,
                         collectionsWithThatArtwork = collectionsWithThatArtwork!!,
-                        collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!,
-                        onArtworkAdditionToRemainingCollection = {
-                            navigationViewModel.onArtworkAdditionToCollections()
-
-                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
-                                )
-                            }
-
-                            artworkViewModel.onArtworkAdditionToCollections(
-                                artworkId = artworkDestination.artworkId
-                            )
-                        },
-                        onArtworkDeletionFromRemainingCollection = {
-                            navigationViewModel.onArtworkDeletionFromCollections()
-
-                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
-                                )
-                            }
-
-                            artworkViewModel.onArtworkDeletionFromCollections(
-                                artworkId = artworkDestination.artworkId
-                            )
-                        }
+                        collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!
                     ) {
                         if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
                             if (currentNavItemIndex != 0) {
@@ -576,51 +550,105 @@ fun NavigationEntryPoint(applicationContext: Context) {
                         }
                     }
 
-                    if (showArtworkInAllCollectionsModal) {
-                        ArtworkInAllCollectionsModal(artworkViewModel = artworkViewModel)
-                    } else if (showNotAnyCollectionsCreatedModalInAdditionOption) {
-                        NotAnyCollectionsCreatedModalInArtworkAdditionOption(
-                            artworkViewModel = artworkViewModel
-                        )
-                    } else if (showNotAnyCollectionsCreatedModalInDeletionOption) {
-                        NotAnyCollectionsCreatedModalInArtworkDeletionOption(
-                            artworkViewModel = artworkViewModel
-                        )
-                    } else if (showNotAnyArtworksInCollectionsModal) {
-                        NotAnyArtworksInCollectionsModal(artworkViewModel = artworkViewModel)
-                    } else if (showArtworkAdditionToCollectionsModal) {
-                        ArtworkAdditionToCollectionsModal(
-                            artworkViewModel = artworkViewModel,
-                            collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!
-                        ) {
-                            navigationViewModel.onArtworkAdditionToCollections()
+                    when {
+                        showArtworkInAllCollectionsModal -> {
+                            ArtworkInAllCollectionsModal(artworkViewModel = artworkViewModel)
+                        }
 
-                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
-                                )
-                            }
-
-                            artworkViewModel.onArtworkAdditionToCollections(
-                                artworkId = artworkDestination.artworkId
+                        showNotAnyCollectionsCreatedModalInAdditionOption -> {
+                            NotAnyCollectionsCreatedModalInArtworkAdditionOption(
+                                artworkViewModel = artworkViewModel
                             )
                         }
-                    } else if (showArtworkDeletionToCollectionsModal) {
-                        ArtworkDeletionFromCollectionsModal(
-                            artworkViewModel = artworkViewModel,
-                            collectionsWithThatArtwork = collectionsWithThatArtwork!!
-                        ) {
-                            navigationViewModel.onArtworkDeletionFromCollections()
 
-                            if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
-                                navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
-                                    hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                        showNotAnyArtworksInCollectionsModal -> {
+                            NotAnyArtworksInCollectionsModal(artworkViewModel = artworkViewModel)
+                        }
+
+                        showArtworkAdditionToRemainingCollectionModal -> {
+                            ArtworkAdditionToRemainingCollectionModal(
+                                artworkViewModel = artworkViewModel,
+                                remainingCollectionTitle =
+                                    collectionsWithoutThatArtwork!!
+                                        .get(index = 0).title
+                            ) {
+                                navigationViewModel.onArtworkAdditionToCollections()
+
+                                if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                    navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                    )
+                                }
+
+                                artworkViewModel.onArtworkAdditionToCollections(
+                                    artworkId = artworkDestination.artworkId
                                 )
                             }
+                        }
 
-                            artworkViewModel.onArtworkDeletionFromCollections(
-                                artworkId = artworkDestination.artworkId
+                        showArtworkAdditionToCollectionsModal -> {
+                            ArtworkAdditionToCollectionsModal(
+                                artworkViewModel = artworkViewModel,
+                                collectionsWithoutThatArtwork = collectionsWithoutThatArtwork!!
+                            ) {
+                                navigationViewModel.onArtworkAdditionToCollections()
+
+                                if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                    navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                    )
+                                }
+
+                                artworkViewModel.onArtworkAdditionToCollections(
+                                    artworkId = artworkDestination.artworkId
+                                )
+                            }
+                        }
+
+                        showNotAnyCollectionsCreatedModalInDeletionOption -> {
+                            NotAnyCollectionsCreatedModalInArtworkDeletionOption(
+                                artworkViewModel = artworkViewModel
                             )
+                        }
+
+                        showArtworkDeletionFromRemainingCollectionModal -> {
+                            ArtworkDeletionFromRemainingCollectionModal(
+                                artworkViewModel = artworkViewModel,
+                                remainingCollectionTitle =
+                                    collectionsWithThatArtwork!!
+                                        .get(index = 0).title
+                            ) {
+                                navigationViewModel.onArtworkDeletionFromCollections()
+
+                                if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                    navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                    )
+                                }
+
+                                artworkViewModel.onArtworkDeletionFromCollections(
+                                    artworkId = artworkDestination.artworkId
+                                )
+                            }
+                        }
+
+                        showArtworkDeletionToCollectionsModal -> {
+                            ArtworkDeletionFromCollectionsModal(
+                                artworkViewModel = artworkViewModel,
+                                collectionsWithThatArtwork = collectionsWithThatArtwork!!
+                            ) {
+                                navigationViewModel.onArtworkDeletionFromCollections()
+
+                                if (hasArtworkBeenMarkedAsFavorite != artwork!!.hasBeenMarkedAsFavorite) {
+                                    navigationViewModel.onArtworkMarkedAsFavoriteStateChange(
+                                        hasArtworkBeenMarkedAsFavorite = hasArtworkBeenMarkedAsFavorite
+                                    )
+                                }
+
+                                artworkViewModel.onArtworkDeletionFromCollections(
+                                    artworkId = artworkDestination.artworkId
+                                )
+                            }
                         }
                     }
                 } else if (showNoInternetConnectionModal) {
