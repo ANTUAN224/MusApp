@@ -104,7 +104,13 @@ fun NotAnyCollectionsToRenameModal(collectionViewModel: CollectionViewModel) {
     AlertDialog(
         onDismissRequest = { collectionViewModel.onNotAnyCollectionsToRenameModalClosing() },
         confirmButton = {
-            TextButton(onClick = { collectionViewModel.onNotAnyCollectionsToRenameModalClosing() }) {
+            TextButton(
+                onClick = { collectionViewModel.onNotAnyCollectionsToRenameModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -291,7 +297,13 @@ fun NotAnyCollectionsToDeleteModal(collectionViewModel: CollectionViewModel) {
     AlertDialog(
         onDismissRequest = { collectionViewModel.onNotAnyCollectionsToDeleteModalClosing() },
         confirmButton = {
-            TextButton(onClick = { collectionViewModel.onNotAnyCollectionsToDeleteModalClosing() }) {
+            TextButton(
+                onClick = { collectionViewModel.onNotAnyCollectionsToDeleteModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
                 Text(text = "Cerrar")
             }
         },
@@ -330,8 +342,8 @@ fun UniqueCollectionToDeleteModal(
             TextButton(
                 onClick = { onModalAcceptButtonClick() },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 )
             ) {
                 Text(text = "Aceptar")
@@ -341,8 +353,8 @@ fun UniqueCollectionToDeleteModal(
             TextButton(
                 onClick = { collectionViewModel.onUniqueCollectionToDeleteModalClosing() },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 )
             ) {
                 Text(text = "Cancelar")
