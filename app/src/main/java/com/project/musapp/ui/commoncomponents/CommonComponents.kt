@@ -253,6 +253,7 @@ fun CommonCollectionOptionMultiSelectionModal(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = text,
                     textAlign = TextAlign.Center,
                     color = Color.DarkGray
@@ -284,7 +285,10 @@ fun CommonCollectionOptionMultiSelectionModal(
                                     }
                                 },
                                 headlineContent = {
-                                    Text(text = collectionOption.title)
+                                    Text(
+                                        text = collectionOption.title,
+                                        color = Color.Black
+                                    )
                                 },
 
                                 trailingContent = {
