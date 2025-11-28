@@ -31,6 +31,10 @@ fun <T : Any> CommonArtisticCultureButtonList(
     ) {
         content.forEachIndexed { index, button ->
             item {
+                if (index == 0) {
+                    CommonVerticalSpacer(height = 50.dp)
+                }
+
                 OutlinedButton(
                     modifier = if (classType == TermUiModel::class) {
                         Modifier.size(width = 199.dp, height = 84.dp)

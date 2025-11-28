@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,8 +36,7 @@ fun ArtisticCultureTechnicalGlossaryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(color = 0xFF58CAF7))
-                .padding(paddingValues = innerPadding)
-                .padding(top = 50.dp),
+                .padding(paddingValues = innerPadding),
             artisticCultureViewModel = artisticCultureViewModel
         )
     }
@@ -74,9 +74,13 @@ fun TermDefinitionModal(artisticCultureViewModel: ArtisticCultureViewModel) {
             TextButton(
                 onClick = {
                     artisticCultureViewModel.onTermDefinitionModalClosing()
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(color = 0xFF58CAF7),
+                    contentColor = Color.Black
+                )
             ) {
-                Text(text = "Cerrar", color = Color.Black)
+                Text(text = "Cerrar")
             }
         },
         title = { Text(text = selectedTerm!!.name) },
