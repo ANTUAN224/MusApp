@@ -242,12 +242,19 @@ fun CommonCollectionOptionMultiSelectionModal(
     AlertDialog(
         modifier = Modifier.height(height = 400.dp),
         onDismissRequest = { onModalCancelButtonClick() },
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                color = Color.Black
+            )
+                },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = text,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.DarkGray
                 )
 
                 LazyColumn(modifier = Modifier.weight(weight = 1f)) {
@@ -276,7 +283,10 @@ fun CommonCollectionOptionMultiSelectionModal(
                                     }
                                 },
                                 headlineContent = {
-                                    Text(text = collectionOption.title)
+                                    Text(
+                                        text = collectionOption.title,
+                                        color = Color.Black
+                                    )
                                 },
 
                                 trailingContent = {

@@ -47,7 +47,12 @@ fun CollectionCreationModal(
 
     AlertDialog(
         onDismissRequest = { collectionViewModel.onCollectionCreationModalClosing() },
-        title = { Text(text = "Crear colección") },
+        title = {
+            Text(
+                text = "Crear colección",
+                color = Color.Black
+            )
+        },
         text = {
             CollectionTitleTextField(collectionViewModel)
         },
@@ -117,13 +122,15 @@ fun NotAnyCollectionsToRenameModal(collectionViewModel: CollectionViewModel) {
         title = {
             Text(
                 text = "Ninguna colección creada",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         },
         text = {
             Text(
                 text = "Asegúrate de que tienes al menos una colección creada antes de querer renombrar una.",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )
@@ -140,12 +147,19 @@ fun CollectionRenamingOptionModal(
     AlertDialog(
         modifier = Modifier.height(height = 400.dp),
         onDismissRequest = { collectionViewModel.onCollectionRenamingOptionModalClosing() },
-        title = { Text(text = "Renombrar colección") },
+        title = {
+            Text(
+                text = "Renombrar colección",
+                color = Color.Black
+            )
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = "Elige qué colección quieres renombrar:",
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.DarkGray
                 )
 
                 LazyColumn(modifier = Modifier.weight(weight = 1f)) {
@@ -240,7 +254,12 @@ fun CollectionRenamingModal(
 
     AlertDialog(
         onDismissRequest = { collectionViewModel.onCollectionRenamingModalClosing() },
-        title = { Text(text = "Renombrar colección") },
+        title = {
+            Text(
+                text = "Renombrar colección",
+                color = Color.Black
+            )
+        },
         text = {
             ModifiedCollectionTitleTextField(collectionViewModel)
         },
