@@ -272,13 +272,15 @@ private fun ArtworkInformationField(
         Text(
             text = firstContent,
             fontStyle = fontStyle,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
 
         if (lastContent != null) {
             Text(
                 text = "($lastContent)",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         }
 

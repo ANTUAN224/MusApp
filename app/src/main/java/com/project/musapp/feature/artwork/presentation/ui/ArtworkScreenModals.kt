@@ -127,14 +127,17 @@ fun NotAnyCollectionsCreatedModalInArtworkAdditionOption(artworkViewModel: Artwo
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Ninguna colección creada",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         },
         text = {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Asegúrate de que tienes al menos una colección creada antes de querer añadir un " +
                         "cuadro.",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )
@@ -159,14 +162,16 @@ fun ArtworkInAllCollectionsModal(artworkViewModel: ArtworkViewModel) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Ninguna colección libre",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         },
         text = {
             Text(
                 text = "Asegúrate de que tienes al menos una colección sin este cuadro antes de querer " +
                         "añadirlo.",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )
@@ -191,14 +196,16 @@ fun NotAnyArtworksInCollectionsModal(artworkViewModel: ArtworkViewModel) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Cuadro no almacenado",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         },
         text = {
             Text(
                 text = "Asegúrate de que el cuadro está almacenado en al menos una colección antes de " +
                         "querer eliminarlo.",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )
@@ -236,14 +243,16 @@ fun ArtworkAdditionToRemainingCollectionModal(
         },
         title = {
             Text(
-                text = "Añadir cuadro"
+                text = "Añadir cuadro",
+                color = Color.Black
             )
         },
         text = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "¿Quieres añadir el cuadro a la colección '$remainingCollectionTitle?'",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )
@@ -281,14 +290,16 @@ fun ArtworkDeletionFromRemainingCollectionModal(
         },
         title = {
             Text(
-                text = "Eliminar cuadro"
+                text = "Eliminar cuadro",
+                color = Color.Black
             )
         },
         text = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "¿Quieres eliminar el cuadro de la colección '$remainingCollectionTitle'?",
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )

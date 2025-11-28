@@ -98,6 +98,7 @@ fun BoldText(
         text = text,
         fontSize = fontSize,
         textAlign = textAlign,
+        color = Color.Black,
         fontWeight = FontWeight.Bold,
         lineHeight = lineHeight
     )
@@ -215,7 +216,8 @@ private fun ArtworkPreviewCard(
 
         Text(
             modifier = Modifier.padding(horizontal = 5.dp, vertical = 3.dp),
-            text = userFavoriteArtworkPreview.authorHistoricallyKnownName
+            text = userFavoriteArtworkPreview.authorHistoricallyKnownName,
+            color = Color.Black
         )
     }
 }
@@ -242,12 +244,18 @@ fun CommonCollectionOptionMultiSelectionModal(
     AlertDialog(
         modifier = Modifier.height(height = 400.dp),
         onDismissRequest = { onModalCancelButtonClick() },
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                color = Color.Black
+            )
+                },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(space = 10.dp)) {
                 Text(
                     text = text,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.DarkGray
                 )
 
                 LazyColumn(modifier = Modifier.weight(weight = 1f)) {
