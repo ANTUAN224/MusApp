@@ -325,10 +325,10 @@ fun PasswordTextField(viewModel: UserRegistrationViewModel) {
         visualTransformation = if (showPassword) VisualTransformation.None
         else PasswordVisualTransformation(),
         isError = passwordError.isNotBlank(),
-        colors = TextFieldDefaults.colors(errorSupportingTextColor = Color.Red),
         supportingText = {
             Text(
-                text = passwordError.ifBlank { "Caracteres especiales válidos: *, +, _, -, #, ? y @" }
+                text = passwordError.ifBlank { "Caracteres especiales válidos: *, +, _, -, #, ? y @" },
+                color = if (passwordError.isBlank()) Color.DarkGray else Color.Red
             )
         },
         trailingIcon = {
