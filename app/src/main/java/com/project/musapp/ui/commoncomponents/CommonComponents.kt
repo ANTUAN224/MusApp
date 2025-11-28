@@ -74,12 +74,28 @@ fun CommonNoInternetConnectionModal() {
     val activity = LocalActivity.current!!
     AlertDialog(
         onDismissRequest = { activity.finish() },
-        confirmButton = { TextButton(onClick = { activity.finish() }) { Text(text = "Cerrar") } },
-        title = { Text(text = "Sin conexión a Internet") },
+        confirmButton = {
+            TextButton(
+                onClick = { activity.finish() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = Color.Black
+                )
+            ) { Text(text = "Cerrar") }
+        },
+        title = {
+            Text(
+                text = "Sin conexión a Internet",
+                color = Color.Black
+            )
+        },
         text = {
             Text(
-                text = "Actualmente, no tienes acceso a Internet, por lo que no podrás acceder a la app. Verifica tu " +
-                        "conexión y vuelva a intentarlo en otra ocasión."
+                modifier = Modifier.fillMaxWidth(),
+                text = "Actualmente, no tienes acceso a Internet, por lo que no podrás acceder a la app. " +
+                        "Verifica tu conexión y vuelva a intentarlo en otra ocasión.",
+                textAlign = TextAlign.Center,
+                color = Color.DarkGray
             )
         }
     )

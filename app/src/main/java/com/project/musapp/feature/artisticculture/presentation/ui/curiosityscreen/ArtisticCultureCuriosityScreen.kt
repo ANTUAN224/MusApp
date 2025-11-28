@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,7 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.project.musapp.feature.artisticculture.presentation.model.CuriosityUiModel
 import com.project.musapp.feature.artisticculture.presentation.ui.commoncomponents.CommonArtisticCultureButtonList
 import com.project.musapp.feature.artisticculture.presentation.viewmodel.ArtisticCultureViewModel
@@ -32,8 +32,7 @@ fun ArtisticCultureCuriosityScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(color = 0xFFCCFE44))
-                .padding(paddingValues = innerPadding)
-                .padding(top = 50.dp),
+                .padding(paddingValues = innerPadding),
             artisticCultureViewModel = artisticCultureViewModel
         )
     }
@@ -72,9 +71,13 @@ fun CuriosityDescriptionModal(artisticCultureViewModel: ArtisticCultureViewModel
             TextButton(
                 onClick = {
                     artisticCultureViewModel.onCuriosityDescriptionModalClosing()
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(color = 0xFFCCFE44),
+                    contentColor = Color.Black
+                )
             ) {
-                Text(text = "Cerrar", color = Color.Black)
+                Text(text = "Cerrar")
             }
         },
         title = { Text(text = "Curiosidad") },
