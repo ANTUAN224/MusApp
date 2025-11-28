@@ -30,34 +30,41 @@ fun LoginModal(
         initial = false
     )
 
-    AlertDialog(onDismissRequest = { userLoginViewModel.onLoginModalClosing() }, dismissButton = {
-        TextButton(
-            onClick = { userLoginViewModel.onLoginModalClosing() },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black, contentColor = Color.White
+    AlertDialog(
+        onDismissRequest = { userLoginViewModel.onLoginModalClosing() }, dismissButton = {
+            TextButton(
+                onClick = { userLoginViewModel.onLoginModalClosing() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black, contentColor = Color.White
+                )
+            ) {
+                Text(text = "Cancelar")
+            }
+        }, confirmButton = {
+            TextButton(
+                onClick = { userLoginViewModel.onLoginAcceptButtonClick() },
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = Color.LightGray,
+                    disabledContentColor = Color.Black,
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                enabled = isLoginAcceptButtonEnabled
+            ) {
+                Text(text = "Aceptar")
+            }
+        },
+        title = {
+            Text(
+                text = "Inicio de sesión",
+                color = Color.Black
             )
-        ) {
-            Text(text = "Cancelar")
-        }
-    }, confirmButton = {
-        TextButton(
-            onClick = { userLoginViewModel.onLoginAcceptButtonClick() },
-            colors = ButtonDefaults.buttonColors(
-                disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.Black,
-                containerColor = Color.Black,
-                contentColor = Color.White
-            ),
-            enabled = isLoginAcceptButtonEnabled
-        ) {
-            Text(text = "Aceptar")
-        }
-    }, title = { Text(text = "Inicio de sesión") }, text = {
-        Column {
-            LoginEmailTextField(viewModel = userLoginViewModel)
-            LoginPasswordTextField(viewModel = userLoginViewModel)
-        }
-    })
+        }, text = {
+            Column {
+                LoginEmailTextField(viewModel = userLoginViewModel)
+                LoginPasswordTextField(viewModel = userLoginViewModel)
+            }
+        })
 }
 
 @Composable
@@ -114,6 +121,5 @@ fun LoginPasswordTextField(viewModel: UserLoginViewModel) {
                     )
                 }
             }
-        }
-    )
+        })
 }
