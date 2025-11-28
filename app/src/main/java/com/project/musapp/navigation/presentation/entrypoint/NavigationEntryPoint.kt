@@ -248,8 +248,8 @@ fun NavigationEntryPoint(applicationContext: Context) {
                     UserRegistrationScreen(
                         userRegistrationViewModel = userRegistrationViewModel,
                         context = applicationContext,
-                        onReturnButtonPress = { navController.popBackStack() },
-                        onRegisterButtonPress = {
+                        onReturnToInitialMenu = { navController.popBackStack() },
+                        onRegistrationButtonPress = {
                             userRegistrationViewModel.onUserRegistrationScreenButtonPress()
                         })
                 } else {

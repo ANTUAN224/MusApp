@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -28,14 +27,11 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -44,13 +40,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.musapp.feature.auth.presentation.registration.viewmodel.UserRegistrationViewModel
+import com.project.musapp.ui.commoncomponents.BoldText
+import com.project.musapp.ui.commoncomponents.CommonTopBar
 import com.project.musapp.ui.commoncomponents.CommonVerticalSpacer
 import com.project.musapp.ui.commoncomponents.UserProfileImage
 import java.time.Instant
@@ -62,48 +59,35 @@ import java.time.format.DateTimeFormatter
 fun UserRegistrationScreen(
     userRegistrationViewModel: UserRegistrationViewModel,
     context: Context,
-    onReturnButtonPress: () -> Unit,
-    onRegisterButtonPress: () -> Unit,
+    onReturnToInitialMenu: () -> Unit,
+    onRegistrationButtonPress: () -> Unit,
 ) {
     Scaffold(topBar = {
-        UserRegistrationTopBar(onReturnButtonPress = onReturnButtonPress)
+        UserRegistrationTopBar(onReturnToInitialMenu = onReturnToInitialMenu)
     }) { _ ->
         UserRegistrationScreenBody(
             userRegistrationViewModel = userRegistrationViewModel, context = context
         ) {
-            onRegisterButtonPress()
+            onRegistrationButtonPress()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserRegistrationTopBar(onReturnButtonPress: () -> Unit) {
-    TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = { onReturnButtonPress() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Botón para volver a la pantalla anterior",
-                    tint = Color.White
-                )
-            }
-        }, title = {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Text(text = "Registro de usuario", color = Color.White)
-            }
-        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(color = 0xFF12AA7A))
-    )
+fun UserRegistrationTopBar(onReturnToInitialMenu: () -> Unit) {
+    CommonTopBar(
+        title = "Registro de usuario"
+    ) {
+        onReturnToInitialMenu()
+    }
 }
 
 @Composable
 fun UserRegistrationScreenBodyTitle() {
-    Text(
+    BoldText(
         modifier = Modifier.padding(top = 100.dp),
         text = "Introduce tus datos",
-        color = Color.Black,
         fontSize = 40.sp,
-        fontWeight = FontWeight.Bold
     )
 }
 
@@ -111,7 +95,7 @@ fun UserRegistrationScreenBodyTitle() {
 fun UserRegistrationScreenBody(
     userRegistrationViewModel: UserRegistrationViewModel,
     context: Context,
-    onLastRegisterButtonPress: () -> Unit
+    onRegistrationButtonPress: () -> Unit
 ) {
     val userProfileImageUri by userRegistrationViewModel.userProfileImageUri.observeAsState()
 
@@ -130,9 +114,16 @@ fun UserRegistrationScreenBody(
                 .weight(1.5f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val fieldNames = getFieldNames()
 
-            items(fieldNames) { fieldName ->
+            items(
+                items = listOf(
+                    "name",
+                    "surnames",
+                    "birthdate",
+                    "email",
+                    "password"
+                )
+            ) { fieldName ->
                 FieldView(fieldName = fieldName, viewModel = userRegistrationViewModel)
                 CommonVerticalSpacer(height = 23.dp)
             }
@@ -157,15 +148,11 @@ fun UserRegistrationScreenBody(
             UserRegistrationScreenButton(
                 content = "Completar el registro", viewModel = userRegistrationViewModel
             ) {
-                onLastRegisterButtonPress()
+                onRegistrationButtonPress()
             }
         }
     }
 }
-
-fun getFieldNames(): List<String> = listOf(
-    "name", "surnames", "birthdate", "email", "password"
-)
 
 @Composable
 fun FieldView(fieldName: String, viewModel: UserRegistrationViewModel) {
