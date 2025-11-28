@@ -357,8 +357,18 @@ private fun HomeScreenSearchBar(
                                 contentDescription = "Cuadro de ${searchArtwork.title}"
                             )
                         },
-                        headlineContent = { Text(text = searchArtwork.title) },
-                        supportingContent = { Text(text = searchArtwork.authorHistoricallyKnownName) },
+                        headlineContent = {
+                            Text(
+                                text = searchArtwork.title,
+                                color = Color.Black
+                            )
+                                          },
+                        supportingContent = {
+                            Text(
+                                text = searchArtwork.authorHistoricallyKnownName,
+                                color = Color.DarkGray
+                            )
+                                            },
                         colors = ListItemDefaults.colors(
                             containerColor = Color.White
                         ),
