@@ -49,7 +49,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
 
     fun onCollectionFirstTimeArrival() {
         viewModelScope.launch {
-            delay(3000)
+            delay(5000)
 
             _isArrivingForFirstTimeToCollection.value = false
         }
@@ -65,7 +65,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
 
     fun onCollectionArrival() {
         viewModelScope.launch {
-            delay(3000)
+            delay(5000)
 
             _hasArtworkBeenNavigatedFromCollection.value = false
         }
