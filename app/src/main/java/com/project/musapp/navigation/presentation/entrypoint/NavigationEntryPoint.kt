@@ -329,7 +329,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                 ).show()
                             }
 
-                            navigationViewModel.onHomeArrival()
+                            navigationViewModel.onArrivalToHome()
                         } else if (hasArtworkBeenDeletedFromCollections) {
                             if (hasArtworkBeenMarkedAsFavorite != null) {
                                 Toast.makeText(
@@ -345,7 +345,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                 ).show()
                             }
 
-                            navigationViewModel.onHomeArrival()
+                            navigationViewModel.onArrivalToHome()
                         } else if (homeDestination.artworkId != null
                             && hasArtworkBeenMarkedAsFavorite != null
                         ) {
@@ -363,7 +363,7 @@ fun NavigationEntryPoint(applicationContext: Context) {
                                 ).show()
                             }
 
-                            navigationViewModel.onHomeArrival()
+                            navigationViewModel.onArrivalToHome()
                         }
 
                         if (!showNavBar) {
@@ -695,10 +695,13 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
                     LaunchedEffect(Unit) {
                         if (isArrivingForFirstTimeToCollection || hasArtworkBeenNavigatedFromCollection) {
-                            collectionViewModel.onCollectionPreviewScreenArrival(
-                                navigationViewModel = navigationViewModel,
-                                isArrivingForFirstTimeToCollection = isArrivingForFirstTimeToCollection
-                            )
+                            collectionViewModel.onCollectionPreviewScreenArrival {
+                                if (isArrivingForFirstTimeToCollection) {
+                                    navigationViewModel.onFirstTimeArrivalToCollection()
+                                } else {
+                                    navigationViewModel.onArrivalToCollection()
+                                }
+                            }
                         }
                     }
 
