@@ -351,8 +351,7 @@ class CollectionViewModel @Inject constructor(
     }
 
     fun onCollectionPreviewScreenArrival(
-        navigationViewModel: NavigationViewModel,
-        isArrivingForFirstTimeToCollection: Boolean
+        onUserCollectionsObtained: () -> Unit
     ) {
         viewModelScope.launch {
             delay(2000)
@@ -372,11 +371,7 @@ class CollectionViewModel @Inject constructor(
                 Log.d("EJECUCIÓN", "Pasaron cosas -> $throwable")
             }
 
-            if (isArrivingForFirstTimeToCollection) {
-                navigationViewModel.onCollectionFirstTimeArrival()
-            } else {
-                navigationViewModel.onCollectionArrival()
-            }
+            onUserCollectionsObtained()
         }
     }
 
