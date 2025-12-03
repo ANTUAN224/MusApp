@@ -3,10 +3,7 @@ package com.project.musapp.navigation.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +44,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         _isArrivingForFirstTimeToCollection.value = true
     }
 
-    fun onCollectionFirstTimeArrival() {
+    fun onFirstTimeArrivalToCollection() {
         _isArrivingForFirstTimeToCollection.value = false
     }
 
@@ -59,7 +56,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         _hasArtworkBeenNavigatedFromCollection.value = false
     }
 
-    fun onCollectionArrival() {
+    fun onArrivalToCollection() {
         _hasArtworkBeenNavigatedFromCollection.value = false
     }
 
@@ -71,7 +68,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
         _hasArtworkBeenAddedToCollections.value = true
     }
 
-    fun onHomeArrival() {
+    fun onArrivalToHome() {
         if (hasArtworkBeenMarkedAsFavorite.value != null) {
             _hasArtworkBeenMarkedAsFavorite.value = null
         }
