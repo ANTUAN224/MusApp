@@ -694,14 +694,11 @@ fun NavigationEntryPoint(applicationContext: Context) {
 
 
                     LaunchedEffect(Unit) {
-                        if (isArrivingForFirstTimeToCollection) {
-                            navigationViewModel.onCollectionFirstTimeArrival()
-
-                            collectionViewModel.onCollectionPreviewScreenArrival()
-                        } else if (hasArtworkBeenNavigatedFromCollection) {
-                            navigationViewModel.onCollectionArrival()
-
-                            collectionViewModel.onCollectionPreviewScreenArrival()
+                        if (isArrivingForFirstTimeToCollection || hasArtworkBeenNavigatedFromCollection) {
+                            collectionViewModel.onCollectionPreviewScreenArrival(
+                                navigationViewModel = navigationViewModel,
+                                isArrivingForFirstTimeToCollection = isArrivingForFirstTimeToCollection
+                            )
                         }
                     }
 

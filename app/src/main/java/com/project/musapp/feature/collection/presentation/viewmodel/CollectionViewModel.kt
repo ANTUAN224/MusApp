@@ -17,6 +17,7 @@ import com.project.musapp.feature.collection.presentation.model.CollectionCreati
 import com.project.musapp.feature.collection.presentation.model.CollectionReadingUiModel
 import com.project.musapp.feature.collection.presentation.model.CollectionRenamingUiModel
 import com.project.musapp.feature.collection.domain.usecase.GetUserCollectionsUseCase
+import com.project.musapp.navigation.presentation.viewmodel.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -349,7 +350,10 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
-    fun onCollectionPreviewScreenArrival() {
+    fun onCollectionPreviewScreenArrival(
+        navigationViewModel: NavigationViewModel,
+        isArrivingForFirstTimeToCollection: Boolean
+    ) {
         viewModelScope.launch {
             delay(2000)
 
@@ -366,6 +370,12 @@ class CollectionViewModel @Inject constructor(
                 }
 
                 Log.d("EJECUCIÓN", "Pasaron cosas -> $throwable")
+            }
+
+            if (isArrivingForFirstTimeToCollection) {
+                navigationViewModel.onCollectionFirstTimeArrival()
+            } else {
+                navigationViewModel.onCollectionArrival()
             }
         }
     }

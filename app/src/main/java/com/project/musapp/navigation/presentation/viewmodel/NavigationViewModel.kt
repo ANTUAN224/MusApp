@@ -48,11 +48,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onCollectionFirstTimeArrival() {
-        viewModelScope.launch {
-            delay(5000)
-
-            _isArrivingForFirstTimeToCollection.value = false
-        }
+        _isArrivingForFirstTimeToCollection.value = false
     }
 
     fun onArtworkArrivalFromCollection() {
@@ -64,11 +60,7 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onCollectionArrival() {
-        viewModelScope.launch {
-            delay(5000)
-
-            _hasArtworkBeenNavigatedFromCollection.value = false
-        }
+        _hasArtworkBeenNavigatedFromCollection.value = false
     }
 
     fun onArtworkMarkedAsFavoriteStateChange(hasArtworkBeenMarkedAsFavorite: Boolean) {
