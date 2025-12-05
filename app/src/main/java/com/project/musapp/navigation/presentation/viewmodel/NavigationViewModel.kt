@@ -28,8 +28,8 @@ class NavigationViewModel @Inject constructor() : ViewModel() {
     val hasArtworkBeenDeletedFromCollections: LiveData<Boolean> =
         _hasArtworkBeenDeletedFromCollections
 
-    private val _hasArtworkBeenMarkedAsFavorite = MutableLiveData<Boolean>()
-    val hasArtworkBeenMarkedAsFavorite: LiveData<Boolean> = _hasArtworkBeenMarkedAsFavorite
+    private val _hasArtworkBeenMarkedAsFavorite = MutableLiveData<Boolean?>()
+    val hasArtworkBeenMarkedAsFavorite: LiveData<Boolean?> = _hasArtworkBeenMarkedAsFavorite
 
     fun onNavBarShowing() {
         _showNavBar.value = true
